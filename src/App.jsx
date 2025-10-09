@@ -279,7 +279,6 @@ const PropertyDashboard = () => {
                       {personalizedInfo.potentialSavings}
                     </p>
                   </div>
-
                   <div className="grid grid-cols-4 gap-2">
                     {personalizedInfo.monthlyUsage.map((data) => (
                       <div key={data.month} className="text-center">
@@ -313,6 +312,144 @@ const PropertyDashboard = () => {
                       <span>Elektra (kWh)</span>
                     </div>
                   </div>
+{/* Comparison Section */}
+<div className="mt-6 pt-6 border-t border-gray-200">
+  <h4 className="text-base font-semibold text-gray-900 mb-4">
+    Uw verbruik vergeleken met andere huishoudens en woningtypes
+  </h4>
+  
+  <div className="grid grid-cols-2 gap-6">
+    {/* Electricity Comparison */}
+    <div>
+      <div className="flex items-center gap-2 mb-3">
+        <Zap className="w-4 h-4 text-orange-600" />
+        <span className="font-semibold text-gray-900">Stroom (zonder teruglevering)</span>
+      </div>
+      
+      <div className="space-y-3">
+        <div>
+          <div className="flex items-center justify-between text-sm mb-1">
+            <span className="text-gray-700">1 persoon: 122 kWh</span>
+          </div>
+          <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-full bg-gray-700 rounded-full" style={{ width: '39%' }}></div>
+          </div>
+        </div>
+        
+        <div>
+          <div className="flex items-center justify-between text-sm mb-1">
+            <span className="text-orange-600 font-medium">Jouw verbruik: 159 kWh</span>
+          </div>
+          <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-full bg-orange-400 rounded-full" style={{ width: '51%' }}></div>
+          </div>
+        </div>
+        
+        <div>
+          <div className="flex items-center justify-between text-sm mb-1">
+            <span className="text-gray-700">2 personen: 190 kWh</span>
+          </div>
+          <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-full bg-gray-700 rounded-full" style={{ width: '61%' }}></div>
+          </div>
+        </div>
+        
+        <div>
+          <div className="flex items-center justify-between text-sm mb-1">
+            <span className="text-gray-700">3 personen: 229 kWh</span>
+          </div>
+          <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-full bg-gray-700 rounded-full" style={{ width: '73%' }}></div>
+          </div>
+        </div>
+        
+        <div>
+          <div className="flex items-center justify-between text-sm mb-1">
+            <span className="text-gray-700">4 personen: 268 kWh</span>
+          </div>
+          <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-full bg-gray-700 rounded-full" style={{ width: '86%' }}></div>
+          </div>
+        </div>
+        
+        <div>
+          <div className="flex items-center justify-between text-sm mb-1">
+            <span className="text-gray-700">5 personen: 296 kWh</span>
+          </div>
+          <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-full bg-gray-700 rounded-full" style={{ width: '95%' }}></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Gas Comparison */}
+    <div>
+      <div className="flex items-center gap-2 mb-3">
+        <div className="w-4 h-4 rounded-full bg-blue-600 flex items-center justify-center">
+          <span className="text-white text-xs">●</span>
+        </div>
+        <span className="font-semibold text-gray-900">Gas</span>
+      </div>
+      
+      <div className="space-y-3">
+        <div>
+          <div className="flex items-center justify-between text-sm mb-1">
+            <span className="text-gray-700">Appartement: 17 m³</span>
+          </div>
+          <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-full bg-gray-700 rounded-full" style={{ width: '44%' }}></div>
+          </div>
+        </div>
+            
+        <div>
+          <div className="flex items-center justify-between text-sm mb-1">
+            <span className="text-gray-700">Rijtjeswoning: 22 m³</span>
+          </div>
+          <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-full bg-gray-700 rounded-full" style={{ width: '56%' }}></div>
+          </div>
+        </div>
+
+        <div>
+          <div className="flex items-center justify-between text-sm mb-1">
+            <span className="text-blue-600 font-medium">Jouw verbruik: 25 m³</span>
+          </div>
+          <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-full bg-blue-400 rounded-full" style={{ width: '56%' }}></div>
+          </div>
+        </div>
+
+        <div>
+          <div className="flex items-center justify-between text-sm mb-1">
+            <span className="text-gray-700">Hoekwoning: 26 m³</span>
+          </div>
+          <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-full bg-gray-700 rounded-full" style={{ width: '67%' }}></div>
+          </div>
+        </div>
+        
+        <div>
+          <div className="flex items-center justify-between text-sm mb-1">
+            <span className="text-gray-700">2 onder 1 kap: 30 m³</span>
+          </div>
+          <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-full bg-gray-700 rounded-full" style={{ width: '77%' }}></div>
+          </div>
+        </div>
+        
+        <div>
+          <div className="flex items-center justify-between text-sm mb-1">
+            <span className="text-gray-700">Vrijstaande woning: 39 m³</span>
+          </div>
+          <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-full bg-gray-700 rounded-full" style={{ width: '100%' }}></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
                 </div>
               </div>
 
