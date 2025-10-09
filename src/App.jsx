@@ -206,16 +206,14 @@ const PropertyDashboard = () => {
                 <MapPin className="w-5 h-5 text-blue-600" />
                 Kadastrale Kaart
               </h3>
-              <div className="bg-gray-100 h-64 rounded-lg flex items-center justify-center mb-4">
-                <div className="text-center">
-                  <div className="w-48 h-48 mx-auto border-4 border-blue-400 bg-blue-50 relative">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center">
-                        <p className="text-sm font-semibold text-blue-800">Perceel 1560</p>
-                        <p className="text-xs text-blue-600">Sectie T</p>
-                      </div>
-                    </div>
-                  </div>
+              <div className="bg-gray-100 rounded-lg overflow-hidden mb-4 relative">
+                <img 
+                  src="/perceel-1560.png" 
+                  alt="Kadastrale kaart - Perceel 1560" 
+                  className="w-full h-auto"
+                />
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+                  <div className="bg-blue-500 bg-opacity-20 border-2 border-blue-600 rounded-lg w-40 h-40"></div>
                 </div>
               </div>
               <div className="space-y-2 text-sm">
