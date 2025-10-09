@@ -469,15 +469,6 @@ const PropertyDashboard = () => {
                           
                           <div>
                             <div className="flex items-center justify-between text-sm mb-1">
-                              <span className="text-blue-600 font-medium">Uw verbruik: 22 m³</span>
-                            </div>
-                            <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
-                              <div className="h-full bg-blue-400 rounded-full" style={{ width: '56%' }}></div>
-                            </div>
-                          </div>
-                          
-                          <div>
-                            <div className="flex items-center justify-between text-sm mb-1">
                               <span className="text-gray-700">Rijtjeswoning: 22 m³</span>
                             </div>
                             <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
@@ -486,6 +477,14 @@ const PropertyDashboard = () => {
                           </div>
                           
                           <div>
+                            <div className="flex items-center justify-between text-sm mb-1">
+                              <span className="text-blue-600 font-medium">Uw verbruik: 26 m³</span>
+                            </div>
+                            <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+                              <div className="h-full bg-blue-400 rounded-full" style={{ width: '56%' }}></div>
+                            </div>
+                          </div>
+                                                    <div>
                             <div className="flex items-center justify-between text-sm mb-1">
                               <span className="text-gray-700">Hoekwoning: 26 m³</span>
                             </div>
