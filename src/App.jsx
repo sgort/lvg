@@ -393,9 +393,11 @@ const PropertyDashboard = () => {
             </p>
             <button
               onClick={() => setIsLoggedIn(true)}
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
+              className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold text-base transition-colors"
             >
-              <Unlock className="w-5 h-5" />
+              <div className="bg-blue-900 rounded px-2 py-1 flex items-center justify-center">
+                <span className="text-white font-bold text-xs">DigiD</span>
+              </div>
               Inloggen met DigiD
             </button>
           </div>
