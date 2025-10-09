@@ -21,8 +21,10 @@ const PropertyDashboard = () => {
     size: "138 m²",
     buildYear: 1990,
     energyLabel: "C",
-    wozValue: "€ 317.000",
-    wozDate: "1 januari 2018",
+    wozHistory: [
+      { value: "€ 317.000", date: "1 januari 2025" },
+      { value: "€ 304.000", date: "1 januari 2024" },
+    ],
   };
 
   const personalizedInfo = {
@@ -182,7 +184,6 @@ const PropertyDashboard = () => {
                   Gemiddeld energieverbruik
                 </p>
               </div>
-
               {/* WOZ Value */}
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
@@ -191,19 +192,59 @@ const PropertyDashboard = () => {
                 </h3>
                 <div className="text-center mb-4">
                   <p className="text-4xl font-bold text-gray-900">
-                    {publicInfo.wozValue}
+                    {publicInfo.wozHistory[0].value}
                   </p>
                   <p className="text-sm text-gray-600">
-                    Peildatum: {publicInfo.wozDate}
+                    Peildatum: {publicInfo.wozHistory[0].date}
                   </p>
                 </div>
+
+                {/* Historical WOZ Values Table */}
+                <div className="mb-4">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-2">
+                    Historisch overzicht
+                  </h4>
+                  <div className="overflow-hidden border border-gray-200 rounded-lg">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                            Adres
+                          </th>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                            WOZ-waarde
+                          </th>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                            Peildatum
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {publicInfo.wozHistory.map((woz, index) => (
+                          <tr key={index} className="hover:bg-gray-50">
+                            <td className="px-4 py-2 text-sm text-gray-900">
+                              {publicInfo.address}, {publicInfo.postalCode}
+                            </td>
+                            <td className="px-4 py-2 text-sm font-medium text-gray-900">
+                              {woz.value}
+                            </td>
+                            <td className="px-4 py-2 text-sm text-gray-600">
+                              {woz.date}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
                 <div className="bg-blue-50 rounded-lg p-4">
                   <p className="text-sm text-gray-700">
                     De WOZ-waarde is de getaxeerde marktwaarde van uw woning en
                     wordt jaarlijks vastgesteld door de gemeente.
                   </p>
                 </div>
-              </div>
+              </div>{" "}
             </div>
           </div>
         </div>
