@@ -13,7 +13,7 @@ const PropertyDashboard = () => {
     postalCode: "3073 BJ",
     city: "Rotterdam",
     cadastralId: "G 3916",
-    size: "184 m²",
+    size: "158 m²",
     buildYear: 1990,
     energyLabel: "C",
     wozHistory: [
@@ -173,12 +173,22 @@ const PropertyDashboard = () => {
         {/* Header */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <div className="flex justify-between items-start">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Mijn Woning Overzicht</h1>
-              <p className="text-gray-600 flex items-center gap-2">
-                <MapPin className="w-4 h-4" />
-                {publicInfo.address}, {publicInfo.postalCode} {publicInfo.city}
-              </p>
+            <div className="flex items-center gap-4">
+              {/* Rijksoverheid Logo */}
+              <div className="w-12 h-18 bg-blue-900 rounded flex items-center justify-center flex-shrink-0 p-2">
+                <img 
+                  src="/rijksoverheid-logo.png" 
+                  alt="Rijksoverheid logo" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">Mijn Woning Overzicht</h1>
+                <p className="text-gray-600 flex items-center gap-2">
+                  <MapPin className="w-4 h-4" />
+                  {publicInfo.address}, {publicInfo.postalCode} {publicInfo.city}
+                </p>
+              </div>
             </div>
             <button
               onClick={() => setIsLoggedIn(!isLoggedIn)}
@@ -370,7 +380,7 @@ const PropertyDashboard = () => {
                   {/* Comparison Section */}
                   <div className="mt-6 pt-6 border-t border-gray-200">
                     <h4 className="text-base font-semibold text-gray-900 mb-4">
-                      Jouw verbruik vergeleken met andere huishoudens en woningtypes
+                      Uw verbruik vergeleken met andere huishoudens en woningtypes
                     </h4>
                     
                     <div className="grid grid-cols-2 gap-6">
@@ -393,7 +403,7 @@ const PropertyDashboard = () => {
                           
                           <div>
                             <div className="flex items-center justify-between text-sm mb-1">
-                              <span className="text-orange-600 font-medium">Jouw verbruik: 159 kWh</span>
+                              <span className="text-orange-600 font-medium">Uw verbruik: 159 kWh</span>
                             </div>
                             <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
                               <div className="h-full bg-orange-400 rounded-full" style={{ width: '51%' }}></div>
@@ -459,7 +469,7 @@ const PropertyDashboard = () => {
                           
                           <div>
                             <div className="flex items-center justify-between text-sm mb-1">
-                              <span className="text-blue-600 font-medium">Jouw verbruik: 22 m³</span>
+                              <span className="text-blue-600 font-medium">Uw verbruik: 22 m³</span>
                             </div>
                             <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
                               <div className="h-full bg-blue-400 rounded-full" style={{ width: '56%' }}></div>
