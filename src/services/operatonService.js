@@ -1,13 +1,23 @@
 // src/services/operatonService.js
 // Service for calling Operaton DMN API
 
-const OPERATON_CONFIG = {
-  baseUrl: '/api/engine-rest',  // This will proxy to Operaton
-  decisionKey: 'bereken_isolatie_opties',
-  auth: {
-    username: 'demo',
-    password: 'demo'
+const getBaseUrl = () => {
+  // Production: Direct connection to Operaton (CORS enabled)
+  if (import.meta.env.PROD) {
+    return "https://operaton.open-regels.nl/engine-rest";
   }
+
+  // Development: Use Vite proxy
+  return "/api/engine-rest";
+};
+
+const OPERATON_CONFIG = {
+  baseUrl: getBaseUrl(),
+  decisionKey: "bereken_isolatie_opties",
+  auth: {
+    username: import.meta.env.VITE_OPERATON_USER || "demo",
+    password: import.meta.env.VITE_OPERATON_PASSWORD || "demo",
+  },
 };
 
 /**
