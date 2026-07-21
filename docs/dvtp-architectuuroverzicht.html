@@ -1,0 +1,345 @@
+<meta charset="utf-8">
+<title>DvTP Architectuuroverzicht - requirements per voorziening</title>
+<style>
+  :root{
+    --ground:#ffffff; --raise:#f5f7fb; --raise-2:#eef2f8;
+    --ink:#14181c; --ink-2:#48515e; --ink-3:#79838f;
+    --line:#e4e8f0; --line-2:#ccd4e0;
+    --accent:#3f68c8; --accent-ink:#2f52a6; --accent-weak:rgba(63,104,200,.10);
+    --mono:ui-monospace,"SFMono-Regular","Menlo","Consolas",monospace;
+    --font:"Century Gothic","Futura","Questrial","Trebuchet MS",system-ui,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --ground:#0f1217; --raise:#161b22; --raise-2:#1b212b;
+      --ink:#e8ecf2; --ink-2:#a6b0be; --ink-3:#7b8593;
+      --line:#262d38; --line-2:#374150;
+      --accent:#7aa0f5; --accent-ink:#9db9ff; --accent-weak:rgba(122,160,245,.14);
+    }
+  }
+  :root[data-theme="light"]{--ground:#ffffff;--raise:#f5f7fb;--raise-2:#eef2f8;--ink:#14181c;--ink-2:#48515e;--ink-3:#79838f;--line:#e4e8f0;--line-2:#ccd4e0;--accent:#3f68c8;--accent-ink:#2f52a6;--accent-weak:rgba(63,104,200,.10);}
+  :root[data-theme="dark"]{--ground:#0f1217;--raise:#161b22;--raise-2:#1b212b;--ink:#e8ecf2;--ink-2:#a6b0be;--ink-3:#7b8593;--line:#262d38;--line-2:#374150;--accent:#7aa0f5;--accent-ink:#9db9ff;--accent-weak:rgba(122,160,245,.14);}
+
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--ground); color:var(--ink); font-family:var(--font); line-height:1.5; -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1360px; margin:0 auto; padding:40px 32px 48px;}
+
+  .kicker{font-size:12px; color:var(--ink-3); margin:0 0 10px; font-weight:700;}
+  h1{font-size:clamp(23px,2.5vw,31px); line-height:1.12; margin:0 0 10px; font-weight:700; letter-spacing:-.01em; text-wrap:balance;}
+  .lead{margin:0; font-size:14.5px; color:var(--ink-2); max-width:76ch;}
+  .lead b{color:var(--ink); font-weight:700;}
+  .srcline{margin:16px 0 0; padding-top:12px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-3);}
+  .srcline b{color:var(--ink-2); font-weight:700;}
+
+  /* Architecture schematic */
+  .arch{margin:22px 0 4px; border:1px solid var(--line); background:var(--raise); padding:16px 18px 10px;}
+  .arch .atitle{font-size:13px; font-weight:700; margin:0 0 2px;}
+  .arch .acap{font-size:12px; color:var(--ink-2); margin:0 0 12px; max-width:96ch; line-height:1.45;}
+  .arch svg{display:block; width:100%; height:auto;}
+  .arch svg text{font-family:var(--font);}
+  .arch .box{fill:var(--ground); stroke:var(--line-2); stroke-width:1;}
+  .arch .box.actor{fill:var(--raise-2); stroke:var(--ink-3); stroke-dasharray:4 3;}
+  .arch .box.cross{fill:var(--accent-weak); stroke:var(--accent);}
+  .arch .code{fill:var(--accent-ink); font-family:var(--mono); font-size:11px; font-weight:700;}
+  .arch .nm{fill:var(--ink); font-size:12px; font-weight:700;}
+  .arch .cap{fill:var(--ink-3); font-size:10.5px; letter-spacing:.02em;}
+  .arch .elab{fill:var(--ink-3); font-size:10px;}
+  .arch .edge{stroke:var(--ink-3); stroke-width:1.4; fill:none;}
+  .arch .edge.strong{stroke:var(--accent); stroke-width:1.7;}
+  .arch .edge.dash{stroke-dasharray:4 4;}
+  .arch .ah{fill:var(--ink-3);} .arch .ahA{fill:var(--accent);}
+
+  /* Controls */
+  .controls{display:flex; align-items:center; gap:14px; margin:22px 0 10px; flex-wrap:wrap;}
+  .seg{display:inline-flex; border:1px solid var(--line-2);}
+  .seg button{appearance:none; border:0; background:var(--ground); color:var(--ink-2); font-family:inherit; font-size:12.5px; font-weight:700; padding:6px 15px; cursor:pointer;}
+  .seg button+button{border-left:1px solid var(--line-2);}
+  .seg button[aria-pressed="true"]{background:var(--accent); color:#fff;}
+  .seg button:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  .hint{font-size:12px; color:var(--ink-3);}
+
+  /* Actor strip */
+  .actors{display:grid; grid-template-columns:repeat(4,1fr); border:1px solid var(--line); background:var(--raise); margin:14px 0 8px;}
+  .actor{padding:12px 15px;}
+  .actor+.actor{border-left:1px solid var(--line);}
+  .actor .role{font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-3); font-weight:700;}
+  .actor .name{font-size:14.5px; font-weight:700; margin-top:2px;}
+  .actor .note{font-size:12px; color:var(--ink-2); margin-top:2px;}
+  .actor .fr18{margin-top:8px; padding-top:8px; border-top:1px solid var(--line-2);}
+  .actor .fr18 .c{font-family:var(--mono); font-size:11px; color:var(--accent-ink); font-weight:700;}
+  .actor .fr18 .tt{font-size:12px; font-weight:700; margin-left:4px;}
+  .actor .fr18 ul{margin:4px 0 0; padding-left:15px;}
+  .actor .fr18 li{font-size:11.5px; color:var(--ink-2); line-height:1.4;}
+
+  /* Zone */
+  .zone{margin-top:26px;}
+  .zhead{display:flex; align-items:baseline; gap:12px; padding-bottom:8px; border-bottom:2px solid var(--ink); margin-bottom:14px;}
+  .zidx{font-family:var(--mono); font-size:12px; color:var(--accent-ink); font-weight:700;}
+  .zname{font-size:16px; font-weight:700;}
+  .zmeta{margin-left:auto; font-family:var(--mono); font-size:11.5px; color:var(--ink-3); font-variant-numeric:tabular-nums;}
+
+  .vrow{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:0;}
+  .voor{border:1px solid var(--line); border-left:none; padding:14px 16px 15px;}
+  .voor:first-child{border-left:1px solid var(--line);}
+  .voor.full{grid-column:1 / -1;}
+  .voor.full .frlist{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); column-gap:30px;}
+  @media (max-width:920px){ .voor{border-left:1px solid var(--line);} }
+  @media (max-width:760px){ .voor.full .frlist{grid-template-columns:1fr;} }
+  .vtop{display:flex; align-items:baseline; gap:9px; padding-bottom:9px; border-bottom:1px solid var(--line-2);}
+  .scode{font-family:var(--mono); font-size:12.5px; font-weight:700; color:#fff; background:var(--accent); padding:2px 7px; letter-spacing:.02em;}
+  .vname{font-size:14.5px; font-weight:700; line-height:1.2;}
+  .vdoel{margin:9px 0 2px; font-size:12px; color:var(--ink-2); line-height:1.45;}
+
+  .fr{padding:10px 0 2px; border-top:1px solid var(--line);}
+  .fr:first-of-type{border-top:none;}
+  .frh{display:flex; align-items:baseline; gap:8px;}
+  .frh .c{font-family:var(--mono); font-size:11.5px; font-weight:700; color:var(--accent-ink); flex:none;}
+  .frh .t{font-size:12.5px; font-weight:700; line-height:1.25;}
+  .crit{margin:6px 0 4px; padding-left:15px; list-style:none;}
+  .crit li{position:relative; font-size:11.5px; color:var(--ink-2); line-height:1.45; margin-bottom:2px;}
+  .crit li::before{content:""; position:absolute; left:-13px; top:8px; width:4px; height:4px; background:var(--ink-3);}
+
+  /* Compact */
+  body.compact .vdoel{display:none;}
+  body.compact .fr{border-top:none; padding:2px 0;}
+  body.compact .frlist{display:flex; flex-direction:column; gap:1px; margin-top:8px;}
+  body.compact .crit{display:none;}
+  body.compact .frh .c{color:var(--accent-ink);}
+  body.compact .frh .t{font-weight:400; color:var(--ink-2);}
+
+  /* Footer */
+  .fnote{margin-top:30px; padding-top:14px; border-top:1px solid var(--line); display:grid; grid-template-columns:1fr 1fr; gap:26px; font-size:12px; color:var(--ink-2);}
+  .fnote h4{margin:0 0 6px; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); font-weight:700;}
+  .fnote p{margin:0 0 4px; line-height:1.5;}
+  .fnote b{color:var(--ink); font-weight:700;}
+  .fnote .c{font-family:var(--mono); color:var(--accent-ink); font-weight:700;}
+
+  @media (max-width:920px){ .actors{grid-template-columns:1fr 1fr;} .actor:nth-child(3){border-left:none;} .fnote{grid-template-columns:1fr;} }
+  @media (max-width:560px){ .actors{grid-template-columns:1fr;} .actor+.actor{border-left:none; border-top:1px solid var(--line);} .seg,.vrow{width:100%;} }
+  @media print{ .controls{display:none;} }
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="kicker">Programma DvTP · Delen via Toestemming met Private dienstverleners</p>
+    <h1>Architectuuroverzicht: requirements per voorziening</h1>
+    <p class="lead">Referentiekader waartegen de functionele eisen te duiden zijn. Per voorziening (stelselfunctie) zie je waaraan die moet voldoen, met per requirement een paar kernachtige acceptatiecriteria. De voorzieningen komen uit de <b>PSA Gemeenschappelijke Bronontsluiting</b>, de requirements uit de <b>Functionele Requirements DvTP v0.9</b>.</p>
+    <p class="srcline">De vier zones volgen de gegevensstroom: <b>burger en interactie</b>, naar <b>toestemming, autorisatie en beleid</b>, naar <b>organisatie en bron</b>, naar <b>semantiek en verantwoording</b>.</p>
+  </header>
+
+  <figure class="arch">
+    <p class="atitle">Samenhang van de stelselfuncties</p>
+    <p class="acap">De burgerkant legt toestemming vast: de burger geeft via het portaal (S02) toestemming, identificeert zich en wordt gepseudonimiseerd (S03), en de toestemming wordt vastgelegd (S01). De afnemerkant haalt op: na organisatie-authenticatie (S04) toetst de autorisatie (S05) elke uitvraag aan de vastgelegde toestemming en aan het beleid en de betekenis (S06, S10), en haalt geautoriseerd op bij de bron (S07). Logging (S09) legt de hele keten herleidbaar vast.</p>
+    <svg viewBox="0 0 1180 476" role="img" aria-label="Schema van de samenhang tussen de DvTP-stelselfuncties">
+      <defs>
+        <marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto-start-reverse"><path d="M0,0 L7,3 L0,6 Z" class="ah"/></marker>
+        <marker id="ahA" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto-start-reverse"><path d="M0,0 L7,3 L0,6 Z" class="ahA"/></marker>
+      </defs>
+
+      <!-- lane captions -->
+      <text class="cap" x="24" y="34">TOESTEMMING VASTLEGGEN (BURGERKANT)</text>
+      <text class="cap" x="24" y="222">AUTORISEREN EN OPHALEN (AFNEMERKANT)</text>
+      <text class="cap" x="366" y="312">BELEID EN BETEKENIS</text>
+
+      <!-- edges (draw under boxes) -->
+      <path class="edge" d="M136,74 H172" marker-end="url(#ah)"/>
+      <path class="edge" d="M390,74 H426" marker-end="url(#ah)"/>
+      <path class="edge" d="M283,104 V126" marker-start="url(#ah)" marker-end="url(#ah)"/>
+      <path class="edge" d="M136,262 H172" marker-end="url(#ah)"/>
+      <path class="edge" d="M326,262 H362" marker-end="url(#ah)"/>
+      <path class="edge" d="M516,262 H552" marker-end="url(#ah)"/>
+      <path class="edge" d="M732,262 H768" marker-start="url(#ah)" marker-end="url(#ah)"/>
+      <path class="edge strong" d="M537,104 L445,232" marker-end="url(#ahA)"/>
+      <path class="edge" d="M441,318 V296" marker-end="url(#ah)"/>
+      <path class="edge" d="M556,345 H520" marker-end="url(#ah)"/>
+      <path class="edge dash" d="M150,404 V296" marker-end="url(#ah)"/>
+      <path class="edge dash" d="M756,404 V296" marker-end="url(#ah)"/>
+      <text class="elab" x="470" y="160">toestemming</text>
+      <text class="elab" x="470" y="173">raadplegen</text>
+
+      <!-- lane 1 -->
+      <g><rect class="box actor" x="24" y="44" width="112" height="60"/><text class="nm" x="80" y="80" text-anchor="middle">Burger</text></g>
+      <g><rect class="box" x="172" y="44" width="218" height="60"/><text class="code" x="184" y="68">S02</text><text class="nm" x="184" y="88">Toestemmingsportaal</text></g>
+      <g><rect class="box" x="426" y="44" width="218" height="60"/><text class="code" x="438" y="68">S01</text><text class="nm" x="438" y="88">Toestemmingenregistratie</text></g>
+      <g><rect class="box" x="172" y="126" width="218" height="60"/><text class="code" x="184" y="150">S03</text><text class="nm" x="184" y="168">Burgeridentificatie</text><text class="nm" x="184" y="182">en pseudonimisering</text></g>
+
+      <!-- lane 2 -->
+      <g><rect class="box actor" x="24" y="232" width="112" height="60"/><text class="nm" x="80" y="258" text-anchor="middle">PD /</text><text class="nm" x="80" y="274" text-anchor="middle">Integrator</text></g>
+      <g><rect class="box" x="172" y="232" width="154" height="60"/><text class="code" x="184" y="256">S04</text><text class="nm" x="184" y="276">Organisatie-auth.</text></g>
+      <g><rect class="box" x="362" y="232" width="154" height="60"/><text class="code" x="374" y="256">S05</text><text class="nm" x="374" y="276">Autorisatie</text></g>
+      <g><rect class="box" x="552" y="232" width="180" height="60"/><text class="code" x="564" y="256">S07</text><text class="nm" x="564" y="276">Gegevensontsluiting</text></g>
+      <g><rect class="box actor" x="768" y="232" width="124" height="60"/><text class="nm" x="830" y="268" text-anchor="middle">Bronhouder</text></g>
+
+      <!-- beleid -->
+      <g><rect class="box" x="362" y="318" width="154" height="54"/><text class="code" x="374" y="340">S06</text><text class="nm" x="374" y="359">Beleidsbeheer</text></g>
+      <g><rect class="box" x="552" y="318" width="180" height="54"/><text class="code" x="564" y="340">S10</text><text class="nm" x="564" y="359">Semantiek &amp; catalogus</text></g>
+
+      <!-- cross-cutting -->
+      <g><rect class="box cross" x="24" y="404" width="868" height="48"/><text class="code" x="36" y="433">S09</text><text class="nm" x="78" y="433">Logging, audit &amp; traceerbaarheid</text><text class="cap" x="470" y="433">legt elke uitvraag herleidbaar vast, over de hele keten</text></g>
+    </svg>
+  </figure>
+
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Detailniveau">
+      <button id="btn-detail" aria-pressed="true">Toelichting</button>
+      <button id="btn-compact" aria-pressed="false">Compact</button>
+    </div>
+    <span class="hint">Compact toont alleen de requirement-titels.</span>
+  </div>
+
+  <div class="actors" id="actors"></div>
+  <div id="zones"></div>
+
+  <div class="fnote">
+    <div>
+      <h4>Leeswijzer</h4>
+      <p><span class="c">S01</span> t/m <span class="c">S10</span> zijn stelselfuncties uit de PSA; <span class="c">FR-01</span> t/m <span class="c">FR-39</span> zijn functionele requirements. De criteria zijn ingekort; de volledige tekst staat in de FR. Een voorziening kan meerdere eisen raken; hier staat de primaire toewijzing.</p>
+      <p style="margin-top:8px;"><b>Buiten dit overzicht:</b> FR-06 en FR-19 zijn vervallen. Stelselfuncties S08 (OOTS-adapter) en S11 (attesteringsuitgifte) horen bij de grensoverschrijdende en wallet-routes en vallen buiten DvTP.</p>
+    </div>
+    <div>
+      <h4>Verantwoording</h4>
+      <p>Voorzieningen: <b>PSA Gemeenschappelijke Bronontsluiting v0.8.1</b> (juni 2026), hoofdstuk 7.</p>
+      <p>Requirements: <b>Functionele Requirements DvTP v0.9</b>, 39 eisen.</p>
+      <p>Samengesteld 13 juli 2026, ICTU, programma DvTP.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const ACTORS=[
+  {role:"Initieert", name:"Burger", note:"Start de deling, geeft toestemming, beheert en trekt in."},
+  {role:"Vraagt op", name:"Private Dienstverlener", note:"Vraagt gegevens op binnen doel en toestemming."},
+  {role:"Bewerker", name:"Integrator", note:"Verwerkt namens de PD, geen eigen doel.",
+    fr:{code:"FR-18", title:"Rol als bewerker", crit:["Verwerker namens de PD, met verwerkersovereenkomst","Geen persistente opslag; na oplevering verwijderd","Pseudoniem (FR-35) en waarmerk (FR-27) blijven gelden"]}},
+  {role:"Levert", name:"Bronhouder", note:"Levert gewaarmerkte gegevens via de bronontsluiting."}
+];
+
+const ZONES=[
+ {idx:"01", name:"Burger & interactie", voor:[
+   {code:"S02", full:true, name:"Toestemmingsportaal (burgerinteractie)",
+    doel:"De burger geeft via een toegankelijke interface geïnformeerde toestemming, authenticeert op het vereiste niveau en kan toestemmingen inzien en intrekken.",
+    frs:[
+     {code:"FR-05", title:"Weergave toestemmingsdetails (scope)", crit:["Toont de specifieke gegevenselementen, niet een groepsnaam","Toont naam dienstverlener, doel en geldigheidsduur","Per ondeelbare set; verplicht versus optioneel zichtbaar"]},
+     {code:"FR-07", title:"Begrijpelijke taal (B1)", crit:["Teksten op taalniveau B1","Juridisch jargon vermeden of in lekentaal"]},
+     {code:"FR-08", title:"Bevestiging van inzicht (force to read)", crit:["Toestemmingsknop pas actief na bevestiging 'gelezen'","Toegankelijk conform WCAG 2.1 AA"]},
+     {code:"FR-12", title:"Initiatie vanuit private omgeving", crit:["Koppelvlak waar de PD de burger naartoe leidt","Verzoek bevat dienst, PD en eventuele integrator"]},
+     {code:"FR-13", title:"Naadloze contextoverdracht (handover)", crit:["Context blijft behouden bij de overgang","Burger landt direct op de juiste toestemmingspagina"]},
+     {code:"FR-14", title:"Automatische terugleiding (return)", crit:["Return naar vooraf geregistreerde locatie","Uitkomst (succes, weigering of fout) meegegeven"]},
+     {code:"FR-15", title:"Ondersteuning web en app", crit:["Werkt op desktop- en mobiele browsers","Naadloos wisselen tussen web en native app"]},
+     {code:"FR-20", title:"Centraal overzicht van toestemmingen", crit:["Chronologisch overzicht na inlog","Toont uitgevoerde verwerkingen (LDV); export csv of pdf"]},
+     {code:"FR-21", title:"Detailweergave per transactie", crit:["Per toestemming: dienstverlener, doel, opgehaalde dataset","Geen feitelijke waarden getoond"]},
+     {code:"FR-22", title:"Statusweergave van de toestemming", crit:["Status: openstaand, opgehaald, verlopen of geannuleerd","Toont resterende geldigheidsduur"]},
+     {code:"FR-25", title:"Verwijzing naar AVG-rechten", crit:["Bij reeds opgehaalde data: instructie recht op verwijdering bij PD","Toont contactgegevens privacyfunctionaris van de PD"]},
+     {code:"FR-36", title:"Vrijwilligheid en gelijkwaardig alternatief", crit:["PD mag digitale route niet als enige weg stellen","Weigering mag niet tot nadeel leiden","Klachtkanaal richting toezichthouder"]}
+    ]},
+   {code:"S03", full:true, name:"Burgeridentificatie & pseudonimisering",
+    doel:"Identiteit van de burger vaststellen op het vereiste betrouwbaarheidsniveau, en het BSN omzetten naar partijspecifieke, onomkeerbare pseudoniemen.",
+    frs:[
+     {code:"FR-01", title:"Authenticatie burger via erkend middel", crit:["Inloggen met een overheidserkend middel (DigiD)","Geen toegang zonder gevalideerde identiteit op vereist niveau"]},
+     {code:"FR-02", title:"Configuratiegedreven delegatiecontrole", crit:["Detecteert machtiging of vertegenwoordiging bij inloggen","Blokkeert delegatie waar de grondslag dat uitsluit, met heldere melding"]},
+     {code:"FR-04", title:"Ontsluiting via vertrouwd overheidsdomein", crit:["Auth- en toestemmingspagina op aantoonbaar overheidsdomein","Herkenbare stijl; echte contactmogelijkheid"]},
+     {code:"FR-35", title:"BSN-loze uitlevering (pseudonimisering)", crit:["Register slaat geen BSN op, alleen een partijspecifiek kenmerk","PD krijgt een onomkeerbaar, niet-koppelbaar pseudoniem","BSN-vertaling blijft binnen het overheidsdomein"]}
+    ]}
+ ]},
+ {idx:"02", name:"Toestemming, autorisatie & beleid", voor:[
+   {code:"S01", name:"Toestemmingenregistratie",
+    doel:"Machineleesbaar vastleggen en raadplegen van de grondslag per uitvraag (toestemming, wettelijke basis, doelbinding), zodat de autorisatie deze real-time kan toetsen.",
+    frs:[
+     {code:"FR-09", title:"Alleen specifieke toestemming", crit:["Geen algemene of blanco toestemming","Record bevat dienst, dienstverlener en scope per bronhouder"]},
+     {code:"FR-10", title:"Atomiciteit per ondeelbare gegevensset", crit:["Aan of uit alleen op niveau van een hele (optionele) set","Binnen een set geen deeltoestemming mogelijk"]},
+     {code:"FR-11", title:"Geldigheidsduur (instelbaar)", crit:["Instelbare duur; standaard per dienst uit de catalogus","Binnen de looptijd meermaals bruikbaar (retry)"]},
+     {code:"FR-23", title:"Intrekken van een geldige toestemming", crit:["Optie 'intrekken' bij status open; direct van kracht","Latere ophaalpoging wordt geweigerd"]},
+     {code:"FR-24", title:"Intrekking werkt vooruit", crit:["Verdere raadplegingen worden geweigerd","Reeds opgehaalde data valt onder AVG bij de PD"]}
+    ]},
+   {code:"S05", name:"Autorisatie (PEP / PDP / PIP)",
+    doel:"Iedere uitvraag getoetst aan machineleesbaar beleid op identiteit, gevraagde gegevens en real-time grondslag. De beslissing is herleidbaar en trajectonafhankelijk.",
+    frs:[
+     {code:"FR-17", title:"Ophalen uitsluitend binnen geldige toestemming", crit:["Geldige toestemming passend bij partij, doel, gegevens en moment","Alleen gegevens binnen scope; daarbuiten geweigerd","Toets op moment van opvragen, intrekking werkt direct door"]},
+     {code:"FR-26", title:"Verificatie van toestemming bij bron", crit:["Bronhouder controleert toestemming vóór vrijgave","Gevraagde gegevens moeten binnen de geregistreerde scope vallen"]},
+     {code:"FR-38", title:"Multi-bron scoping van toestemming", crit:["Eén toestemmingsrecord met een regel per bronhouder","Bronhouder toetst alleen de eigen regels","Voorbeeld hypotheek: één toestemming, meerdere bronnen"]}
+    ]},
+   {code:"S06", name:"Beleidsbeheer & -distributie (PAP)",
+    doel:"Beheren en distribueren van machineleesbare autorisatieregels naar de autorisatiecomponenten.",
+    frs:[
+     {code:"FR-39", title:"Centraal beleidsbeheer en -distributie", crit:["Autorisatieregels centraal, versiebeheerd en gewaarmerkt","Distributie naar autorisatiecomponenten bij bronhouders","Wijziging via RFC met inwerkingtredingsmoment; Beleidsautoriteit als gezag"]}
+    ]}
+ ]},
+ {idx:"03", name:"Organisatie & bron", voor:[
+   {code:"S04", name:"Organisatie-authenticatie & vertrouwensstelsel",
+    doel:"Vaststellen dat een deelnemende organisatie is wie zij zegt, bevoegd is tot deelname en verifieerbaar aan het stelsel verbonden is.",
+    frs:[
+     {code:"FR-03", title:"Authenticatie PD via eHerkenning", crit:["PD logt in met eHerkenning of een erkend middel","Onboarding pas toegankelijk na authenticatie"]},
+     {code:"FR-16", title:"Vaststellen opvragende partij en bevoegdheid", crit:["Partij betrouwbaar vastgesteld, toegelaten en bevoegd","Bevoegdheid begrensd in reikwijdte en in tijd"]},
+     {code:"FR-29", title:"Digitale aanmelding & onboarding", crit:["Digitaal aanmelden via overheidspagina na eHerkenning","Uploaden van bewijsstukken voor de selectiecriteria"]},
+     {code:"FR-30", title:"Validatie aansluitvoorwaarden (poortwachter)", crit:["Goedkeuren of afwijzen; alleen 'vertrouwd' krijgt koppelvlaktoegang","Toetst de aangevraagde scope tegen de catalogus (FR-32)"]},
+     {code:"FR-33", title:"Verwerving en registratie aansluitcertificaat", crit:["Geldig organisatie-identificatiemiddel van erkende uitgever","Gekoppeld aan OIN of KvK in het aansluitprofiel"]},
+     {code:"FR-34", title:"Identiteitsvaststelling tijdens gebruik", crit:["Verzoek geverifieerd tegen geregistreerd certificaat (Flow A en B)","Bij intrekking certificaat: toegang direct geblokkeerd"]},
+     {code:"FR-37", title:"Onboarding integrator of softwarepartij", crit:["Integrator eigen onboarding, certificaat en registratie","Poortwachter toetst verwerkersovereenkomst en doelbinding"]}
+    ]},
+   {code:"S07", name:"Gegevensontsluiting (bronontsluiting-API)",
+    doel:"Bronhouders stellen gegevens beschikbaar via één generieke, herbruikbare API met aanvullende DvTP-waarborgen.",
+    frs:[
+     {code:"FR-27", title:"Waarmerken van persoonsgegevens (sealing)", crit:["Alle uitgaande datasets gewaarmerkt met gekwalificeerd zegel","Ontvanger kan herkomst en integriteit verifiëren"]},
+     {code:"FR-28", title:"Aansluiting via gemeenschappelijke bronontsluiting", crit:["Ontsluiting via de gestandaardiseerde GBO-koppeling","Ondersteunt selectieve bevraging en het bewijs van toestemming"]}
+    ]}
+ ]},
+ {idx:"04", name:"Semantiek & verantwoording", voor:[
+   {code:"S10", name:"Semantiek & gegevenscatalogus",
+    doel:"Eenduidige, gedocumenteerde betekenis van gegevens; de catalogus definieert per use case de toegestane gegevenssets.",
+    frs:[
+     {code:"FR-32", title:"Proces inrichting gegevensbehoefte (sector)", crit:["Catalogus definieert per use case het juridische plafond","Sets gekoppeld aan geautoriseerde PD's; verplicht of optioneel plus minimale set","Delegatie per dienst instelbaar"]}
+    ]},
+   {code:"S09", name:"Logging, audit & traceerbaarheid",
+    doel:"Onweerlegbare vastlegging per uitvraag (Logboek Dataverwerkingen); de burger heeft recht op inzage.",
+    frs:[
+     {code:"FR-31", title:"Naleving & auditing faciliteiten", crit:["Logt wie wanneer wat ophaalde op basis van welke toestemming (metadata)","In lijn met LDV; burger-inzage (AVG art. 15) en ketentoezicht","Mogelijkheid tot schorsing bij non-compliance"]}
+    ]}
+ ]}
+];
+
+function el(t,c,x){const e=document.createElement(t); if(c)e.className=c; if(x!=null)e.textContent=x; return e;}
+
+const actors=document.getElementById("actors");
+ACTORS.forEach(a=>{
+  const d=el("div","actor");
+  d.append(el("span","role",a.role), el("div","name",a.name), el("div","note",a.note));
+  if(a.fr){
+    const f=el("div","fr18");
+    const h=el("div"); h.append(el("span","c",a.fr.code), el("span","tt",a.fr.title)); f.append(h);
+    const ul=el("ul"); a.fr.crit.forEach(x=>ul.append(el("li",null,x))); f.append(ul);
+    d.append(f);
+  }
+  actors.append(d);
+});
+
+const zc=document.getElementById("zones");
+ZONES.forEach(z=>{
+  const zone=el("div","zone");
+  const h=el("div","zhead");
+  h.append(el("span","zidx",z.idx), el("span","zname",z.name));
+  const nFr=z.voor.reduce((s,v)=>s+v.frs.length,0);
+  h.append(el("span","zmeta",z.voor.length+" voorzieningen, "+nFr+" eisen"));
+  zone.append(h);
+  const row=el("div","vrow");
+  z.voor.forEach(v=>{
+    const c=el("div", v.full ? "voor full" : "voor");
+    const top=el("div","vtop"); top.append(el("span","scode",v.code), el("span","vname",v.name)); c.append(top);
+    c.append(el("p","vdoel",v.doel));
+    const list=el("div","frlist");
+    v.frs.forEach(f=>{
+      const fr=el("div","fr");
+      const fh=el("div","frh"); fh.append(el("span","c",f.code), el("span","t",f.title)); fr.append(fh);
+      const ul=el("ul","crit"); f.crit.forEach(x=>ul.append(el("li",null,x))); fr.append(ul);
+      list.append(fr);
+    });
+    c.append(list);
+    row.append(c);
+  });
+  zone.append(row);
+  zc.append(zone);
+});
+
+const bd=document.body, bD=document.getElementById("btn-detail"), bC=document.getElementById("btn-compact");
+function mode(cmp){bd.classList.toggle("compact",cmp); bD.setAttribute("aria-pressed",String(!cmp)); bC.setAttribute("aria-pressed",String(cmp));}
+bD.onclick=()=>mode(false); bC.onclick=()=>mode(true);
+</script>
