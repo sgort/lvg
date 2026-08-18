@@ -1,6 +1,11 @@
 name: Azure Static Web Apps CI/CD
 
 on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/Wireframes/**'
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
