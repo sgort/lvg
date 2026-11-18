@@ -1,0 +1,8 @@
+# Text files are stored with LF. Checkout is deliberately not pinned, so
+# core.autocrlf still decides what lands in the working tree.
+* text=auto
+
+# Binary formats, declared explicitly so they are never normalised.
+*.ico binary
+*.jpg binary
+*.png binary
