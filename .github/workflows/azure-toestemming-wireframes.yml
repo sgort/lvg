@@ -1,4 +1,4 @@
-name: Azure Static Web Apps CI/CD (toestemming)
+name: Deploy toestemming wireframes
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - "docs/Wireframes/**"
-      - ".github/workflows/azure-static-web-apps-toestemming.yml"
+      - ".github/workflows/azure-toestemming-wireframes.yml"
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
