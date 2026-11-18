@@ -14,10 +14,6 @@ const getBaseUrl = () => {
 const OPERATON_CONFIG = {
   baseUrl: getBaseUrl(),
   decisionKey: "bereken_isolatie_opties",
-  auth: {
-    username: import.meta.env.VITE_OPERATON_USER || "demo",
-    password: import.meta.env.VITE_OPERATON_PASSWORD || "demo",
-  },
 };
 
 /**
@@ -32,18 +28,15 @@ const OPERATON_CONFIG = {
  * @returns {Promise<Object>} DMN evaluation result
  */
 export const evaluateInsulation = async (params) => {
-  const auth = btoa(
-    `${OPERATON_CONFIG.auth.username}:${OPERATON_CONFIG.auth.password}`,
-  );
-
   try {
     const response = await fetch(
       `${OPERATON_CONFIG.baseUrl}/decision-definition/key/${OPERATON_CONFIG.decisionKey}/evaluate`,
       {
         method: "POST",
+        // No Authorization header: decision evaluation is public, and the
+        // server's CORS policy rejects browser requests that send one.
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Basic ${auth}`,
         },
         body: JSON.stringify({
           variables: {

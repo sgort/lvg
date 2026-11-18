@@ -1003,7 +1003,8 @@ const PropertyDashboard = () => {
                       </p>
                       <p className="text-red-600 text-sm">{calculationError}</p>
                       <p className="text-red-600 text-sm mt-2">
-                        Controleer of Operaton draait op http://localhost:8080
+                        De rekenservice is tijdelijk niet bereikbaar. Probeer
+                        het later opnieuw.
                       </p>
                     </div>
                   )}
