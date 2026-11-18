@@ -12,8 +12,10 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     server: {
       proxy: {
-        // The local Operaton requires a login, so the proxy adds it.
-        '/api': {
+        // The local Operaton requires a login, so the proxy adds it. Only the call
+        // the app makes is forwarded: other sites can send requests to this dev
+        // server, and they must not reach the rest of the engine with that login.
+        '/api/engine-rest/decision-definition/key/bereken_isolatie_opties/evaluate': {
           target: 'http://localhost:8081',
           changeOrigin: true,
           auth: `${user}:${password}`,
