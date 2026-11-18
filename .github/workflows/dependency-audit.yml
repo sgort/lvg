@@ -1,0 +1,97 @@
+name: Dependency audit
+
+# Audits acc and main every day, because a new advisory can land against code that
+# has not changed. It fails on a high or critical advisory in shipped dependencies.
+# Development-only findings are listed but do not fail it.
+on:
+  schedule:
+    # Off the hour, because GitHub queues scheduled workflows at the top of it.
+    - cron: '17 5 * * *'
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/dependency-audit.yml'
+      - 'scripts/audit-tree.mjs'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Not "audit": that name belongs to the required check in zizmor.yml.
+  dependency-audit:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      # To open, update and close the tracking issue.
+      issues: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24.22.2'
+      - name: Audit acc and main
+        id: audit
+        env:
+          AUDIT_REPORT_FILE: ${{ runner.temp }}/audit.md
+        run: |
+          # Checking out each branch replaces this script, so run a copy.
+          script="$RUNNER_TEMP/audit-tree.mjs"
+          cp scripts/audit-tree.mjs "$script"
+          git fetch --no-tags --quiet origin acc main
+          status=0
+          for ref in acc main; do
+            git checkout --force --quiet "origin/$ref"
+            rc=0
+            node "$script" "$ref ($(git rev-parse --short HEAD))" || rc=$?
+            # 0 clean, 1 a shipped high or critical, 2 the audit could not run.
+            if [ "$rc" -gt 2 ]; then rc=2; fi
+            if [ "$rc" -gt "$status" ]; then status=$rc; fi
+          done
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          echo "Worst exit status across both branches: $status"
+      - name: Open, update or close the tracking issue
+        if: ${{ always() && github.event_name != 'pull_request' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STATUS: ${{ steps.audit.outputs.status }}
+          TITLE: 'Daily dependency audit: shipped high or critical advisory'
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          REPORT: ${{ runner.temp }}/audit.md
+        run: |
+          existing=$(gh issue list --state open --search "in:title \"$TITLE\"" --json number,title \
+            --jq "[.[] | select(.title == \"$TITLE\")] | .[0].number // empty")
+          {
+            echo "Opened by the daily dependency audit on $(date -u '+%Y-%m-%d %H:%M UTC')."
+            echo
+            echo "It fails on a **high or critical advisory in shipped dependencies**, on \`acc\` or \`main\`."
+            echo "Development-only advisories are listed but do not fail it."
+            echo
+            cat "$REPORT" 2>/dev/null || echo '_The audit produced no report; see the run._'
+            echo
+            echo "Run: $RUN_URL"
+          } > body.md
+          if [ "${STATUS:-2}" = "0" ]; then
+            if [ -n "$existing" ]; then
+              gh issue comment "$existing" --body "The audit is clean as of $(date -u '+%Y-%m-%d'). Closing. Run: $RUN_URL"
+              gh issue close "$existing"
+            else
+              echo "Clean, and no open issue to close."
+            fi
+          elif [ -n "$existing" ]; then
+            gh issue edit "$existing" --body-file body.md
+          else
+            gh issue create --title "$TITLE" --body-file body.md --label security --label ci
+          fi
+      - name: Fail when a shipped high or critical advisory is present
+        if: ${{ always() }}
+        env:
+          STATUS: ${{ steps.audit.outputs.status }}
+        run: exit "${STATUS:-2}"

@@ -14,7 +14,9 @@
     "check-format": "prettier --check .",
     "deps:check": "bash scripts/check-deps.sh",
     "prepare": "husky",
-    "postinstall": "node scripts/write-deps-marker.mjs"
+    "postinstall": "node scripts/write-deps-marker.mjs",
+    "check-supply-chain": "node scripts/check-supply-chain.mjs",
+    "audit:signatures": "bash scripts/audit-signatures.sh"
   },
   "dependencies": {
     "lucide-react": "^0.263.1",
