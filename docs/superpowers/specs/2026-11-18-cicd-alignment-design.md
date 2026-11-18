@@ -63,11 +63,11 @@ This work has failed, even if every check is green, if:
 
 ## Approaches
 
-| Approach | Trade-off | Outcome |
-| --- | --- | --- |
+| Approach                                          | Trade-off                                                                                              | Outcome                 |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ----------------------- |
 | Copy and adapt TTL's files, in four pull requests | Duplicates files, as the other repositories already do. Reviewable, and each step is verified on `acc` | **Chosen by the owner** |
-| The same files in one pull request | Less promotion overhead, but hard to review, and one failure blocks everything | Rejected |
-| Shared reusable workflows | Less duplication, but LVG would become the only repository working this way | Rejected |
+| The same files in one pull request                | Less promotion overhead, but hard to review, and one failure blocks everything                         | Rejected                |
+| Shared reusable workflows                         | Less duplication, but LVG would become the only repository working this way                            | Rejected                |
 
 Scope was also chosen by the owner: "same gates, lighter", rather than full TTL
 parity or gates and deploys only.
@@ -93,11 +93,11 @@ Rewrite the deploy workflows on TTL's shape. All actions are pinned to the diges
 in TTL's register, with `ubuntu-24.04`, least-privilege `permissions` and
 `persist-credentials: false`.
 
-| Workflow | Job name (exact) | Trigger | Target |
-| --- | --- | --- | --- |
-| `azure-lvg-acc.yml` | `Build and deploy ACC` | push and pull request on `acc` | `LVG-Demo-MO-acc` |
-| `azure-lvg-stable.yml` | `Build and deploy stable` | push and pull request on `main` | `LVG-Demo-MO` |
-| `azure-toestemming-wireframes.yml` | `Deploy wireframes` | push and pull request on `main`, wireframes paths only | `toestemming-wireframes` |
+| Workflow                           | Job name (exact)          | Trigger                                                | Target                   |
+| ---------------------------------- | ------------------------- | ------------------------------------------------------ | ------------------------ |
+| `azure-lvg-acc.yml`                | `Build and deploy ACC`    | push and pull request on `acc`                         | `LVG-Demo-MO-acc`        |
+| `azure-lvg-stable.yml`             | `Build and deploy stable` | push and pull request on `main`                        | `LVG-Demo-MO`            |
+| `azure-toestemming-wireframes.yml` | `Deploy wireframes`       | push and pull request on `main`, wireframes paths only | `toestemming-wireframes` |
 
 - **Build steps for both LVG workflows:** checkout, `setup-node` from `.nvmrc`,
   `npm ci`, `npm run build`, fail if `dist/index.html` is missing,
@@ -201,10 +201,10 @@ Copied from TTL unless stated, keeping the exact job names.
 Applied only after Parts 1 to 3 are on both `acc` and `main`, and after `audit`,
 `scan` and `Build and deploy ACC` have each passed there.
 
-| Ruleset | Target | Rules |
-| --- | --- | --- |
-| `acc supply-chain gate` | `refs/heads/acc` | Pull request required, merge commit only, 0 approvals; required checks `audit`, `scan`, `Build and deploy ACC`; no deletion; no non-fast-forward; no bypass actors |
-| `main promotion gate` | `refs/heads/main` | The same, with required checks `audit` and `scan` |
+| Ruleset                 | Target            | Rules                                                                                                                                                              |
+| ----------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `acc supply-chain gate` | `refs/heads/acc`  | Pull request required, merge commit only, 0 approvals; required checks `audit`, `scan`, `Build and deploy ACC`; no deletion; no non-fast-forward; no bypass actors |
+| `main promotion gate`   | `refs/heads/main` | The same, with required checks `audit` and `scan`                                                                                                                  |
 
 Repository settings, as in TTL: merge commits only, and delete branch on merge.
 
@@ -223,12 +223,12 @@ Needed before Part 3 can pass:
 
 ## Verification
 
-| Part | Evidence |
-| --- | --- |
-| 1 | Preview and `acc` builds pass on the runner with `npm ci`; `acc.lvg.open-regels.nl` and, after promotion, `lvg.open-regels.nl` and `toestemming.open-regels.nl` respond; a closed pull request leaves no preview; `npm run check-previews` exits 0; owner confirms the calculation |
-| 2 | `npm ci`, `npm run lint`, `npm run check-format` and `npm run build` pass locally and on the runner; `npm audit` reports no high or critical findings; owner confirms the calculation on `localhost:5173`, then on `acc` and after promotion on the stable release |
-| 3 | `audit`, `scan` and a manually triggered `dependency-audit` pass; Renovate's onboarding or dashboard appears |
-| 4 | `gh api` shows both rulesets active; `gh api repos/sgort/lvg/rules/branches/acc` and `.../main` return the expected effective rules, with no test push attempted; a documentation-only pull request can still merge with `Build and deploy ACC` skipped |
+| Part | Evidence                                                                                                                                                                                                                                                                           |
+| ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1    | Preview and `acc` builds pass on the runner with `npm ci`; `acc.lvg.open-regels.nl` and, after promotion, `lvg.open-regels.nl` and `toestemming.open-regels.nl` respond; a closed pull request leaves no preview; `npm run check-previews` exits 0; owner confirms the calculation |
+| 2    | `npm ci`, `npm run lint`, `npm run check-format` and `npm run build` pass locally and on the runner; `npm audit` reports no high or critical findings; owner confirms the calculation on `localhost:5173`, then on `acc` and after promotion on the stable release                 |
+| 3    | `audit`, `scan` and a manually triggered `dependency-audit` pass; Renovate's onboarding or dashboard appears                                                                                                                                                                       |
+| 4    | `gh api` shows both rulesets active; `gh api repos/sgort/lvg/rules/branches/acc` and `.../main` return the expected effective rules, with no test push attempted; a documentation-only pull request can still merge with `Build and deploy ACC` skipped                            |
 
 ## Left to the builder
 

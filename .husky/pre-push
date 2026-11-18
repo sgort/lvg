@@ -1,0 +1,6 @@
+#!/bin/sh
+# First, so a push from an install that no longer matches package-lock.json stops
+# here with the fix named, instead of lint failing on the wrong tool versions.
+npm run deps:check
+npm run lint
+npm run check-format
