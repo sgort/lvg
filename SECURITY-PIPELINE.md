@@ -40,6 +40,21 @@ same branch before merging.
 
 Required checks match by job name, so renaming a job means updating the rulesets.
 
+## Branch rulesets
+
+Rulesets are GitHub state, so this section records what a diff cannot show.
+
+| Ruleset                 | ID         | Branch | Required checks                         |
+| ----------------------- | ---------- | ------ | --------------------------------------- |
+| `acc supply-chain gate` | `27549985` | `acc`  | `audit`, `scan`, `Build and deploy ACC` |
+| `main promotion gate`   | `27549986` | `main` | `audit`, `scan`                         |
+
+Both require a pull request with zero approvals and merge commits only, and both
+block branch deletion and force pushes. Neither has bypass actors.
+
+If semgrep.dev is unreachable or `SEMGREP_APP_TOKEN` is revoked, `scan` fails and
+merges stop until the repository owner edits the rulesets.
+
 ## Dependency audit rule
 
 The audit fails on a high or critical advisory in shipped dependencies.
