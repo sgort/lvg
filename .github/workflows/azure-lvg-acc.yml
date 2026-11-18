@@ -3,48 +3,100 @@ name: Deploy LVG to acceptance
 # Deploys acc to its own Static Web App (acc.lvg.open-regels.nl). Azure does not
 # support custom domains on preview or named environments, so acceptance cannot
 # share the app that serves the stable release from main.
-
+#
+# Deploys are filtered by paths-ignore: anything not listed still deploys, so a
+# forgotten path costs one unnecessary preview rather than a skipped deploy.
 on:
   push:
     branches:
       - acc
     paths-ignore:
-      - 'docs/Wireframes/**'
+      - 'docs/**'
+      - '.claude/**'
+      - '**/*.md'
   pull_request:
-    types: [opened, synchronize, reopened, closed]
+    types: [opened, synchronize, reopened]
     branches:
       - acc
+    # No path filter here, deliberately: see the `changes` job. Filtering the
+    # trigger would leave this workflow's check unreported.
+
+permissions:
+  contents: read
 
 jobs:
+  # A workflow its trigger filters out reports no check at all, and a required
+  # check that never reports blocks a pull request forever. A job skipped by its
+  # own `if:` counts as passed, so the path filter for pull requests lives here.
+  #
+  # Fail-safe: the build runs when this job did NOT succeed, so an API failure
+  # means a full build, never a free pass.
+  changes:
+    permissions:
+      pull-requests: read
+    runs-on: ubuntu-24.04
+    outputs:
+      relevant: ${{ steps.filter.outputs.relevant }}
+    steps:
+      - name: Match the changed files against this workflow's paths
+        id: filter
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          PR: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+          # The paths-ignore list under push: above, as one regular expression.
+          # A pull request is relevant if ANY file falls outside it. Keep the
+          # two in step.
+          PATTERN: '^(docs/|\.claude/)|\.md$'
+        run: |
+          if [ "$EVENT" != "pull_request" ]; then
+            echo "relevant=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # Renames count under both names, as GitHub's own path filter does.
+          files=$(gh api --paginate "repos/$REPO/pulls/$PR/files" --jq '.[] | .filename, (.previous_filename // empty)')
+          if printf '%s\n' "$files" | grep -vqE "$PATTERN"; then relevant=true; else relevant=false; fi
+          echo "relevant=$relevant" >> "$GITHUB_OUTPUT"
+          echo "Changed files relevant to this workflow: $relevant"
+
   build_and_deploy_job:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
-    runs-on: ubuntu-latest
-    name: Build and Deploy Job
+    needs: changes
+    if: ${{ !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.relevant == 'true') }}
+    permissions:
+      contents: read
+      pull-requests: write
+    runs-on: ubuntu-24.04
+    # Required checks match by job name, so a rename must update the ruleset too.
+    name: Build and deploy ACC
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          submodules: true
-          lfs: false
-      - name: Build And Deploy
+          persist-credentials: false
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      # Built here, from the tree `npm ci` installed, so the lockfile decides
+      # what ships. Azure's own build would run `npm install` on a Node version
+      # this repository did not choose.
+      - name: Build
+        run: |
+          npm run build
+          test -f dist/index.html || { echo "::error::dist/index.html not found after build"; exit 1; }
+      - name: Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@4d27395796ac319302594769cfe812bd207490b1 # v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LVG_ACC }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
-          action: "upload"
-          production_branch: "acc" # The acceptance app's live environment follows acc
-          app_location: "/" # App source code path
-          api_location: "" # Api source code path - optional
-          output_location: "dist" # Built app content directory - optional
-
-  close_pull_request_job:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    name: Close Pull Request Job
-    steps:
-      - name: Close Pull Request
-        id: closepullrequest
-        uses: Azure/static-web-apps-deploy@4d27395796ac319302594769cfe812bd207490b1 # v1
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LVG_ACC }}
-          action: "close"
+          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for GitHub integrations (i.e. PR comments)
+          action: 'upload'
+          production_branch: 'acc' # This app is not linked to a repository branch
+          # With skip_app_build, app_location is the built output itself.
+          app_location: '/dist'
+          api_location: ''
+          output_location: ''
+          skip_app_build: true
