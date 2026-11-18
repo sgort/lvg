@@ -1,0 +1,82 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
+  "minimumReleaseAge": "14 days",
+  "prConcurrentLimit": 2,
+  "internalChecksFilter": "strict",
+  "vulnerabilityAlerts": {
+    "minimumReleaseAge": null,
+    "labels": ["security"],
+    "dependencyDashboardApproval": false
+  },
+  "packageRules": [
+    {
+      "description": "Azure/static-web-apps-deploy publishes v1 as both a 2021 tag (1a947af9992250f3bc2e68ad0754c0b0c11566c9) and a 2024 branch head (4d27395796ac319302594769cfe812bd207490b1). Renovate's github-tags datasource resolves v1 to the tag, so an automated digest update would silently revert the pinned deploy step from the branch head back to 3.5-year-old code — see SECURITY-PIPELINE.md for the full analysis. This action has only ever published v1, so disabling updates here loses no legitimate version bump.",
+      "matchManagers": ["github-actions"],
+      "matchDepNames": ["Azure/static-web-apps-deploy"],
+      "enabled": false
+    },
+    {
+      "description": "Tailwind CSS v4 is a migration of its own, so its major update stays a deliberate change.",
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["tailwindcss"],
+      "matchUpdateTypes": ["major"],
+      "minimumReleaseAge": "14 days",
+      "enabled": false
+    },
+    {
+      "description": "ESLint 10 waits until eslint-plugin-react declares support for it.",
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["eslint"],
+      "matchUpdateTypes": ["major"],
+      "minimumReleaseAge": "14 days",
+      "enabled": false
+    },
+    {
+      "description": "Runner image majors move deliberately, in one pull request for all workflows.",
+      "matchManagers": ["github-actions"],
+      "matchDepNames": ["ubuntu"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
+      "description": "Major updates wait in the Dependency Dashboard until someone approves them.",
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "description": [
+        "ICTU recommendation 7: do not take a new major's first release. Renovate",
+        "never proposes X.0.0 for an npm package, so the earliest a major can be",
+        "offered is X.0.1 — the first patch, by which point the release has been",
+        "used by others. Majors still wait for Dependency Dashboard approval as",
+        "well (the rule above): this decides WHICH version may be offered, that",
+        "one decides WHETHER it is raised at all, and the assessment R7 asks for is",
+        "what the person ticking the box is doing.",
+        "allowedVersions applies to every update type of a matched package, not",
+        "only majors, which is why the pattern is written to match X.0.0 alone: no",
+        "minor or patch release can look like that. Scoped to npm deliberately —",
+        "the same pattern against Docker tags (18-alpine) or the github-runner",
+        "datasource (ubuntu 26.04) would mean something else entirely.",
+        "The cost, stated plainly: a package that publishes X.0.0 and never a patch",
+        "is never offered that major. Add a per-package exception with the reason,",
+        "the way a deferral is recorded.",
+        "minimumReleaseAge repeats the top-level 14 days and changes nothing; it is",
+        "here because Semgrep's renovate-missing-minimum-release-age flags a rule",
+        "that does not set it locally."
+      ],
+      "matchManagers": ["npm"],
+      "allowedVersions": "!/^\\d+\\.0\\.0$/",
+      "minimumReleaseAge": "14 days"
+    },
+    {
+      "description": "Lock-file maintenance moves the transitive tree, so it is prioritised within the normal pull request limit.",
+      "matchUpdateTypes": ["lockFileMaintenance"],
+      "prPriority": 10
+    }
+  ],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 5am on monday"]
+  }
+}

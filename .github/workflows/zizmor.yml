@@ -1,0 +1,71 @@
+name: Supply-chain audit
+
+# Deliberately no branches or paths filter on pull_request. `audit` is a required
+# check, and a pull request that matched no trigger would carry no check at all.
+# Audit widely, deploy narrowly: the deploy workflows keep their branch filters
+# because each deployment claims a limited preview slot.
+on:
+  pull_request:
+  push:
+    branches:
+      - acc
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  zizmor:
+    # Required checks match by name. Renaming this job means updating the rulesets.
+    name: audit
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24.22.2'
+          cache: 'npm'
+      - name: Run zizmor
+        uses: zizmorcore/zizmor-action@53290badfa369cb0bf7ad16342cb62c2fa47ac7b # v0.8.0
+        with:
+          # The action defaults to "latest". Update this after the action itself,
+          # because the action only runs versions in its own digest table.
+          version: '1.29.0'
+          # SARIF upload would need security-events: write.
+          advanced-security: false
+          annotations: true
+          online-audits: false
+
+      # Every step below uses `if: always()`, so one run reports on every part of
+      # the policy instead of stopping at the first failure.
+      - name: Validate renovate.json
+        if: always()
+        # Pinned by hand, because Renovate does not manage an inline npx argument.
+        # No filename: passing one switches the validator to global config rules.
+        run: npx --yes --package renovate@44.50.3 renovate-config-validator --strict
+      - name: Lockfile matches package.json
+        if: always()
+        # --ignore-scripts because a dry run creates no node_modules for postinstall.
+        run: npm ci --dry-run --ignore-scripts
+      - name: Install dependencies for the formatter
+        if: always()
+        run: npm ci
+      - name: Check formatting
+        if: always()
+        run: npm run check-format
+      - name: Verify registry signatures
+        if: always()
+        run: npm run audit:signatures
+      - name: Verify pin truth and register agreement
+        if: always()
+        # zizmor checks that a reference is a commit hash, not that it is the right
+        # one. This resolves each hash and compares SECURITY-PIPELINE.md with the
+        # workflows. Update that file on the same branch as any action bump.
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: npm run check-supply-chain

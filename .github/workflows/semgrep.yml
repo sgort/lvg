@@ -1,0 +1,47 @@
+name: Semgrep
+
+# Same trigger shape as zizmor.yml: `scan` is a required check, so a pull request
+# must not be able to skip it by its base branch or the paths it touches.
+on:
+  pull_request:
+  push:
+    branches:
+      - acc
+      - main
+
+# Pull-request runs write nothing durable, so a newer push may replace them. Push
+# runs write the Semgrep baseline and must be allowed to finish.
+concurrency:
+  group: semgrep-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  semgrep:
+    # Required checks match by name. Renaming this job means updating the rulesets.
+    name: scan
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          # Diff-aware scanning needs full history to compare with the merge base.
+          fetch-depth: 0
+      - name: Install Semgrep
+        # Pinned by hand, because Renovate does not read versions from run blocks.
+        run: |
+          python3 -m venv "$RUNNER_TEMP/semgrep-venv"
+          "$RUNNER_TEMP/semgrep-venv/bin/pip" install --quiet semgrep==1.176.1
+          echo "$RUNNER_TEMP/semgrep-venv/bin" >> "$GITHUB_PATH"
+      - name: Verify the pinned version installed
+        run: semgrep --version
+      - name: Scan
+        env:
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+        # Fails only on findings the Semgrep policy marks as blocking. Without
+        # --no-suppress-errors, a scanner that cannot run would still exit 0.
+        run: semgrep ci --no-suppress-errors
