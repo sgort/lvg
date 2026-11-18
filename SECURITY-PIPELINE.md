@@ -65,7 +65,28 @@ The audit fails on a high or critical advisory in shipped dependencies.
 Development-only findings are reported without failing it.
 
 On 18 November 2026 the development tree carries GHSA-fc5q-39xc-vjpf in
-`picomatch`, through Vite and Tailwind. No patched release exists yet.
+`picomatch`, through Vite, Tailwind and `lint-staged`. No patched release exists
+yet.
+
+## Semgrep findings we accept, and why
+
+Semgrep Supply Chain findings have no inline suppression. They are triaged in the
+Semgrep UI with a comment, and the platform's API does not return that comment
+(sgort/iou-architectuur#132). **This table is the record**: each row is the reason,
+and the comment in the UI repeats it. A finding marked ignored in the UI without a
+row here is a gap.
+
+Last triaged on 18 November 2026, from the export of `main` at `6405f8f` and the
+findings of `acc` at `1ef7b82`.
+
+| Package (version) | Advisory                                              | Semgrep finding IDs             | Decision              | Reason                                                                                                                                                                                                                                                                                         | Revisit when                                                            |
+| ----------------- | ----------------------------------------------------- | ------------------------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `picomatch` 2.3.2 | ReDoS through repeated extglobs (GHSA-fc5q-39xc-vjpf) | acc 1088397281, main 1088402222 | accepted, 18 Nov 2026 | Development only, through Tailwind's file matching, and not in the shipped bundle. Exploiting it needs an attacker-controlled glob pattern; the patterns here come from this repository's own configuration. No patched release exists. Dependabot #3 was dismissed automatically.             | `picomatch` publishes a fix that Tailwind's dependencies can resolve to |
+| `picomatch` 4.0.7 | ReDoS through repeated extglobs (GHSA-fc5q-39xc-vjpf) | acc 1088397280, main 1088402221 | accepted, 18 Nov 2026 | Development only, through Vite, `tinyglobby` and `lint-staged`, and not in the shipped bundle. Exploiting it needs an attacker-controlled glob pattern; the patterns here come from this repository's own configuration. No patched release exists. Dependabot #3 was dismissed automatically. | `picomatch` publishes a fix                                             |
+
+Not in the table, because they are fixed rather than accepted: `glob` 10.5.0
+(GHSA-3g3m-2fjr-6pw4) and `minimatch` 9.0.9 (GHSA-g3hv-75wg-m249). Updating `sucrase`
+to 3.35.1 removes both from the dependency tree.
 
 ## Leftover previews
 
