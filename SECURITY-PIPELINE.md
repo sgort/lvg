@@ -55,6 +55,14 @@ block branch deletion and force pushes. Neither has bypass actors.
 If semgrep.dev is unreachable or `SEMGREP_APP_TOKEN` is revoked, `scan` fails and
 merges stop until the repository owner edits the rulesets.
 
+`require_extra_approval_for_unattributed_changes` is `true` on `acc` and `false` on
+`main`, as in `ttl-editor`, `linked-data-explorer` and `ronl-business-api`. GitHub
+documents it as one extra approval when Copilot opens a pull request without a human
+collaborator and a non-zero approval count is required. Neither ruleset requires
+approvals, so the difference is kept for consistency across the repositories. If a
+Copilot pull request into `acc` is ever blocked despite passing its checks, look here
+first.
+
 A pull request that is retargeted to `acc` gets no new `Build and deploy ACC` run,
 because retargeting does not trigger that workflow. If the check stays on
 "Expected", run `gh pr close <number> && gh pr reopen <number>`, or push a commit.
@@ -101,6 +109,9 @@ To recover:
 2. Review each orphan it lists.
 3. Run the `az staticwebapp environment delete` command it prints.
 4. Re-run the failed check on the blocked pull request.
+
+If there are no orphans, the slots are held by open pull requests. Merge or close
+one of them, then re-run the failed check.
 
 Renovate is limited to two open pull requests to leave room in this pool.
 
