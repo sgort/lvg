@@ -55,6 +55,10 @@ block branch deletion and force pushes. Neither has bypass actors.
 If semgrep.dev is unreachable or `SEMGREP_APP_TOKEN` is revoked, `scan` fails and
 merges stop until the repository owner edits the rulesets.
 
+A pull request that is retargeted to `acc` gets no new `Build and deploy ACC` run,
+because retargeting does not trigger that workflow. If the check stays on
+"Expected", run `gh pr close <number> && gh pr reopen <number>`, or push a commit.
+
 ## Dependency audit rule
 
 The audit fails on a high or critical advisory in shipped dependencies.
