@@ -129,6 +129,7 @@ export const Woning = z.object({
     opnamedatum: datum.optional(),
     actie: Actie.optional(),
   }),
+  veelgesteldeVragen: VeelgesteldeVragen.optional(),
 });
 export type Woning = z.infer<typeof Woning>;
 

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450" role="img" aria-label="Voorbeeld van een luchtfoto: woningen langs een straat">
+  <rect width="800" height="450" fill="#9cb98a"/>
+  <rect x="0" y="190" width="800" height="70" fill="#8a8a8a"/>
+  <path d="M0 225H800" stroke="#f4f4f4" stroke-width="4" stroke-dasharray="28 22"/>
+  <rect x="0" y="170" width="800" height="20" fill="#cfcfcf"/>
+  <rect x="0" y="260" width="800" height="20" fill="#cfcfcf"/>
+  <g fill="#b9573f">
+    <rect x="40" y="70" width="110" height="80"/>
+    <rect x="190" y="70" width="110" height="80"/>
+    <rect x="340" y="70" width="110" height="80"/>
+    <rect x="490" y="70" width="110" height="80"/>
+    <rect x="640" y="70" width="110" height="80"/>
+    <rect x="40" y="300" width="110" height="80"/>
+    <rect x="190" y="300" width="110" height="80"/>
+    <rect x="490" y="300" width="110" height="80"/>
+    <rect x="640" y="300" width="110" height="80"/>
+  </g>
+  <g stroke="#8e3f2c" stroke-width="3">
+    <path d="M40 110H150M190 110H300M340 110H450M490 110H600M640 110H750"/>
+    <path d="M40 340H150M190 340H300M490 340H600M640 340H750"/>
+  </g>
+  <rect x="340" y="300" width="110" height="80" fill="#7a8fa6"/>
+  <path d="M340 340H450" stroke="#5e7187" stroke-width="3"/>
+  <g fill="#6f9a5a">
+    <circle cx="170" cy="40" r="18"/><circle cx="470" cy="40" r="22"/><circle cx="620" cy="420" r="20"/>
+    <circle cx="320" cy="420" r="16"/><circle cx="20" cy="420" r="18"/>
+  </g>
+  <text x="784" y="438" font-family="sans-serif" font-size="16" fill="#ffffff" text-anchor="end">Voorbeeld, geen echte luchtfoto</text>
+</svg>

@@ -252,6 +252,14 @@ Every page has three data states besides the filled one:
 Dutch copy is given as it will appear. `[…]` marks values from the API. Text between
 `{…}` is still a design placeholder; it is built as written and listed under open questions.
 
+Changed with the owner on 19 November 2026, so the first deployed version looks finished:
+every `{…}` placeholder is filled with mock content, written for this sandbox in B1 Dutch and
+not reviewed by G&B or the source holders. The API's mock copy is in
+`api/src/mock/teksten.js` and `api/src/mock/veelgesteldeVragen.js` (API 1.3.0, which also gives
+the property summary its FAQ); the stand-in frame has a fictional citizen and footer columns;
+the aerial and street photos are drawn examples. The open questions about the real copy stand.
+Links whose real target is unknown still lead to "Nog niet beschikbaar".
+
 ### 1. Wonen (landing)
 
 From the deck, page 2, and `wonen - mobile.pdf`. Three cards in a grid: two columns on desktop,

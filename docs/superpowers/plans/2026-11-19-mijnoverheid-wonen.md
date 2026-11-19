@@ -482,6 +482,18 @@ Branch: `feat/wonen-pages` from `acc`.
 
 ### Task 22: Woning, Kadaster, WOZ and Energielabel
 
+Before this task, agreed with the owner on 19 November 2026 so the first deployed version looks
+finished: mock content replaces every `{…}` placeholder (spec, "Page designs"). In the API
+(`api/src/mock/teksten.js`, `api/src/mock/veelgesteldeVragen.js`, API 1.3.0) this covers the
+landing cards, the WOZ explanations, the ISDE link, the Kadaster product links, the contact
+websites and every FAQ, and the property summary (`Woning`) gets a `veelgesteldeVragen`, which
+the spec's FAQ card on that page needs. The parcel map is a download; the aerial and street
+photos are drawn examples (`public/luchtfoto-voorbeeld.svg`, `public/panoramafoto-voorbeeld.svg`).
+In the front-end the stand-in frame has a fictional citizen (`J. de Vries`) and footer columns,
+and the property list an intro. `api/test/inhoud.test.js` fails on any `{…}` in a response.
+Committed as `feat(api): mock content instead of placeholders, and FAQ on the property summary`
+and `feat: mock content for the stand-in frame and the property list`.
+
 **Files:**
 
 - Create: `src/pages/WoningPage.tsx`, `KadasterPage.tsx`, `WozPage.tsx`, `EnergielabelPage.tsx`, their features, with tests; `e2e/woning.spec.ts`

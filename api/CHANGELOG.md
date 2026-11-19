@@ -2,6 +2,16 @@
 
 All notable changes to the LVG Wonen API. Versions follow the policy in `README.md`.
 
+## 1.3.0
+
+- `GET /woningen/{woningId}` answers frequently asked questions about the property
+  (`veelgesteldeVragen`, optional), for the FAQ card on the property summary.
+- Mock content replaces the design placeholders (`{…}`) in every response: the landing
+  cards' texts, the WOZ explanations, the ISDE link and explanation, the Kadaster product
+  links, the contact websites and the frequently asked questions. The parcel map is offered as
+  a download, and the aerial and street photos are drawn examples. All of it is mock content
+  for this sandbox, not reviewed by G&B or the source holders.
+
 ## 1.2.1
 
 - The default scenario is `een-woning` instead of `drie-woningen`: without a valid

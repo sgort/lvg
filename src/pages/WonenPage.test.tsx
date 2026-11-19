@@ -48,7 +48,9 @@ describe('WonenPage', () => {
       'Ik ben huurder',
     ]);
     expect(within(kaarten[0]!).getByText('Bron: Officiële Bekendmakingen')).toBeInTheDocument();
-    expect(within(kaarten[1]!).getByText('{Ingang LVG}')).toBeInTheDocument();
+    expect(
+      within(kaarten[1]!).getByText(/Bekijk de gegevens van uw koopwoning/)
+    ).toBeInTheDocument();
   });
 
   it('sends each button where its action leads', async () => {

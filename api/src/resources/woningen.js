@@ -1,6 +1,7 @@
 // GET /woningen and GET /woningen/{id}: the list of koopwoningen and the summary of one.
 import { errorName, json } from '../core/http.js';
-import { KOOPWONINGEN } from '../mock/veelgesteldeVragen.js';
+import { WOZ_UITLEG } from '../mock/teksten.js';
+import { KOOPWONINGEN, WONING } from '../mock/veelgesteldeVragen.js';
 import * as registers from '../sources/registers.js';
 import {
   adresKort,
@@ -73,8 +74,8 @@ export async function getWoning(request) {
     sectie(
       () => registers.getWoz(scenario, woningId),
       (w) => ({
-        waarde: { bedragEur: w.waardeEur, uitleg: '{uitleg WOZ-waarde}' },
-        waardepeildatum: { datum: w.waardepeildatum, uitleg: '{uitleg waardepeildatum}' },
+        waarde: { bedragEur: w.waardeEur, uitleg: WOZ_UITLEG.waarde },
+        waardepeildatum: { datum: w.waardepeildatum, uitleg: WOZ_UITLEG.waardepeildatum },
         actie: { type: 'bekijk-woz', href: woningHref(woningId, 'woz') },
       })
     ),
@@ -101,5 +102,6 @@ export async function getWoning(request) {
     kadaster,
     woz,
     energielabel,
+    veelgesteldeVragen: veelgesteldeVragen(WONING),
   });
 }

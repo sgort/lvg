@@ -51,6 +51,12 @@ describe('response schemas', () => {
     expect(schemas.Advies.safeParse({ status: 'niet-beschikbaar' }).success).toBe(false);
   });
 
+  it('keeps the frequently asked questions of the property summary', () => {
+    const parsed = schemas.Woning.parse(contractExample('getWoning', 200));
+
+    expect(parsed.veelgesteldeVragen?.vragen).toHaveLength(3);
+  });
+
   it('keeps the frequently asked questions of the property list', () => {
     const lijst = contractExamples('listWoningen', 200).lijst;
     const parsed = schemas.WoningenOverzicht.parse(lijst);

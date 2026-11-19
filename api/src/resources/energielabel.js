@@ -1,6 +1,8 @@
 // GET /woningen/{id}/energielabel: the label, its validity as a status, the documents and
 // the actions the page may offer. The page never compares dates itself.
 import { json } from '../core/http.js';
+import { ISDE } from '../mock/teksten.js';
+import { ENERGIELABEL } from '../mock/veelgesteldeVragen.js';
 import * as registers from '../sources/registers.js';
 import {
   externeLink,
@@ -41,14 +43,14 @@ export async function getEnergielabel(request) {
     ),
     opnamegegevens: placeholderLink('Opnamegegevens (pdf)'),
     isde: {
-      link: externeLink('{ISDE-gegevens}', 'https://www.rvo.nl/subsidies-financiering/isde'),
-      uitleg: '{uitleg ISDE-gegevens}',
+      link: externeLink(ISDE.tekst, 'https://www.rvo.nl/subsidies-financiering/isde'),
+      uitleg: ISDE.uitleg,
     },
     contact: {
       organisatie: 'Rijksdienst voor Ondernemend Nederland (RVO)',
       website: externeLink('www.rvo.nl', 'https://www.rvo.nl/'),
     },
-    veelgesteldeVragen: veelgesteldeVragen(),
+    veelgesteldeVragen: veelgesteldeVragen(ENERGIELABEL),
     acties,
   });
 }
