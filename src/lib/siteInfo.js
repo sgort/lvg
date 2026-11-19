@@ -14,6 +14,22 @@ export function getSiteUrl() {
 }
 
 /**
+ * The browser tab title, marked per environment so acceptance and local builds
+ * cannot be mistaken for the stable release. Takes the raw VITE_SITE_URL value,
+ * because vite.config.js calls it at build time, outside import.meta.env.
+ *
+ * @param {string | undefined} rawSiteUrl
+ * @param {string} baseTitle
+ * @returns {string}
+ */
+export function getPageTitle(rawSiteUrl, baseTitle) {
+  const url = (rawSiteUrl ?? '').trim();
+  if (!url) return `LOCAL · ${baseTitle}`;
+  if (getSiteHost(url).startsWith('acc.')) return `ACC · ${baseTitle}`;
+  return baseTitle;
+}
+
+/**
  * @param {string} url
  * @returns {string} The host, without scheme or trailing slash.
  */
