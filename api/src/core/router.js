@@ -1,5 +1,10 @@
 // Routes requests to handlers. The table maps each contract operation to a plain function,
 // so tests and both hosts (Azure Functions and the Vite dev server) share one entry point.
+import { getEnergielabel } from '../resources/energielabel.js';
+import { getKadaster } from '../resources/kadaster.js';
+import { getWoning, listWoningen } from '../resources/woningen.js';
+import { getWonen } from '../resources/wonen.js';
+import { getWoz } from '../resources/woz.js';
 import { contract } from './contract.js';
 import { getHeader, json, LANGUAGE, problem, ProblemError } from './http.js';
 
@@ -13,6 +18,22 @@ const getOpenapi = async () => json(200, contract, { 'access-control-allow-origi
 /** The route table. Later tasks add one entry per contract operation. */
 export const routes = [
   { method: 'GET', pattern: '/openapi.json', operationId: 'getOpenapi', handler: getOpenapi },
+  { method: 'GET', pattern: '/wonen', operationId: 'getWonen', handler: getWonen },
+  { method: 'GET', pattern: '/woningen', operationId: 'listWoningen', handler: listWoningen },
+  { method: 'GET', pattern: '/woningen/{woningId}', operationId: 'getWoning', handler: getWoning },
+  {
+    method: 'GET',
+    pattern: '/woningen/{woningId}/kadaster',
+    operationId: 'getKadaster',
+    handler: getKadaster,
+  },
+  { method: 'GET', pattern: '/woningen/{woningId}/woz', operationId: 'getWoz', handler: getWoz },
+  {
+    method: 'GET',
+    pattern: '/woningen/{woningId}/energielabel',
+    operationId: 'getEnergielabel',
+    handler: getEnergielabel,
+  },
 ];
 
 // '/woningen/{woningId}/woz' → /^\/woningen\/([^/]+)\/woz$/ with names ['woningId'].

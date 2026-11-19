@@ -666,7 +666,7 @@ components:
             $ref: '#/components/schemas/Actie'
     WoningInLijst:
       type: object
-      required: [id, adresKort, soort, bouwjaar]
+      required: [id, adresKort, adresMetPlaats, soort, bouwjaar]
       properties:
         id:
           type: string
@@ -674,6 +674,10 @@ components:
         adresKort:
           type: string
           example: Straatnaam 23
+        adresMetPlaats:
+          type: string
+          description: Straat, huisnummer en woonplaats, zoals de lijst ze toont.
+          example: Straatnaam 23, Drechtstad
         soort:
           type: string
           example: Koopwoning

@@ -132,11 +132,13 @@ Branch: `feat/lvg-api` from `acc`.
 - Consumes: Tasks 2 and 3.
 - Produces: handlers for `getWonen`, `listWoningen`, `getWoning`, `getKadaster`, `getWoz`, `getEnergielabel`, registered in the router.
 
-- [ ] **Step 1: Write failing tests**, one file per resource. Each asserts the fields the spec names for its page and calls `expectValidResponse`. Specifically: `listWoningen` returns `weergave` `direct`, `lijst` or `leeg` per scenario; `getWoning` returns four sections each with `status`; `getEnergielabel` returns `objectAanduiding`, a `geldigheid` status (`geldig` or `verlopen`, decided in the API from the dates), and the action `bekijk-dakisolatie` only for a property with building data.
-- [ ] **Step 2:** Run tests. Expected: FAIL.
-- [ ] **Step 3:** Implement. Dates go out as ISO dates; amounts as numbers in euros; texts for info buttons as plain Dutch strings.
-- [ ] **Step 4:** Run tests. Expected: PASS.
-- [ ] **Step 5:** After owner go-ahead, commit `feat(api): add register resources`.
+**Note, 19 November 2026:** the contract gained `adresMetPlaats` on `WoningInLijst`, because the list shows the address with the town (`Straatnaam 23, Drechtstad`). Copy and links that G&B or the open questions still have to supply are built as `{…}` placeholders, with links pointing to `#nog-niet-beschikbaar`.
+
+- [x] **Step 1: Write failing tests**, one file per resource. Each asserts the fields the spec names for its page and calls `expectValidResponse`. Specifically: `listWoningen` returns `weergave` `direct`, `lijst` or `leeg` per scenario; `getWoning` returns four sections each with `status`; `getEnergielabel` returns `objectAanduiding`, a `geldigheid` status (`geldig` or `verlopen`, decided in the API from the dates), and the action `bekijk-dakisolatie` only for a property with building data.
+- [x] **Step 2:** Run tests. Expected: FAIL.
+- [x] **Step 3:** Implement. Dates go out as ISO dates; amounts as numbers in euros; texts for info buttons as plain Dutch strings.
+- [x] **Step 4:** Run tests. Expected: PASS.
+- [x] **Step 5:** After owner go-ahead, commit `feat(api): add register resources`.
 
 ### Task 5: Bring the DMN into the repository and add `aanbevolen`
 
