@@ -24,13 +24,20 @@ const PropertyDashboard = () => {
     setShowRoofInsulationModal(true);
   };
 
+  // The modal needs personal building data, which is cleared on logout, so it
+  // closes too. Keyboard focus can still reach the header button behind it.
+  const handleLogout = () => {
+    setShowRoofInsulationModal(false);
+    logout();
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
         <PageHeader
           publicInfo={property.publicInfo.data}
           isLoggedIn={isLoggedIn}
-          onToggleLogin={isLoggedIn ? logout : login}
+          onToggleLogin={isLoggedIn ? handleLogout : login}
         />
 
         <PublicInfoSection publicInfoState={property.publicInfo} />
