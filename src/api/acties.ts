@@ -1,6 +1,6 @@
 // Presentation only: which page an action type opens. Whether an action is offered at all is
 // the API's decision (its `acties`); this table decides nothing about that.
-import type { Actie } from './schemas';
+import type { Actie, Link } from './schemas';
 
 /** The page for links whose target G&B has not delivered yet. */
 export const NIET_BESCHIKBAAR_PAD = '/nl/wonen/nog-niet-beschikbaar';
@@ -29,4 +29,14 @@ export function routeVoorActie(actie: Actie, context: ActieContext = {}): Bestem
   const route = ROUTES[actie.type];
   if (!route || !context.woningId) return null;
   return { naar: route(`${KOOPWONINGEN}/${encodeURIComponent(context.woningId)}`) };
+}
+
+/**
+ * Where a link from the API leads: an external site, the "Nog niet beschikbaar" page for a
+ * placeholder, or the address as it is (a download, an image).
+ */
+export function bestemmingVoorLink(link: Link): Bestemming | { href: string } {
+  if (link.href.startsWith('https://')) return { extern: link.href };
+  if (link.href === PLACEHOLDER_HREF) return { naar: NIET_BESCHIKBAAR_PAD };
+  return { href: link.href };
 }

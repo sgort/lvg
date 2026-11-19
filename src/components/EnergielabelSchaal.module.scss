@@ -25,6 +25,7 @@
   font-weight: var(--lux-font-weight-bold);
 }
 
+// White text is too faint on C to F (below 4.5:1); they take the dark text colour.
 .klasseA {
   background-color: var(--lux-color-donkergroen-500);
 }
@@ -35,18 +36,22 @@
 
 .klasseC {
   background-color: var(--lux-color-groen-300);
+  color: var(--lux-color-foreground-default);
 }
 
 .klasseD {
   background-color: var(--lux-color-geel-500);
+  color: var(--lux-color-foreground-default);
 }
 
 .klasseE {
   background-color: var(--lux-color-donkergeel-500);
+  color: var(--lux-color-foreground-default);
 }
 
 .klasseF {
   background-color: var(--lux-color-oranje-500);
+  color: var(--lux-color-foreground-default);
 }
 
 .klasseG {

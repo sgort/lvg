@@ -12,15 +12,15 @@ import {
   haalKadaster,
   haalToestemming,
   haalWoning,
-  haalWoningen,
-  haalWonen,
   haalWoz,
 } from './api/wonen';
 import { LoadState } from './components/LoadState';
 import { Hoofdinhoud } from './pages/Hoofdinhoud';
+import { KoopwoningenPage, koopwoningenLoader } from './pages/KoopwoningenPage';
 import { NietBeschikbaarPage } from './pages/NietBeschikbaarPage';
 import { NietGevondenPage } from './pages/NietGevondenPage';
 import { RouteFout } from './pages/RouteFout';
+import { WonenPage, wonenLoader } from './pages/WonenPage';
 
 // A route parameter the path guarantees; its absence means the path did not match.
 function parameter(params: LoaderFunctionArgs['params'], naam: string): string {
@@ -51,8 +51,12 @@ export const routes: RouteObject[] = [
         errorElement: <RouteFout />,
         children: [
           { path: '/', loader: () => redirect('/nl/wonen') },
-          { path: '/nl/wonen', loader: () => haalWonen(), element: placeholder },
-          { path: '/nl/wonen/koopwoningen', loader: () => haalWoningen(), element: placeholder },
+          { path: '/nl/wonen', loader: wonenLoader, element: <WonenPage /> },
+          {
+            path: '/nl/wonen/koopwoningen',
+            loader: () => koopwoningenLoader(),
+            element: <KoopwoningenPage />,
+          },
           {
             path: '/nl/wonen/koopwoningen/:woningId',
             loader: (args) => haalWoning(woning(args)),

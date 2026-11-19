@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { NIET_BESCHIKBAAR_PAD, routeVoorActie } from './acties';
+import { bestemmingVoorLink, NIET_BESCHIKBAAR_PAD, routeVoorActie } from './acties';
 
 const context = { woningId: 'w-7f3a' };
 const WONING = '/nl/wonen/koopwoningen/w-7f3a';
@@ -44,5 +44,25 @@ describe('routeVoorActie', () => {
 
   it('shows no property action without a property', () => {
     expect(routeVoorActie({ type: 'bekijk-woz', href: '/api/v1/woningen/w-7f3a/woz' })).toBeNull();
+  });
+});
+
+describe('bestemmingVoorLink', () => {
+  it('opens an absolute https link as an external link', () => {
+    const href = 'https://www.kadaster.nl/';
+
+    expect(bestemmingVoorLink({ tekst: 'Kadaster', href })).toEqual({ extern: href });
+  });
+
+  it('sends a placeholder link to the "Nog niet beschikbaar" page', () => {
+    expect(bestemmingVoorLink({ tekst: 'Meer', href: '#nog-niet-beschikbaar' })).toEqual({
+      naar: NIET_BESCHIKBAAR_PAD,
+    });
+  });
+
+  it('keeps any other address as it is, such as a download', () => {
+    expect(bestemmingVoorLink({ tekst: 'Kaart', href: '/perceel-1560.png' })).toEqual({
+      href: '/perceel-1560.png',
+    });
   });
 });

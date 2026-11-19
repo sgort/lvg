@@ -1,0 +1,52 @@
+.kop {
+  margin: 0;
+}
+
+.lijst {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rij {
+  display: flex;
+  gap: var(--lux-space-200);
+  align-items: center;
+  padding-block: var(--lux-space-200);
+  color: var(--lux-color-foreground-default);
+  text-decoration: none;
+  border-block-end: var(--lux-border-width-default, 1px) solid var(--lux-color-border-default);
+}
+
+.rij:hover .adres {
+  text-decoration-thickness: 2px;
+}
+
+.rij:focus-visible {
+  outline: var(--lux-focus-outline-width) var(--lux-focus-outline-style) currentColor;
+  outline-offset: var(--lux-focus-outline-offset);
+}
+
+.regels {
+  display: grid;
+  flex: 1;
+  gap: var(--lux-space-50);
+}
+
+.adres {
+  color: var(--lux-color-foreground-link);
+  font-weight: var(--lux-font-weight-bold);
+  text-decoration: underline;
+}
+
+.details {
+  display: inline-flex;
+  gap: var(--lux-space-100);
+  align-items: center;
+}
+
+.pijl {
+  flex-shrink: 0;
+  color: var(--lux-color-foreground-link);
+}

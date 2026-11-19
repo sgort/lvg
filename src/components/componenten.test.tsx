@@ -16,6 +16,7 @@ import { ErrorState } from './ErrorState';
 import { FaqCard } from './FaqCard';
 import { InfoToggle } from './InfoToggle';
 import { Koppeling } from './Koppeling';
+import { LabelTegel } from './LabelTegel';
 import { LoadState } from './LoadState';
 import { PageTitle } from './PageTitle';
 import { Tabel } from './Tabel';
@@ -138,6 +139,18 @@ describe('EnergielabelSchaal', () => {
     render(<EnergielabelSchaal tekst="Energielabel" label={{ klasse: 'A', naam: 'A++' }} />);
 
     expect(screen.getByText('Energielabel A++')).toBeInTheDocument();
+  });
+});
+
+describe('LabelTegel', () => {
+  it('shows the letter on its colour and names the label in text', async () => {
+    const { container } = render(
+      <LabelTegel tekst="Energielabel" label={{ klasse: 'C', naam: 'C' }} />
+    );
+
+    expect(screen.getByText('Energielabel C')).toBeInTheDocument();
+    expect(container.querySelector('[aria-hidden="true"]')).toHaveTextContent('C');
+    await expectNoAxeViolations(container);
   });
 });
 
