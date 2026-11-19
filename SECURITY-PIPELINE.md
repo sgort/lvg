@@ -31,12 +31,12 @@ same branch before merging.
 
 ## Checks
 
-| Check                  | Workflow               | Covers                                                                 |
-| ---------------------- | ---------------------- | ---------------------------------------------------------------------- |
-| `audit`                | `zizmor.yml`           | Workflow analysis, Renovate config, lockfile, format, signatures, pins |
-| `scan`                 | `semgrep.yml`          | Semgrep Code and Supply Chain                                          |
-| `Build and deploy ACC` | `azure-lvg-acc.yml`    | Lint and the production build, skipped for documentation-only changes  |
-| `dependency-audit`     | `dependency-audit.yml` | Daily audit of `acc` and `main`; not a merge check                     |
+| Check                  | Workflow               | Covers                                                                       |
+| ---------------------- | ---------------------- | ---------------------------------------------------------------------------- |
+| `audit`                | `zizmor.yml`           | Workflow analysis, Renovate config, lockfile, format, signatures, pins       |
+| `scan`                 | `semgrep.yml`          | Semgrep Code and Supply Chain                                                |
+| `Build and deploy ACC` | `azure-lvg-acc.yml`    | Lint, tests and the production build, skipped for documentation-only changes |
+| `dependency-audit`     | `dependency-audit.yml` | Daily audit of `acc` and `main`; not a merge check                           |
 
 Required checks match by job name, so renaming a job means updating the rulesets.
 
@@ -118,5 +118,5 @@ Renovate is limited to two open pull requests to leave room in this pool.
 ## Deliberately left out
 
 These parts of the `ttl-editor` pipeline are not used here: the SBOM workflow, the
-quarterly dependency review, the lockfile review job, a test suite, the GitLab
+quarterly dependency review, the lockfile review job, the GitLab
 mirror and the release process.

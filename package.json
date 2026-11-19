@@ -16,7 +16,8 @@
     "prepare": "husky",
     "postinstall": "node scripts/write-deps-marker.mjs",
     "check-supply-chain": "node scripts/check-supply-chain.mjs",
-    "audit:signatures": "bash scripts/audit-signatures.sh"
+    "audit:signatures": "bash scripts/audit-signatures.sh",
+    "test": "vitest run"
   },
   "dependencies": {
     "lucide-react": "^0.263.1",
@@ -39,7 +40,8 @@
     "postcss": "^8.4.38",
     "prettier": "^3.9.10",
     "tailwindcss": "^3.4.3",
-    "vite": "^8.3.5"
+    "vite": "^8.3.5",
+    "vitest": "^5.1.0"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,json,css,md}": [
