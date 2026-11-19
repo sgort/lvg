@@ -1,0 +1,58 @@
+@use '../styles/mixins' as *;
+
+.schaal {
+  display: inline-block;
+}
+
+.blokken {
+  display: flex;
+  gap: var(--lux-space-25);
+  align-items: center;
+}
+
+.blok {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  border-radius: var(--lux-border-radius-default);
+}
+
+.actief {
+  inline-size: 2.5rem;
+  block-size: 2rem;
+  color: var(--lux-color-foreground-on-emphasis);
+  font-weight: var(--lux-font-weight-bold);
+}
+
+.klasseA {
+  background-color: var(--lux-color-donkergroen-500);
+}
+
+.klasseB {
+  background-color: var(--lux-color-groen-500);
+}
+
+.klasseC {
+  background-color: var(--lux-color-groen-300);
+}
+
+.klasseD {
+  background-color: var(--lux-color-geel-500);
+}
+
+.klasseE {
+  background-color: var(--lux-color-donkergeel-500);
+}
+
+.klasseF {
+  background-color: var(--lux-color-oranje-500);
+}
+
+.klasseG {
+  background-color: var(--lux-color-rood-500);
+}
+
+.tekst {
+  @include visueel-verborgen;
+}

@@ -1,0 +1,31 @@
+@use '../styles/mixins' as *;
+
+.lijst {
+  display: grid;
+  gap: var(--lux-space-150);
+  margin: 0;
+}
+
+.rij {
+  display: grid;
+  gap: var(--lux-space-25);
+}
+
+.label {
+  font-weight: var(--lux-font-weight-bold);
+}
+
+.waarde {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--lux-space-100);
+  align-items: flex-start;
+  margin: 0;
+}
+
+@media (min-width: $breekpunt-desktop) {
+  .rij {
+    grid-template-columns: minmax(12rem, 1fr) 2fr;
+    gap: var(--lux-space-200);
+  }
+}

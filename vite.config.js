@@ -2,7 +2,8 @@ import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import { configDefaults } from 'vitest/config';
 
-import { getPageTitle } from './src/lib/siteInfo.js';
+import { getPageTitle } from './src/lib/siteInfo.ts';
+import { luxCssPlugin } from './vite/luxCssPlugin.js';
 import { lvgApiPlugin } from './vite/lvgApiPlugin.js';
 
 export default defineConfig(({ mode }) => {
@@ -21,10 +22,12 @@ export default defineConfig(({ mode }) => {
   return {
     // lvgApiPlugin serves the LVG API on /api/ in the dev server only. It calls Operaton
     // itself, so the browser never talks to Operaton and no login reaches the bundle.
-    plugins: [react(), pageTitle, lvgApiPlugin()],
+    // luxCssPlugin moves the LUX components' styles into a stylesheet, so the strict CSP holds.
+    plugins: [react(), pageTitle, lvgApiPlugin(), luxCssPlugin()],
     test: {
       // The API has its own package, Node version and test run (`npm run test:api`).
       exclude: [...configDefaults.exclude, 'api/**'],
+      setupFiles: ['src/test/setup.ts'],
     },
   };
 });

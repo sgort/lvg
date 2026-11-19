@@ -1,0 +1,29 @@
+.toggle {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--lux-space-50);
+  align-items: center;
+}
+
+.knop {
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: var(--lux-size-target-minimum, 24px);
+  min-block-size: var(--lux-size-target-minimum, 24px);
+  padding: 0;
+  color: var(--lux-color-foreground-link);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.knop:focus-visible {
+  outline: var(--lux-focus-outline-width) var(--lux-focus-outline-style) currentColor;
+  outline-offset: var(--lux-focus-outline-offset);
+}
+
+.uitleg {
+  flex-basis: 100%;
+  padding: var(--lux-space-100) var(--lux-space-150);
+  background-color: var(--lux-color-feedback-info-subdued);
+}

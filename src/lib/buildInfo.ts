@@ -11,17 +11,21 @@
  * silently fails to resolve is worse than none.
  *
  * Ported from ronl-business-api packages/public-site/src/lib/buildInfo.ts.
- *
- * @typedef {object} BuildInfo
- * @property {string} sha Full 40-character commit SHA, or '' when not injected.
- * @property {string} shortSha First 7 characters of the SHA, or '' when not injected.
- * @property {string} run GitHub Actions run number, or '' when not injected.
- * @property {boolean} isTracked True only when both values are present.
- * @property {string} label Ready to render. Never blank.
  */
+export type BuildInfo = {
+  /** Full 40-character commit SHA, or '' when not injected. */
+  sha: string;
+  /** First 7 characters of the SHA, or '' when not injected. */
+  shortSha: string;
+  /** GitHub Actions run number, or '' when not injected. */
+  run: string;
+  /** True only when both values are present. */
+  isTracked: boolean;
+  /** Ready to render. Never blank. */
+  label: string;
+};
 
-/** @type {BuildInfo} */
-const UNTRACKED = {
+const UNTRACKED: BuildInfo = {
   sha: '',
   shortSha: '',
   run: '',
@@ -38,10 +42,8 @@ const UNTRACKED = {
  * Half-configured counts as untracked. A run number with no SHA implies a
  * provenance the bundle does not have, and a SHA with no run number cannot tell
  * two builds of the same commit apart. Either way the answer is 'local build'.
- *
- * @returns {BuildInfo}
  */
-export function getBuildInfo() {
+export function getBuildInfo(): BuildInfo {
   const sha = (import.meta.env.VITE_BUILD_SHA ?? '').trim();
   const run = (import.meta.env.VITE_BUILD_RUN ?? '').trim();
 

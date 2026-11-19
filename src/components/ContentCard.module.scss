@@ -1,0 +1,12 @@
+.kaart {
+  display: grid;
+  gap: var(--lux-space-200);
+  padding: var(--lux-space-300);
+  background-color: var(--lux-color-background-default);
+  border-radius: var(--lux-border-radius-default);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 12%);
+}
+
+.kop {
+  margin: 0;
+}

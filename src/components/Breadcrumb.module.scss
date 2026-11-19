@@ -1,0 +1,22 @@
+.kruimelpad {
+  font-size: var(--lux-font-size-body-small);
+}
+
+.lijst {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--lux-space-50);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stap {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--lux-space-50);
+}
+
+.scheiding {
+  color: var(--lux-color-foreground-subdued);
+}

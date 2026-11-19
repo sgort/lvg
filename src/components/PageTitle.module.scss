@@ -1,0 +1,34 @@
+@use '../styles/mixins' as *;
+
+.titel {
+  display: grid;
+  gap: var(--lux-space-200);
+  margin-block-end: var(--lux-space-300);
+}
+
+.desktop {
+  display: none;
+}
+
+.mobiel {
+  display: inline-flex;
+}
+
+@media (min-width: $breekpunt-desktop) {
+  .desktop {
+    display: block;
+  }
+
+  .mobiel {
+    display: none;
+  }
+}
+
+.kop:focus {
+  outline: none;
+}
+
+.kop:focus-visible {
+  outline: var(--lux-focus-outline-width) var(--lux-focus-outline-style) currentColor;
+  outline-offset: var(--lux-focus-outline-offset);
+}

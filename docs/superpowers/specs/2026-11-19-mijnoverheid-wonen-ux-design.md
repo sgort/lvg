@@ -730,6 +730,13 @@ source is `dmn/bereken_isolatie_opties.dmn` (see `dmn/README.md`).
   `default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'`.
   No `unsafe-inline` and no `unsafe-eval`. React's `style` prop sets styles through the DOM,
   which this policy allows; markup carries no `style` attributes or inline scripts.
+- `@lux-design-system/components-react` injects its CSS at run time as `<style>` elements, which
+  `style-src 'self'` blocks, and LUX publishes no separate CSS package. Decided with the owner
+  on 19 November 2026 (plan Task 17): `vite/luxCssPlugin.js` moves that CSS into an ordinary
+  stylesheet during the build and removes the injection, so the policy stays as written. The
+  dev server keeps the injection and sends no CSP; the build, `vite preview` and the deployed
+  sites use the extracted stylesheet. The port (#37) meets the same question with
+  `@mijnoverheid/ui`.
 - The mock consent stores nothing outside the API's memory, in a capped store (Part 1b).
 - The API logs no request data and no source error messages, only error names (Part 1b).
 

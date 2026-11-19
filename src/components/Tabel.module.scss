@@ -1,0 +1,21 @@
+.omhulsel {
+  overflow-x: auto;
+}
+
+.tabel {
+  inline-size: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: var(--lux-space-100) var(--lux-space-150);
+    text-align: start;
+    border-block-end: var(--lux-border-width-default, 1px) solid var(--lux-color-border-default);
+  }
+}
+
+.caption {
+  margin-block-end: var(--lux-space-100);
+  font-weight: var(--lux-font-weight-bold);
+  text-align: start;
+}
