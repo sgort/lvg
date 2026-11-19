@@ -152,22 +152,24 @@ Branch: `feat/lvg-api` from `acc`.
       Commit it unchanged first, so the patch is a reviewable diff. Note the deployed version
       and id in `dmn/README.md`.
 - [x] **Step 2:** After owner go-ahead, commit `chore(dmn): add bereken_isolatie_opties as deployed (version 21)`.
-- [ ] **Step 3:** Add an output column `aanbevolen` (label `Aanbevolen`, `typeRef="boolean"`) to the
+- [x] **Step 3:** Add an output column `aanbevolen` (label `Aanbevolen`, `typeRef="boolean"`) to the
       decision table. Every rule gets a value: `true` for the rule with the recommendation text
       (target R 6.0), `false` for the others. Do not change the decision key, inputs or other
       outputs. Keep FEEL as Operaton accepts it (for example `not(x)`, not `not x`).
-- [ ] **Step 4:** `scripts/deploy-dmn-local.sh` posts the file to
+- [x] **Step 4:** `scripts/deploy-dmn-local.sh` posts the file to
       `http://localhost:8081/engine-rest/deployment/create` as multipart form data
       (`deployment-name=lvg-dmn`, `deploy-changed-only=true`, the file) with the local login from
       `OPERATON_USER` / `OPERATON_PASSWORD` (default `demo`). It refuses any other host.
-- [ ] **Step 5:** Owner check: run the script against local Operaton, then evaluate the decision for
+- [x] **Step 5:** Owner check: run the script against local Operaton, then evaluate the decision for
       target 6.0 and 4.0 with the inputs from `src/services/insulationParams.js`. Expected:
       `aanbevolen` is `true` for 6.0 and `false` for 4.0; all other outputs are unchanged from
       the call before the patch.
-- [ ] **Step 6:** `dmn/README.md` describes the decision, its inputs and outputs, the deploy script,
+      Result on 19 November 2026: local version 2; `aanbevolen` is `true` for 6.0 and `false` for 4.0; no other output changed.
+      On the same day the owner deployed it to `operaton.open-regels.nl` as version 22; its XML matches the file and it gives the same results without a login.
+- [x] **Step 6:** `dmn/README.md` describes the decision, its inputs and outputs, the deploy script,
       and that `operaton.open-regels.nl` still runs version 21 without `aanbevolen` until the
       owner deploys it there.
-- [ ] **Step 7:** After owner go-ahead, commit `feat(dmn): add the aanbevolen output`.
+- [x] **Step 7:** After owner go-ahead, commit `feat(dmn): add the aanbevolen output`.
 
 ### Task 6: Operaton and the Dakisolatie resource
 

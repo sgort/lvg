@@ -45,6 +45,7 @@
       <output id="output8" label="Besparing/jaar (€)" name="besparing_jaar" typeRef="integer" />
       <output id="output9" label="Terugverdientijd (jaar)" name="terugverdientijd" typeRef="double" />
       <output id="output10" label="Aanbeveling" name="aanbeveling" typeRef="string" />
+      <output id="output11" label="Aanbevolen" name="aanbevolen" typeRef="boolean" />
       <rule id="rule1">
         <inputEntry id="rule1_input1">
           <text>&gt;= 0</text>
@@ -84,6 +85,9 @@
         </outputEntry>
         <outputEntry id="rule1_output10">
           <text>""</text>
+        </outputEntry>
+        <outputEntry id="rule1_output11">
+          <text>false</text>
         </outputEntry>
       </rule>
       <rule id="rule2">
@@ -126,6 +130,9 @@
         <outputEntry id="rule2_output10">
           <text>""</text>
         </outputEntry>
+        <outputEntry id="rule2_output11">
+          <text>false</text>
+        </outputEntry>
       </rule>
       <rule id="rule3">
         <inputEntry id="rule3_input1">
@@ -167,6 +174,9 @@
         <outputEntry id="rule3_output10">
           <text>"Aanbevolen: R-waarde 6.0 m²K/W (gemarkeerd in groen) biedt de beste balans tussen investering, subsidie en terugverdientijd."</text>
         </outputEntry>
+        <outputEntry id="rule3_output11">
+          <text>true</text>
+        </outputEntry>
       </rule>
       <rule id="rule4">
         <inputEntry id="rule4_input1">
@@ -207,6 +217,9 @@
         </outputEntry>
         <outputEntry id="rule4_output10">
           <text>""</text>
+        </outputEntry>
+        <outputEntry id="rule4_output11">
+          <text>false</text>
         </outputEntry>
       </rule>
     </decisionTable>
