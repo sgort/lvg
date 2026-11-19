@@ -9,7 +9,8 @@ export const API_BASIS = '/api/v1';
 
 /** Where the stand-in frame keeps the chosen scenario. Holds a scenario name only. */
 export const SCENARIO_SLEUTEL = 'lvg-scenario';
-export const STANDAARD_SCENARIO = 'drie-woningen';
+// The same default as the API: one property (plan Task 21).
+export const STANDAARD_SCENARIO = 'een-woning';
 
 const TIMEOUT_MS = 15_000;
 const LATER_OPNIEUW = 'Probeer het later opnieuw.';

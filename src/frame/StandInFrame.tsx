@@ -26,9 +26,13 @@ const MENU = [
 // Placeholders, as the spec's convention marks copy that is not known yet.
 const VOETTEKST_KOLOMMEN = ['{Kolom 1}', '{Kolom 2}', '{Kolom 3}', '{Kolom 4}'];
 
-type Props = { scenario: string; children: ReactNode };
+// The scenario switch is hidden while the pages are built on one fixed path (plan Task 21).
+// Set this to true to show it again; the walkthroughs set the scenario themselves.
+export const TOON_SCENARIO_KEUZE = false;
 
-export function StandInFrame({ scenario, children }: Props) {
+type Props = { scenario: string; scenarioKeuze?: boolean; children: ReactNode };
+
+export function StandInFrame({ scenario, scenarioKeuze = TOON_SCENARIO_KEUZE, children }: Props) {
   const [zoek] = useSearchParams();
   if (zoek.get('kader') === 'uit') return <>{children}</>;
 
@@ -38,7 +42,7 @@ export function StandInFrame({ scenario, children }: Props) {
         <p className={styles.bandTekst}>
           Nagebootst MijnOverheid-kader. Geen onderdeel van de oplevering.
         </p>
-        <ScenarioSwitch scenario={scenario} />
+        {scenarioKeuze && <ScenarioSwitch scenario={scenario} />}
         <BuildLine />
       </aside>
       <header className={styles.kop}>

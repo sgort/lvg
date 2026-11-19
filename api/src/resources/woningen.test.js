@@ -87,7 +87,8 @@ describe('GET /woningen', () => {
     vi.stubEnv('LVG_SCENARIOS', '');
     const response = await get('/api/v1/woningen', 'geen-woning');
 
-    expect(response.body.weergave).toBe('lijst');
+    // The default scenario, een-woning, goes straight to the only property.
+    expect(response.body.weergave).toBe('direct');
   });
 });
 

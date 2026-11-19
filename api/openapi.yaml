@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: LVG Wonen API
-  version: 1.2.0
+  version: 1.2.1
   description: |-
     The API behind the MijnOverheid Wonen pages built by LVG. It returns what each page needs,
     already decided: statuses, final amounts, allowed actions (`acties`) and the texts a
@@ -69,7 +69,7 @@ paths:
                     openapi: 3.0.3
                     info:
                       title: LVG Wonen API
-                      version: 1.2.0
+                      version: 1.2.1
                     paths: {}
         '500':
           $ref: '#/components/responses/InternalServerError'
@@ -1291,10 +1291,12 @@ components:
       required: false
       description: >-
         Alleen voor ontwikkeling en acceptatie: kiest een nagebootste burger. De API negeert
-        deze header tenzij `LVG_SCENARIOS=on` is ingesteld.
+        deze header tenzij `LVG_SCENARIOS=on` is ingesteld. Zonder geldige header geldt
+        `een-woning`.
       schema:
         type: string
         enum: [geen-woning, een-woning, drie-woningen]
+        default: een-woning
     WoningId:
       name: woningId
       in: path
@@ -1308,7 +1310,7 @@ components:
       description: De volledige versie van deze API.
       schema:
         type: string
-        example: 1.2.0
+        example: 1.2.1
     ContentLanguage:
       description: De taal van de teksten in het antwoord.
       schema:

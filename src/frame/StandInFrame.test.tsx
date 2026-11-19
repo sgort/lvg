@@ -19,20 +19,23 @@ const opslag = {
 
 const inhoudLoader = vi.fn(() => null);
 
-const toon = (pad = '/nl/wonen') => {
+const toon = (pad = '/nl/wonen', scenarioKeuze = false) => {
   const router = createMemoryRouter(
     [
-      kaderRoute([
-        {
-          path: '*',
-          loader: inhoudLoader,
-          element: (
-            <main>
-              <p>Inhoud</p>
-            </main>
-          ),
-        },
-      ]),
+      kaderRoute(
+        [
+          {
+            path: '*',
+            loader: inhoudLoader,
+            element: (
+              <main>
+                <p>Inhoud</p>
+              </main>
+            ),
+          },
+        ],
+        { scenarioKeuze }
+      ),
     ],
     { initialEntries: [pad] }
   );
@@ -67,23 +70,39 @@ describe('StandInFrame', () => {
     expect(screen.queryByText(BAND)).not.toBeInTheDocument();
   });
 
+  it('hides the scenario switch for now', async () => {
+    toon();
+
+    expect(await screen.findByText(BAND)).toBeInTheDocument();
+    expect(screen.queryByRole('combobox', { name: 'Scenario' })).not.toBeInTheDocument();
+  });
+
   it('keeps the chosen scenario and loads the page again', async () => {
     const user = userEvent.setup();
-    toon();
+    toon('/nl/wonen', true);
     const keuze = await screen.findByRole('combobox', { name: 'Scenario' });
-    expect(keuze).toHaveValue('drie-woningen');
+    expect(keuze).toHaveValue('een-woning');
     const geladen = inhoudLoader.mock.calls.length;
 
-    await user.selectOptions(keuze, 'een-woning');
+    await user.selectOptions(keuze, 'drie-woningen');
 
-    expect(opslag.setItem).toHaveBeenCalledWith(SCENARIO_SLEUTEL, 'een-woning');
+    expect(opslag.setItem).toHaveBeenCalledWith(SCENARIO_SLEUTEL, 'drie-woningen');
     await vi.waitFor(() => expect(inhoudLoader.mock.calls.length).toBeGreaterThan(geladen));
-    expect(screen.getByRole('combobox', { name: 'Scenario' })).toHaveValue('een-woning');
+    expect(screen.getByRole('combobox', { name: 'Scenario' })).toHaveValue('drie-woningen');
   });
 
   it('reads no browser storage while rendering', () => {
     const router = createMemoryRouter(
-      [{ path: '*', element: <StandInFrame scenario="geen-woning">Inhoud</StandInFrame> }],
+      [
+        {
+          path: '*',
+          element: (
+            <StandInFrame scenario="geen-woning" scenarioKeuze>
+              Inhoud
+            </StandInFrame>
+          ),
+        },
+      ],
       { initialEntries: ['/nl/wonen'] }
     );
     // Creating the router reads React Router's own key; only rendering is measured.

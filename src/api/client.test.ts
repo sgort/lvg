@@ -45,7 +45,7 @@ describe('apiGet', () => {
     expect(url).toBe('/api/v1/wonen');
     expect(init.headers).toMatchObject({
       'Accept-Language': 'nl',
-      'X-LVG-Scenario': 'drie-woningen',
+      'X-LVG-Scenario': 'een-woning',
     });
   });
 

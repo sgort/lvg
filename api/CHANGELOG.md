@@ -2,6 +2,12 @@
 
 All notable changes to the LVG Wonen API. Versions follow the policy in `README.md`.
 
+## 1.2.1
+
+- The default scenario is `een-woning` instead of `drie-woningen`: without a valid
+  `X-LVG-Scenario` (and always where `LVG_SCENARIOS` is off, as on the stable release) the API
+  answers for a citizen with one property. The contract states the default.
+
 ## 1.2.0
 
 - `GET /woningen` answers frequently asked questions about koopwoningen

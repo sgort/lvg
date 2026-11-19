@@ -474,7 +474,10 @@ oplevering.`
   with `VITE_FRAME=off` at build time or `?kader=uit` at run time; the content then renders
   in a plain page with the same width as the MijnOverheid content column.
 - The **scenario switch** sits in the band: a select with `Geen woning`, `Eén woning` and
-  `Drie woningen` (default). The choice goes to the API as the header `X-LVG-Scenario` and is
+  `Drie woningen`. Changed with the owner on 19 November 2026 (plan Task 21): the default is
+  `Eén woning`, in the API and the front-end, and the switch is hidden while the pages are
+  built on that one path (`TOON_SCENARIO_KEUZE` in `src/frame/StandInFrame.tsx`); the
+  walkthroughs still cover all three scenarios. The choice goes to the API as the header `X-LVG-Scenario` and is
   kept in `sessionStorage` (no personal data; only the scenario name), read in the API client
   and the switch's event handler, never while rendering. The API ignores the
   header unless `LVG_SCENARIOS=on` is set, which it is on `acc`, previews and locally, and

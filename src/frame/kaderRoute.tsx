@@ -7,16 +7,19 @@ import { gekozenScenario } from '../api/client';
 import { LoadState } from '../components/LoadState';
 import { StandInFrame } from './StandInFrame';
 
-function Kader() {
+function Kader({ scenarioKeuze }: { scenarioKeuze?: boolean }) {
   const { scenario } = useLoaderData<{ scenario: string }>();
   return (
-    <StandInFrame scenario={scenario}>
+    <StandInFrame scenario={scenario} scenarioKeuze={scenarioKeuze}>
       <Outlet />
     </StandInFrame>
   );
 }
 
-export function kaderRoute(children: RouteObject[]): RouteObject {
+export function kaderRoute(
+  children: RouteObject[],
+  { scenarioKeuze }: { scenarioKeuze?: boolean } = {}
+): RouteObject {
   return {
     id: 'kader',
     loader: () => ({ scenario: gekozenScenario() }),
@@ -26,7 +29,7 @@ export function kaderRoute(children: RouteObject[]): RouteObject {
         <LoadState tekst="Gegevens laden…" />
       </main>
     ),
-    element: <Kader />,
+    element: <Kader scenarioKeuze={scenarioKeuze} />,
     children,
   };
 }
