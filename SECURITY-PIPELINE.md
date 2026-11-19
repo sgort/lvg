@@ -24,6 +24,8 @@ or exact version wherever one exists. `lvg` is a sandbox, so this follows
 | semgrep                        | `semgrep==1.176.1` in `semgrep.yml`        | 1.176.1 | manual                                         |
 | renovate config validator      | `renovate@44.50.3` in `zizmor.yml`         | 44.50.3 | manual                                         |
 | npm dependencies               | `package-lock.json` integrity hashes       | 3       | Renovate                                       |
+| LVG API dependencies           | `api/package-lock.json` integrity hashes   | 3       | Renovate                                       |
+| API Design Rules ruleset       | vendored as `api/.spectral.yaml`           | dated   | manual, refreshed each iteration (runbook)     |
 
 `npm run check-supply-chain` compares this table with the workflows and resolves
 each hash against GitHub. When Renovate updates an action, update its row on the
@@ -31,14 +33,33 @@ same branch before merging.
 
 ## Checks
 
-| Check                  | Workflow               | Covers                                                                       |
-| ---------------------- | ---------------------- | ---------------------------------------------------------------------------- |
-| `audit`                | `zizmor.yml`           | Workflow analysis, Renovate config, lockfile, format, signatures, pins       |
-| `scan`                 | `semgrep.yml`          | Semgrep Code and Supply Chain                                                |
-| `Build and deploy ACC` | `azure-lvg-acc.yml`    | Lint, tests and the production build, skipped for documentation-only changes |
-| `dependency-audit`     | `dependency-audit.yml` | Daily audit of `acc` and `main`; not a merge check                           |
+| Check                  | Workflow               | Covers                                                                                                          |
+| ---------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `audit`                | `zizmor.yml`           | Workflow analysis, Renovate config, lockfile, format, signatures, pins                                          |
+| `scan`                 | `semgrep.yml`          | Semgrep Code and Supply Chain                                                                                   |
+| `Build and deploy ACC` | `azure-lvg-acc.yml`    | Lint, tests, the API contract and tests, the build and the bundle check, skipped for documentation-only changes |
+| `dependency-audit`     | `dependency-audit.yml` | Daily audit of `acc` and `main`; not a merge check                                                              |
 
 Required checks match by job name, so renaming a job means updating the rulesets.
+
+## The LVG API
+
+`api/` is its own npm package, deployed as Azure Functions on Node 22 with the site.
+
+- **Its own lockfile.** Both deploy workflows run `npm ci --prefix api`, so
+  `api/package-lock.json` decides what the functions run. `api/.npmrc` carries the same
+  14-day cooldown as the root, because npm reads `.npmrc` from the package being installed.
+  Before deploying, `npm prune --omit=dev --prefix api` removes development tools, and the
+  deploy uses `skip_api_build`, so Azure does not install anything itself.
+- **The contract.** `npm run lint:contract` checks `api/openapi.yaml` against the API
+  Design Rules. The ruleset is vendored in `api/.spectral.yaml`, so CI fetches no rules
+  from the network; its first line records the source and download date.
+- **The bundle check.** `npm run check-bundle` runs after the build and fails when `dist/`
+  contains `localhost:8081` or `demo:demo`. `operaton.open-regels.nl` is added when the old
+  page that still calls Operaton from the browser is removed (plan, Task 19).
+- **Not yet covered.** The daily dependency audit and `audit:signatures` read the root
+  lockfile only. The API's lockfile is covered by Renovate, Dependabot alerts and Semgrep
+  Supply Chain.
 
 ## Branch rulesets
 

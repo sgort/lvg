@@ -144,13 +144,12 @@ Walk through each changed page:
 
 ## Waiting on others
 
-| Item                                                    | From        | Blocks                               |
-| ------------------------------------------------------- | ----------- | ------------------------------------ |
-| Aansluitvoorwaarden MijnOverheid (code)                 | Logius      | Final choice of stack and packaging  |
-| Editor access to the Figma file for steven.gort@ictu.nl | Jan (G&B)   | Reading frames directly              |
-| Copy for placeholders, FAQ and info buttons             | G&B         | Final copy                           |
-| Answers to the spec's open questions                    | G&B, Logius | See the spec                         |
-| Deploying the patched DMN to `operaton.open-regels.nl`  | Owner       | Highlighted advice on deployed sites |
+| Item                                                    | From        | Blocks                              |
+| ------------------------------------------------------- | ----------- | ----------------------------------- |
+| Aansluitvoorwaarden MijnOverheid (code)                 | Logius      | Final choice of stack and packaging |
+| Editor access to the Figma file for steven.gort@ictu.nl | Jan (G&B)   | Reading frames directly             |
+| Copy for placeholders, FAQ and info buttons             | G&B         | Final copy                          |
+| Answers to the spec's open questions                    | G&B, Logius | See the spec                        |
 
 ## Iteration log
 
@@ -165,5 +164,7 @@ decisions.
   the list name; rental is out of scope; the DMN gets an `aanbevolen` output, deployed to
   local Operaton only; implementation runs in a separate Claude Code session.
 - **Plan:** `docs/superpowers/plans/2026-11-19-mijnoverheid-wonen.md`.
+- **DMN:** the patched `bereken_isolatie_opties`, with `aanbevolen`, was deployed to
+  `operaton.open-regels.nl` as version 22 on 19 November 2026, and locally as version 2.
 - **Built:** (to be filled in when Part 3 merges)
 - **Differences from design:** (to be filled in after the preview review)

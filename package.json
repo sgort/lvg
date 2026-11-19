@@ -17,7 +17,10 @@
     "postinstall": "node scripts/write-deps-marker.mjs",
     "check-supply-chain": "node scripts/check-supply-chain.mjs",
     "audit:signatures": "bash scripts/audit-signatures.sh",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:api": "npm test --prefix api",
+    "lint:contract": "npm run lint:contract --prefix api",
+    "check-bundle": "node scripts/check-bundle.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.263.1",
