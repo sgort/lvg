@@ -28,7 +28,8 @@ export default defineConfig(({ mode }) => {
     plugins: [react(), pageTitle, lvgApiPlugin(), luxCssPlugin(), swaHeadersPlugin()],
     test: {
       // The API has its own package, Node version and test run (`npm run test:api`).
-      exclude: [...configDefaults.exclude, 'api/**'],
+      // e2e/ holds the Playwright walkthroughs, run by Playwright itself.
+      exclude: [...configDefaults.exclude, 'api/**', 'e2e/**'],
       setupFiles: ['src/test/setup.ts'],
     },
   };

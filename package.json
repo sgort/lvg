@@ -10,7 +10,7 @@
     "check-previews": "bash scripts/check-previews.sh",
     "lint": "eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p e2e",
     "format": "prettier --write .",
     "check-format": "prettier --check .",
     "deps:check": "bash scripts/check-deps.sh",
@@ -19,6 +19,7 @@
     "check-supply-chain": "node scripts/check-supply-chain.mjs",
     "audit:signatures": "bash scripts/audit-signatures.sh",
     "test": "vitest run",
+    "test:e2e": "npm run build && playwright test",
     "test:api": "npm test --prefix api",
     "lint:contract": "npm run lint:contract --prefix api",
     "check-bundle": "node scripts/check-bundle.mjs"
@@ -34,11 +35,14 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@eslint/js": "^9.39.5",
+    "@playwright/test": "^1.64.1",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.8",
+    "@types/node": "^24.19.2",
     "@types/react": "^18.3.31",
     "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react": "^5.2.0",
@@ -70,6 +74,10 @@
     ],
     "package.json": [
       "prettier --write"
+    ],
+    "e2e/**/*.ts": [
+      "prettier --write",
+      "eslint --fix"
     ]
   }
 }

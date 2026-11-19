@@ -456,12 +456,15 @@ Branch: `feat/wonen-pages` from `acc`.
 
 - Produces: `test` fixture in `e2e/support.ts` that fails a test on any console message containing `Content Security Policy`, and `expectAccessible(page)` with `@axe-core/playwright` (tags `wcag2a`, `wcag2aa`, `wcag21aa`, `wcag22aa`).
 
-- [ ] **Step 1:** Install dev dependencies `@playwright/test` and `@axe-core/playwright`. Root script `test:e2e`: `npm run build && playwright test`. `playwright.config.ts`: Chromium only, `webServer` `npm run preview -- --port 4173 --strictPort` with `LVG_SCENARIOS=on`, `baseURL` `http://localhost:4173`, viewports 1440×900 and 375×812 as two projects.
-- [ ] **Step 2:** `e2e/frame.spec.ts`: `/nl/wonen` shows the band and the H1, passes axe, and logs no CSP violation; `?kader=uit` hides the band.
-- [ ] **Step 3:** Both workflows: after `Run API tests` (Node 22 is active, the API is installed), add `npx playwright install --with-deps chromium` and `npx playwright test` (not `npm run test:e2e`: it would rebuild `dist/` without the workflow's build variables, and that `dist/` is what gets deployed) with `OPERATON_BASE_URL=https://operaton.open-regels.nl/engine-rest` and `LVG_SCENARIOS=on`; upload `playwright-report/` as an artifact on failure. Pin the upload action by commit SHA, as the other actions are.
-- [ ] **Step 4:** `SECURITY-PIPELINE.md`: Playwright downloads its browser from the Playwright CDN in CI; the version follows the lockfile.
-- [ ] **Step 5:** The owner runs `npm run test:e2e` once locally with local Operaton running. Expected: 2 tests × 2 viewports pass. The builder does not run Playwright (CLAUDE.md, no browser automation).
-- [ ] **Step 6:** After owner go-ahead, commit `test: add Playwright walkthroughs with axe and CSP checks`.
+- [x] **Step 1:** Install dev dependencies `@playwright/test` and `@axe-core/playwright`. Root script `test:e2e`: `npm run build && playwright test`. `playwright.config.ts`: Chromium only, `webServer` `npm run preview -- --port 4173 --strictPort` with `LVG_SCENARIOS=on`, `baseURL` `http://localhost:4173`, viewports 1440×900 and 375×812 as two projects.
+- [x] **Step 2:** `e2e/frame.spec.ts`: `/nl/wonen` shows the band and the H1, passes axe, and logs no CSP violation; `?kader=uit` hides the band.
+- [x] **Step 3:** Both workflows: after `Run API tests` (Node 22 is active, the API is installed), add `npx playwright install --with-deps chromium` and `npx playwright test` (not `npm run test:e2e`: it would rebuild `dist/` without the workflow's build variables, and that `dist/` is what gets deployed) with `OPERATON_BASE_URL=https://operaton.open-regels.nl/engine-rest` and `LVG_SCENARIOS=on`; upload `playwright-report/` as an artifact on failure. Pin the upload action by commit SHA, as the other actions are.
+- [x] **Step 4:** `SECURITY-PIPELINE.md`: Playwright downloads its browser from the Playwright CDN in CI; the version follows the lockfile.
+      Deviations, 19 November 2026: `@types/node@^24` is added, because `playwright.config.ts` reads `process.env.CI`. So that browser code cannot use Node's types by accident, `e2e/` has its own `tsconfig.json` (Node types, including `../playwright.config.ts`); the root `tsconfig.json` covers `src/` only, and `npm run typecheck` runs `tsc --noEmit && tsc --noEmit -p e2e`. ESLint checks `playwright.config.ts` with the e2e project (`allowDefaultProject`). `actions/upload-artifact` is pinned to v7.0.2 (`cf430e0`).
+      Notes: the tree resolved without unmet peers (`@axe-core/playwright` shares `axe-core` 4.14.0 and `playwright-core` 1.64.1). `npm audit` reports 7 moderate, development-only findings through `typescript-eslint` → `minimatch` (GHSA-g3hv-75wg-m249), already present since Task 15; production has none, and the required `audit` check does not run `npm audit`.
+- [x] **Step 5:** The owner runs `npm run test:e2e` once locally with local Operaton running. Expected: 2 tests × 2 viewports pass. The builder does not run Playwright (CLAUDE.md, no browser automation).
+      Done on 19 November 2026: 4 passed (2 tests × desktop and mobile).
+- [x] **Step 6:** After owner go-ahead, commit `test: add Playwright walkthroughs with axe and CSP checks`.
 
 ### Task 21: Wonen and Koopwoningen
 

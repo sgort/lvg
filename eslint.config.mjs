@@ -44,13 +44,25 @@ export default [
   // New TypeScript code: type-checked rules, and the layering of the spec ("Layers").
   ...tseslint.configs.recommendedTypeChecked.map((config) => ({
     ...config,
-    files: ['src/**/*.{ts,tsx}', 'e2e/**/*.ts'],
+    files: ['src/**/*.{ts,tsx}', 'e2e/**/*.ts', 'playwright.config.ts'],
   })),
   {
-    files: ['src/**/*.{ts,tsx}', 'e2e/**/*.ts'],
+    files: ['src/**/*.{ts,tsx}', 'e2e/**/*.ts', 'playwright.config.ts'],
     languageOptions: {
-      parserOptions: { projectService: true, tsconfigRootDir: import.meta.dirname },
+      parserOptions: {
+        // playwright.config.ts sits outside both projects; it is checked with e2e's.
+        projectService: {
+          allowDefaultProject: ['playwright.config.ts'],
+          defaultProject: 'e2e/tsconfig.json',
+        },
+        tsconfigRootDir: import.meta.dirname,
+      },
     },
+  },
+  // The walkthroughs and their config run in Node.
+  {
+    files: ['e2e/**/*.ts', 'playwright.config.ts'],
+    languageOptions: { globals: globals.node },
   },
   {
     files: ['src/**/*.tsx'],

@@ -33,14 +33,16 @@ same branch before merging.
 
 ## Checks
 
-| Check                  | Workflow               | Covers                                                                                                                      |
-| ---------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `audit`                | `zizmor.yml`           | Workflow analysis, Renovate config, lockfile, format, signatures, pins                                                      |
-| `scan`                 | `semgrep.yml`          | Semgrep Code and Supply Chain                                                                                               |
-| `Build and deploy ACC` | `azure-lvg-acc.yml`    | Lint, type-check, tests, the API contract and tests, the build and the bundle check, skipped for documentation-only changes |
-| `dependency-audit`     | `dependency-audit.yml` | Daily audit of `acc` and `main`; not a merge check                                                                          |
+| Check                  | Workflow               | Covers                                                                                                                                                   |
+| ---------------------- | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `audit`                | `zizmor.yml`           | Workflow analysis, Renovate config, lockfile, format, signatures, pins                                                                                   |
+| `scan`                 | `semgrep.yml`          | Semgrep Code and Supply Chain                                                                                                                            |
+| `Build and deploy ACC` | `azure-lvg-acc.yml`    | Lint, type-check, tests, the API contract and tests, the build and the bundle check, the Playwright walkthroughs, skipped for documentation-only changes |
+| `dependency-audit`     | `dependency-audit.yml` | Daily audit of `acc` and `main`; not a merge check                                                                                                       |
 
 Required checks match by job name, so renaming a job means updating the rulesets.
+
+**Playwright's browser.** The deploy workflows run `npx playwright install --with-deps chromium`, which downloads Chromium from Playwright's CDN (and system libraries through apt) at the version `@playwright/test` in the lockfile pins. That download is outside npm's lockfile and signatures; it runs in CI only, and nothing from it is deployed. On failure the report is uploaded with `actions/upload-artifact`, pinned by commit SHA like the other actions.
 
 **Install scripts.** npm runs no install script that `allowScripts` does not list. `sass` (since Part 2) brings the optional `@parcel/watcher`, whose script builds a native file watcher; it is not allowed and not needed, because Vite compiles Sass without `--watch`.
 
