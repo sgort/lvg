@@ -32,6 +32,30 @@ describe('handle', () => {
   });
 
   it.each([
+    ['a browser that prefers Dutch', 'nl-NL,nl;q=0.9,en-US;q=0.8,en;q=0.7'],
+    ['a browser that accepts Dutch second', 'en-US,en;q=0.9,nl;q=0.8'],
+    ['a regional Dutch tag', 'nl-BE'],
+    ['any language', '*'],
+    ['upper case and spaces', ' NL-nl ; q=0.5 , en'],
+  ])('accepts %s', async (_, value) => {
+    const response = await get('/api/v1/openapi.json', { 'Accept-Language': value });
+
+    expect(response.status).toBe(200);
+    expect(response.headers['Content-Language']).toBe('nl');
+  });
+
+  it.each([
+    ['only other languages', 'en-US,en;q=0.9,de;q=0.8'],
+    ['Dutch refused with q=0', 'nl;q=0,en'],
+    ['a wildcard refused with q=0', '*;q=0'],
+    ['a tag that only starts with nl', 'nld'],
+  ])('refuses %s with 406', async (_, value) => {
+    const response = await get('/api/v1/openapi.json', { 'Accept-Language': value });
+
+    expect(response.status).toBe(406);
+  });
+
+  it.each([
     ['a success', '/api/v1/openapi.json', {}],
     ['a 404', '/api/v1/bestaat-niet', {}],
     ['a 406', '/api/v1/openapi.json', { 'Accept-Language': 'en' }],

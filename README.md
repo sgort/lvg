@@ -33,25 +33,36 @@ calculation calls the `bereken_isolatie_opties` decision through Operaton's REST
 
 ```bash
 npm ci
+npm ci --prefix api
+bash scripts/deploy-dmn-local.sh
 npm run dev
 ```
 
 `npm run dev` first checks that `node_modules` matches `package-lock.json`. If it does not,
-it stops and asks for `npm ci`. The app runs on http://localhost:5173.
+it stops and asks for `npm ci`. The app runs on http://localhost:5173, and the LVG API on
+http://localhost:5173/api/v1/. Run the deploy script once, and again after a change in
+`dmn/`; see `dmn/README.md`.
 
-### Operaton during development
+### The LVG API during development
 
-The dev server forwards the app's evaluate call to `http://localhost:8081` and adds the
-login on the server side, so it never reaches the browser. The default is `demo` / `demo`.
-To use other credentials, create `.env.local`:
+The API in `api/` is the only part that calls Operaton. In development a Vite plugin
+(`vite/lvgApiPlugin.js`) serves it inside the dev server, so no Azure tooling is needed.
+Changes in `api/` need a dev server restart. Deployed sites run the same code as Azure
+Functions.
 
-```bash
-OPERATON_USER=your-user
-OPERATON_PASSWORD=your-password
-```
+Its settings stay on the server and never reach the browser. Override the defaults in
+`.env.local`:
 
-Deployed sites call the public endpoint `https://operaton.open-regels.nl/engine-rest`
-without a login.
+| Variable            | Default                             | Purpose                                 |
+| ------------------- | ----------------------------------- | --------------------------------------- |
+| `OPERATON_BASE_URL` | `http://localhost:8081/engine-rest` | The Operaton the API calls              |
+| `OPERATON_USER`     | `demo`                              | Login for the local Operaton            |
+| `OPERATON_PASSWORD` | `demo`                              | Login for the local Operaton            |
+| `LVG_SCENARIOS`     | `on`                                | Lets `X-LVG-Scenario` choose a scenario |
+
+To use the public Operaton instead, set
+`OPERATON_BASE_URL=https://operaton.open-regels.nl/engine-rest` and leave the login empty.
+See `docs/runbook.md` for the scenarios and the iteration loop.
 
 ## Scripts
 

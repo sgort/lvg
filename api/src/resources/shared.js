@@ -7,7 +7,13 @@ import * as registers from '../sources/registers.js';
 /** Where a link points while its real target is not known yet. */
 export const PLACEHOLDER_HREF = '#nog-niet-beschikbaar';
 
-export const scenarioOf = (request) => resolveScenario(request.headers, process.env);
+/**
+ * Settings for a request: what the host passes as `request.env` (the Vite dev server), or
+ * the process environment (Azure Functions app settings).
+ */
+export const envOf = (request) => request.env ?? process.env;
+
+export const scenarioOf = (request) => resolveScenario(request.headers, envOf(request));
 
 /** Today's date in the Netherlands, as YYYY-MM-DD. */
 export const vandaag = () =>

@@ -409,11 +409,16 @@ components:
       name: Accept-Language
       in: header
       required: false
-      description: Alleen Nederlands wordt ondersteund. Een andere waarde geeft 406.
+      description: >-
+        Alleen Nederlands wordt ondersteund. De API onderhandelt zoals HTTP voorschrijft: de
+        aanvraag wordt geaccepteerd als Nederlands ergens in de lijst acceptabel is (`nl`,
+        `nl-NL` of `*`, met een q-waarde boven 0), zodat ook de eigen header van een browser
+        werkt. Is Nederlands niet acceptabel, dan antwoordt de API met 406. Antwoorden zijn
+        altijd in het Nederlands.
       schema:
         type: string
-        enum: [nl]
         default: nl
+        example: nl-NL,nl;q=0.9,en;q=0.8
     Scenario:
       name: X-LVG-Scenario
       in: header

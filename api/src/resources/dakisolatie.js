@@ -11,6 +11,7 @@ import {
   TARGET_R_VALUES,
 } from '../operaton/parameters.js';
 import {
+  envOf,
   placeholderLink,
   scenarioOf,
   vandaag,
@@ -53,9 +54,9 @@ function optie(doelRWaarde, result, dakoppervlakteM2) {
   };
 }
 
-async function berekenAdvies(gebouwgegevens) {
+async function berekenAdvies(gebouwgegevens, env) {
   const params = buildIsolatieParams(gebouwgegevens);
-  const config = { ...operatonConfig(process.env), fetch: globalThis.fetch };
+  const config = { ...operatonConfig(env), fetch: globalThis.fetch };
   try {
     const results = await Promise.all(
       TARGET_R_VALUES.map((doel_r_waarde) => evaluateIsolatie({ ...params, doel_r_waarde }, config))
@@ -98,7 +99,7 @@ export async function getDakisolatie(request) {
   const { woningId } = request.params;
   const { bag, gebouwgegevens } = await woningMetDak(scenario, woningId);
 
-  const advies = await berekenAdvies(gebouwgegevens);
+  const advies = await berekenAdvies(gebouwgegevens, envOf(request));
   const isolatie = gebouwgegevens.bestaande_isolatie;
   const acties = [
     ...(advies.status === 'berekend'

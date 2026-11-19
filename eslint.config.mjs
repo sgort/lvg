@@ -31,7 +31,7 @@ export default [
 
   // Root configuration files and scripts
   {
-    files: ['*.{js,mjs}', 'scripts/**/*.{js,mjs}', 'api/**/*.js'],
+    files: ['*.{js,mjs}', 'scripts/**/*.{js,mjs}', 'api/**/*.js', 'vite/**/*.js'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',

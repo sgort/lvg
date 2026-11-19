@@ -216,12 +216,17 @@ Branch: `feat/lvg-api` from `acc`.
 - Create: `api/src/functions/lvg.js`, `vite/lvgApiPlugin.js`
 - Modify: `vite.config.js`, `public/staticwebapp.config.json`, `README.md` (local setup)
 
-- [ ] **Step 1:** In `api/src/functions/lvg.js`, register one HTTP function with route `v1/{*path}`, anonymous auth level, all methods used, that converts the Azure request to the core `request`, calls `handle`, and returns the result.
-- [ ] **Step 2:** In `vite/lvgApiPlugin.js`, a dev-only plugin (`apply: 'serve'`) that mounts the same `handle` on `/api/` using Connect middleware. It reads `OPERATON_*` and `LVG_SCENARIOS` from `loadEnv(mode, cwd, ['OPERATON_', 'LVG_'])`, defaults to `http://localhost:8081/engine-rest`, `demo`/`demo` and `LVG_SCENARIOS=on`, and passes them to the core as configuration, never to the client.
-- [ ] **Step 3:** In `vite.config.js`, remove the `/api/engine-rest/...` proxy and add the plugin.
-- [ ] **Step 4:** In `staticwebapp.config.json`, add `"platform": { "apiRuntime": "node:22" }` and exclude `/api/*` from `navigationFallback`.
-- [ ] **Step 5:** Owner check: with local Operaton running, the owner runs `npm ci --prefix api` and `npm run dev`, then opens `http://localhost:5173/api/v1/woningen/w-7f3a/dakisolatie`. Expected: JSON with four options.
-- [ ] **Step 6:** After owner go-ahead, commit `feat(api): add Azure Functions adapter and local dev plugin`.
+**Note, 19 November 2026:** the plugin loads the API with Node's own `import()`, not Vite's module loader, which cannot run the API's CommonJS dependencies; so API changes need a dev server restart. It does not apply under Vitest. The API reads its settings from `request.env` when a host passes them (the plugin), else from `process.env` (Azure). Removing the proxy stops the old page's calculation on `localhost:5173` until Part 3; deployed sites are unaffected. Both adapters have tests.
+
+**Deviation agreed with the owner on 19 November 2026:** `Accept-Language` is negotiated as in HTTP instead of matched exactly. The API accepts a request when Dutch is acceptable anywhere in the list (`nl`, `nl-NL` or `*`, with q above 0) and answers 406 only when Dutch is not acceptable at all. Found in the Step 5 check: a browser sends its own list, such as `nl-NL,nl;q=0.9,en;q=0.8`, which the exact match refused. Responses stay Dutch with `Content-Language: nl`; the contract's parameter description says so.
+
+- [x] **Step 1:** In `api/src/functions/lvg.js`, register one HTTP function with route `v1/{*path}`, anonymous auth level, all methods used, that converts the Azure request to the core `request`, calls `handle`, and returns the result.
+- [x] **Step 2:** In `vite/lvgApiPlugin.js`, a dev-only plugin (`apply: 'serve'`) that mounts the same `handle` on `/api/` using Connect middleware. It reads `OPERATON_*` and `LVG_SCENARIOS` from `loadEnv(mode, cwd, ['OPERATON_', 'LVG_'])`, defaults to `http://localhost:8081/engine-rest`, `demo`/`demo` and `LVG_SCENARIOS=on`, and passes them to the core as configuration, never to the client.
+- [x] **Step 3:** In `vite.config.js`, remove the `/api/engine-rest/...` proxy and add the plugin.
+- [x] **Step 4:** In `staticwebapp.config.json`, add `"platform": { "apiRuntime": "node:22" }` and exclude `/api/*` from `navigationFallback`.
+- [x] **Step 5:** Owner check: with local Operaton running, the owner runs `npm ci --prefix api` and `npm run dev`, then opens `http://localhost:5173/api/v1/woningen/w-7f3a/dakisolatie`. Expected: JSON with four options.
+      Result on 19 November 2026: four options from the local Operaton, R 6 recommended.
+- [x] **Step 6:** After owner go-ahead, commit `feat(api): add Azure Functions adapter and local dev plugin`.
 
 ### Task 9: CI and hooks
 

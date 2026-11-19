@@ -78,10 +78,19 @@ function compile(pattern) {
   return { regex: new RegExp(`^${source}$`), names };
 }
 
-// Only Dutch is offered for now. A missing header means Dutch.
+// Only Dutch is offered for now. Language negotiation as in HTTP: the request is accepted
+// when Dutch is acceptable anywhere in the list (`nl`, `nl-NL` or `*`, with q above 0), so a
+// browser's own header works. A missing or empty header means any language.
 function acceptsDutch(headers) {
-  const value = getHeader(headers, 'Accept-Language');
-  return value === undefined || value.trim().toLowerCase() === LANGUAGE;
+  const value = getHeader(headers, 'Accept-Language')?.trim();
+  if (!value) return true;
+  return value.split(',').some((item) => {
+    const [range, ...params] = item.split(';').map((part) => part.trim().toLowerCase());
+    const q = params.find((p) => p.startsWith('q='));
+    const quality = q === undefined ? 1 : Number(q.slice(2));
+    const matches = range === '*' || range === LANGUAGE || range.startsWith(`${LANGUAGE}-`);
+    return matches && quality > 0;
+  });
 }
 
 export function createHandler(table) {
