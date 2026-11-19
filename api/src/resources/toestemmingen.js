@@ -24,13 +24,23 @@ export function resetToestemmingenForTests() {
 
 const ongeldig = (title, burgerActie) => new ProblemError(400, title, undefined, burgerActie);
 
+const onleesbaar = () => ongeldig('Aanvraag niet leesbaar', 'Ga terug en probeer het opnieuw.');
+
+const isGewoonObject = (value) =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
+
+// Only a JSON object is a request: null, an array or a bare value is not.
 function leesAanvraag(body) {
-  if (typeof body !== 'string') return body ?? {};
-  try {
-    return JSON.parse(body);
-  } catch {
-    throw ongeldig('Aanvraag niet leesbaar', 'Ga terug en probeer het opnieuw.');
+  let aanvraag = body;
+  if (typeof body === 'string') {
+    try {
+      aanvraag = JSON.parse(body);
+    } catch {
+      throw onleesbaar();
+    }
   }
+  if (!isGewoonObject(aanvraag)) throw onleesbaar();
+  return aanvraag;
 }
 
 // TS-YYYY-MMDD-NNNN, numbered per day.

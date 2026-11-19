@@ -1,10 +1,14 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { expectValidResponse } from '../../test/contract.js';
 import { contract } from './contract.js';
 import { handle } from './router.js';
 
 const get = (path, headers = {}) => handle({ method: 'GET', path, headers, body: undefined });
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 describe('handle', () => {
   it('answers an unknown path with a 404 problem the citizen can act on', async () => {
@@ -27,8 +31,8 @@ describe('handle', () => {
   });
 
   it('accepts Dutch, and a request without Accept-Language', async () => {
-    expect((await get('/api/v1/openapi.json', { 'accept-language': 'nl' })).status).toBe(200);
-    expect((await get('/api/v1/openapi.json')).status).toBe(200);
+    expect((await get('/api/v1/woningen', { 'accept-language': 'nl' })).status).toBe(200);
+    expect((await get('/api/v1/woningen')).status).toBe(200);
   });
 
   it.each([
@@ -37,8 +41,9 @@ describe('handle', () => {
     ['a regional Dutch tag', 'nl-BE'],
     ['any language', '*'],
     ['upper case and spaces', ' NL-nl ; q=0.5 , en'],
+    ['any language with a lower weight', '*;q=0.5'],
   ])('accepts %s', async (_, value) => {
-    const response = await get('/api/v1/openapi.json', { 'Accept-Language': value });
+    const response = await get('/api/v1/woningen', { 'Accept-Language': value });
 
     expect(response.status).toBe(200);
     expect(response.headers['Content-Language']).toBe('nl');
@@ -49,8 +54,11 @@ describe('handle', () => {
     ['Dutch refused with q=0', 'nl;q=0,en'],
     ['a wildcard refused with q=0', '*;q=0'],
     ['a tag that only starts with nl', 'nld'],
+    ['an English browser', 'en-US,en;q=0.9'],
+    ['Dutch refused explicitly before a wildcard', 'nl;q=0, *'],
+    ['regional Dutch refused explicitly before a wildcard', 'nl-NL;q=0, *'],
   ])('refuses %s with 406', async (_, value) => {
-    const response = await get('/api/v1/openapi.json', { 'Accept-Language': value });
+    const response = await get('/api/v1/woningen', { 'Accept-Language': value });
 
     expect(response.status).toBe(406);
   });
@@ -64,6 +72,25 @@ describe('handle', () => {
 
     expect(response.headers['Content-Language']).toBe('nl');
     expect(response.headers['API-Version']).toBe('1.1.0');
+  });
+
+  it('serves the contract in any language', async () => {
+    const response = await get('/api/v1/openapi.json', { 'Accept-Language': 'en-US,en;q=0.9' });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(contract);
+    expectValidResponse('getOpenapi', response);
+  });
+
+  it('answers a malformed percent-encoding in a path with 404', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    const response = await get('/api/v1/woningen/%E0');
+
+    expect(response.status).toBe(404);
+    expect(response.headers['Content-Type']).toBe('application/problem+json');
+    expect(response.body.burgerActie).toBe('Ga naar de pagina Wonen in MijnOverheid.');
+    expectValidResponse('getWoning', response);
+    expect(console.error).not.toHaveBeenCalled();
   });
 
   it('serves the contract at /api/v1/openapi.json', async () => {

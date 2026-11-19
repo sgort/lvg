@@ -78,19 +78,49 @@ function compile(pattern) {
   return { regex: new RegExp(`^${source}$`), names };
 }
 
-// Only Dutch is offered for now. Language negotiation as in HTTP: the request is accepted
-// when Dutch is acceptable anywhere in the list (`nl`, `nl-NL` or `*`, with q above 0), so a
-// browser's own header works. A missing or empty header means any language.
+// Operations that answer in any language: the contract is meant to be read by tools.
+const LANGUAGE_FREE = new Set(['getOpenapi']);
+
+// Only Dutch is offered for now. Language negotiation as in RFC 9110: Dutch is acceptable when
+// `nl`, `nl-*` or `*` has q above 0, so a browser's own header works. An explicit `nl` or
+// `nl-*` with q=0 refuses Dutch, whatever `*` says. A missing or empty header means any
+// language.
 function acceptsDutch(headers) {
   const value = getHeader(headers, 'Accept-Language')?.trim();
   if (!value) return true;
-  return value.split(',').some((item) => {
+  const ranges = value.split(',').map((item) => {
     const [range, ...params] = item.split(';').map((part) => part.trim().toLowerCase());
     const q = params.find((p) => p.startsWith('q='));
-    const quality = q === undefined ? 1 : Number(q.slice(2));
-    const matches = range === '*' || range === LANGUAGE || range.startsWith(`${LANGUAGE}-`);
-    return matches && quality > 0;
+    return { range, quality: q === undefined ? 1 : Number(q.slice(2)) };
   });
+  const explicit = ranges.filter(
+    ({ range }) => range === LANGUAGE || range.startsWith(`${LANGUAGE}-`)
+  );
+  if (explicit.some(({ quality }) => !(quality > 0))) return false;
+  const wildcard = ranges.filter(({ range }) => range === '*');
+  return [...explicit, ...wildcard].some(({ quality }) => quality > 0);
+}
+
+// A path segment that is not valid percent-encoding names nothing: null, so the route's 404.
+function decodeSegment(segment) {
+  try {
+    return decodeURIComponent(segment);
+  } catch (error) {
+    if (error instanceof URIError) return null;
+    throw error;
+  }
+}
+
+const notFound = () =>
+  problem(404, 'Niet gevonden', 'Deze pagina bestaat niet (meer).', NOT_FOUND_ACTION);
+
+function findRoute(compiled, method, path) {
+  for (const route of compiled) {
+    if (route.method !== method) continue;
+    const match = path.match(route.regex);
+    if (match) return { ...route, match };
+  }
+  return undefined;
 }
 
 export function createHandler(table) {
@@ -98,7 +128,10 @@ export function createHandler(table) {
 
   return async function handle(request) {
     try {
-      if (!acceptsDutch(request.headers)) {
+      const path = request.path.startsWith(BASE_PATH) ? request.path.slice(BASE_PATH.length) : null;
+      const route = path === null ? undefined : findRoute(compiled, request.method, path);
+
+      if (!LANGUAGE_FREE.has(route?.operationId) && !acceptsDutch(request.headers)) {
         return problem(
           406,
           'Taal niet beschikbaar',
@@ -107,18 +140,12 @@ export function createHandler(table) {
         );
       }
 
-      const path = request.path.startsWith(BASE_PATH) ? request.path.slice(BASE_PATH.length) : null;
-      for (const route of path === null ? [] : compiled) {
-        if (route.method !== request.method) continue;
-        const match = path.match(route.regex);
-        if (!match) continue;
-        const params = Object.fromEntries(
-          route.names.map((name, i) => [name, decodeURIComponent(match[i + 1])])
-        );
-        return await route.handler({ ...request, params, operationId: route.operationId });
-      }
+      if (!route) return notFound();
 
-      return problem(404, 'Niet gevonden', 'Deze pagina bestaat niet (meer).', NOT_FOUND_ACTION);
+      const values = route.match.slice(1).map(decodeSegment);
+      if (values.includes(null)) return notFound();
+      const params = Object.fromEntries(route.names.map((name, i) => [name, values[i]]));
+      return await route.handler({ ...request, params, operationId: route.operationId });
     } catch (error) {
       if (error instanceof ProblemError) return error.toResponse();
       // Log the error only: request data can contain personal details.

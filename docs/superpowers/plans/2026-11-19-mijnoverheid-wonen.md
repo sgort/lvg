@@ -306,19 +306,20 @@ Branch: `feat/api-iteration-2` from `acc`.
 
 - Modify: `api/src/core/router.js`, `api/src/core/router.test.js`, `api/src/resources/toestemmingen.js`, `api/src/resources/toestemmingen.test.js`
 
-- [ ] **Step 1: Write failing tests:**
+- [x] **Step 1: Write failing tests:**
   - `POST /api/v1/woningen/w-7f3a/toestemmingen` with body `null` (string `'null'` and the value `null`) answers 400 `Aanvraag niet leesbaar`, not 500. The same for a JSON array and a JSON string.
   - `GET /api/v1/woningen/%E0` answers 404 problem+json with the not-found `burgerActie`, not 500.
   - `Accept-Language: nl;q=0, *` answers 406; `Accept-Language: nl-NL;q=0, *` answers 406; `Accept-Language: *;q=0.5` is accepted; `Accept-Language: en-US,en;q=0.9` still answers 406 on `/woningen`.
   - `GET /api/v1/openapi.json` with `Accept-Language: en-US,en;q=0.9` answers 200 with the contract.
-- [ ] **Step 2:** Run `npm run test:api`. Expected: FAIL on each.
-- [ ] **Step 3:** Implement:
+- [x] **Step 2:** Run `npm run test:api`. Expected: FAIL on each.
+- [x] **Step 3:** Implement:
   - `leesAanvraag` accepts only a plain object; anything else throws the existing 400.
   - The router catches `URIError` from `decodeURIComponent` and answers the route's 404.
   - `acceptsDutch` follows RFC 9110: an explicit `nl` or `nl-*` range with `q=0` makes Dutch unacceptable before `*` is considered; otherwise Dutch is acceptable when `nl`, `nl-*` or `*` has q above 0.
   - `getOpenapi` skips language negotiation.
-- [ ] **Step 4:** Run `npm run test:api` and `npm run lint:contract`. Expected: PASS.
-- [ ] **Step 5:** After owner go-ahead, commit `fix(api): reject unreadable bodies and paths, and negotiate language per RFC 9110`.
+- [x] **Step 4:** Run `npm run test:api` and `npm run lint:contract`. Expected: PASS.
+      Notes, 19 November 2026: the existing negotiation tests in `src/core/http.test.js` moved from `/openapi.json` to `/woningen`, because the contract is now served in any language. A malformed path answers the router's own 404 (`Niet gevonden`, `Ga naar de pagina Wonen in MijnOverheid.`), which every route declares. A consent request without a body now also answers 400 `Aanvraag niet leesbaar`.
+- [x] **Step 5:** After owner go-ahead, commit `fix(api): reject unreadable bodies and paths, and negotiate language per RFC 9110`.
 
 ### Task 13: Operation and privacy fixes from #35
 

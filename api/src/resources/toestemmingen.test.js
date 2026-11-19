@@ -35,6 +35,19 @@ afterEach(() => {
 });
 
 describe('POST /woningen/{id}/toestemmingen', () => {
+  it.each([
+    ['the text null', 'null'],
+    ['the value null', null],
+    ['a JSON array', '[]'],
+    ['a JSON string', '"aanvraag"'],
+  ])('answers 400 for %s as body', async (_, body) => {
+    const response = await geef(body);
+
+    expect(response.status).toBe(400);
+    expect(response.body.title).toBe('Aanvraag niet leesbaar');
+    expectValidResponse('createToestemming', response);
+  });
+
   it('creates a consent with a kenmerk, validity and Location', async () => {
     const response = await geef(aanvraag());
 
