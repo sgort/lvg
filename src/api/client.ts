@@ -31,8 +31,8 @@ export class ApiError extends Error {
   }
 }
 
-// Read when a request is made (in a loader or action), never while rendering.
-function gekozenScenario(): string {
+// Read when a request is made, and by the stand-in frame's loader; never while rendering.
+export function gekozenScenario(): string {
   try {
     return globalThis.sessionStorage?.getItem(SCENARIO_SLEUTEL) ?? STANDAARD_SCENARIO;
   } catch {

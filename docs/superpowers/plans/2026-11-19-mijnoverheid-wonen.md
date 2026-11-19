@@ -421,11 +421,12 @@ Branch: `feat/wonen-pages` from `acc`.
 - Modify: `src/main.tsx`
 - Delete: `src/components/Footer.jsx` (its content moves to `BuildLine`)
 
-- [ ] **Step 1: Write failing tests:** the band text `Nagebootst MijnOverheid-kader. Geen onderdeel van de oplevering.` is shown; `?kader=uit` renders only the content; changing the scenario writes `sessionStorage` in the change handler and revalidates the router; nothing reads `sessionStorage` during render (spy on `Storage.prototype.getItem` during the first render); the build line shows `local build` without build variables; no axe violations.
-- [ ] **Step 2:** Run `npm test`. Expected: FAIL.
-- [ ] **Step 3:** Implement as the spec describes. Header and side-menu items other than Wonen are inert text, not links.
-- [ ] **Step 4:** Run `npm test`. Expected: PASS.
-- [ ] **Step 5:** After owner go-ahead, commit `feat: add the stand-in MijnOverheid frame and scenario switch`.
+- [x] **Step 1: Write failing tests:** the band text `Nagebootst MijnOverheid-kader. Geen onderdeel van de oplevering.` is shown; `?kader=uit` renders only the content; changing the scenario writes `sessionStorage` in the change handler and revalidates the router; nothing reads `sessionStorage` during render (spy on `Storage.prototype.getItem` during the first render); the build line shows `local build` without build variables; no axe violations.
+- [x] **Step 2:** Run `npm test`. Expected: FAIL.
+- [x] **Step 3:** Implement as the spec describes. Header and side-menu items other than Wonen are inert text, not links.
+- [x] **Step 4:** Run `npm test`. Expected: PASS.
+      Notes, 19 November 2026: the frame is a layout route (`src/frame/kaderRoute.tsx`) whose loader reads the scenario through `gekozenScenario()` in the API client; the switch's change handler writes `sessionStorage` and revalidates, which reruns that loader and every content loader. So no component reads storage while rendering; the test creates the router first, because `createMemoryRouter` reads React Router's own `remix-router-transitions` key. `main.tsx` leaves the frame out when the build sets `VITE_FRAME=off` (checked: the band text is absent from that bundle). `?kader=uit` hides the frame on the page that carries it; the next navigation shows it again. The band is an `aside` labelled "Testomgeving", so axe finds all content in landmarks. The citizen's name and the four footer columns are `{…}` placeholders: the spec names neither, and the design PDFs' text cannot be extracted (embedded fonts with custom encodings). `src/components/Footer.jsx` is removed; its build line is `BuildLine` in the band.
+- [x] **Step 5:** After owner go-ahead, commit `feat: add the stand-in MijnOverheid frame and scenario switch`.
 
 ### Task 19: Strict CSP, full bundle check and a preview server with the API
 

@@ -1,0 +1,81 @@
+// A stand-in for the MijnOverheid frame, only far enough to read the content in context: the
+// band that says so, the header, the side menu with Wonen active, and the footer. Everything
+// except Wonen is inert text. Not part of the delivery; content never imports from here.
+import type { ReactNode } from 'react';
+import { useSearchParams } from 'react-router';
+
+import { LinkNaar } from '../components/LinkNaar';
+import { BuildLine } from './BuildLine';
+import { ScenarioSwitch } from './ScenarioSwitch';
+import styles from './StandInFrame.module.scss';
+
+const MENU = [
+  'Home',
+  'Berichtenbox',
+  'Lopende zaken',
+  'Identiteit',
+  'Financiën',
+  'Werk',
+  'Gezondheid',
+  'Wonen',
+  'Vervoer',
+  'Onderwijs',
+  'Instellingen',
+];
+
+// Placeholders, as the spec's convention marks copy that is not known yet.
+const VOETTEKST_KOLOMMEN = ['{Kolom 1}', '{Kolom 2}', '{Kolom 3}', '{Kolom 4}'];
+
+type Props = { scenario: string; children: ReactNode };
+
+export function StandInFrame({ scenario, children }: Props) {
+  const [zoek] = useSearchParams();
+  if (zoek.get('kader') === 'uit') return <>{children}</>;
+
+  return (
+    <div className={styles.kader}>
+      <aside aria-label="Testomgeving" className={styles.band}>
+        <p className={styles.bandTekst}>
+          Nagebootst MijnOverheid-kader. Geen onderdeel van de oplevering.
+        </p>
+        <ScenarioSwitch scenario={scenario} />
+        <BuildLine />
+      </aside>
+      <header className={styles.kop}>
+        <img src="/rijksoverheid-logo.png" alt="Rijksoverheid" className={styles.logo} />
+        <span className={styles.merk}>MijnOverheid</span>
+        <span className={styles.kopRechts}>
+          <span>English</span>
+          <span>{'{Naam burger}'}</span>
+          <span>Uitloggen</span>
+        </span>
+      </header>
+      <div className={styles.midden}>
+        <nav aria-label="Menu MijnOverheid" className={styles.menu}>
+          <ul>
+            {MENU.map((item) => (
+              <li key={item}>
+                {item === 'Wonen' ? (
+                  <LinkNaar naar="/nl/wonen" aria-current="page">
+                    Wonen
+                  </LinkNaar>
+                ) : (
+                  <span className={styles.inert}>
+                    {item}
+                    {item === 'Berichtenbox' && <span className={styles.badge}>3</span>}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div className={styles.inhoud}>{children}</div>
+      </div>
+      <footer className={styles.voet}>
+        {VOETTEKST_KOLOMMEN.map((kolom) => (
+          <p key={kolom}>{kolom}</p>
+        ))}
+      </footer>
+    </div>
+  );
+}
