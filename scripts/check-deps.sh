@@ -11,7 +11,7 @@ echo "Checking dependencies..."
 echo ""
 
 STALE=false
-MARKER="node_modules/.package-lock-installed.json"
+STALE_API=false
 
 # Compares the lockfile against the snapshot scripts/write-deps-marker.mjs
 # (the "postinstall" script) takes after every install, ignoring this
@@ -28,6 +28,7 @@ MARKER="node_modules/.package-lock-installed.json"
 # Parsing the JSON also makes line endings irrelevant.
 #
 # Exit codes: 0 in sync, 1 dependencies differ, 2 a file could not be read.
+# Arguments: the lockfile and the marker to compare.
 lockfile_matches_marker() {
   node -e '
     const fs = require("fs");
@@ -47,29 +48,37 @@ lockfile_matches_marker() {
       console.error(error.message);
       process.exit(2);
     }
-  ' "package-lock.json" "$MARKER"
+  ' "$1" "$2"
 }
 
-# 1. node_modules must exist
-if [ ! -d "node_modules" ]; then
-  echo -e "${RED}✗ node_modules is missing.${NC}"
-  STALE=true
-elif [ ! -f "$MARKER" ]; then
-  echo -e "${YELLOW}⚠ $MARKER missing${NC} — install marker not found."
-  STALE=true
-else
-  rc=0
-  lockfile_matches_marker || rc=$?
-  if [ "$rc" -eq 0 ]; then
-    echo -e "${GREEN}✓ Installed dependencies are in sync with package-lock.json${NC}"
-  elif [ "$rc" -eq 1 ]; then
-    echo -e "${YELLOW}⚠ package-lock.json has changed since the last install${NC} — dependencies changed since you last installed."
-    STALE=true
-  else
-    echo -e "${YELLOW}⚠ package-lock.json or the install marker could not be read${NC} — treating the install as stale."
-    STALE=true
+# 1. Each install must exist and match its lockfile: the front-end at the root and the
+# LVG API in api/, which has its own package and lockfile. Returns 1 when stale.
+check_install() {
+  local dir="$1"
+  local lock="$dir/package-lock.json"
+  local marker="$dir/node_modules/.package-lock-installed.json"
+  if [ ! -d "$dir/node_modules" ]; then
+    echo -e "${RED}✗ $dir/node_modules is missing.${NC}"
+    return 1
+  elif [ ! -f "$marker" ]; then
+    echo -e "${YELLOW}⚠ $marker missing${NC} — install marker not found."
+    return 1
   fi
-fi
+  local rc=0
+  lockfile_matches_marker "$lock" "$marker" || rc=$?
+  if [ "$rc" -eq 0 ]; then
+    echo -e "${GREEN}✓ Installed dependencies are in sync with $lock${NC}"
+    return 0
+  elif [ "$rc" -eq 1 ]; then
+    echo -e "${YELLOW}⚠ $lock has changed since the last install${NC} — dependencies changed since you last installed."
+  else
+    echo -e "${YELLOW}⚠ $lock or its install marker could not be read${NC} — treating the install as stale."
+  fi
+  return 1
+}
+
+check_install "." || STALE=true
+check_install "api" || STALE_API=true
 
 # 2. The package-manager cooldown in .npmrc (min-release-age) needs npm 11.10
 # or newer. Older npm ignores the setting without a word, so an `npm install`
@@ -89,7 +98,7 @@ fi
 
 echo ""
 
-if [ "$STALE" = true ]; then
+if [ "$STALE" = true ] || [ "$STALE_API" = true ]; then
   # `npm ci`, not `npm install`. The committed lockfile is the source of truth
   # here: `npm ci` installs exactly what it records, never rewrites it, and
   # fails loudly if package.json and the lockfile disagree. `npm install`
@@ -99,7 +108,8 @@ if [ "$STALE" = true ]; then
   # `npm install <package>` remains the way to add or upgrade one.
   echo -e "${RED}Dependencies are not ready.${NC} Install them from the lockfile:"
   echo ""
-  echo "  npm ci"
+  if [ "$STALE" = true ]; then echo "  npm ci"; fi
+  if [ "$STALE_API" = true ]; then echo "  npm ci --prefix api"; fi
   echo ""
   echo "  npm ci removes node_modules first, so stop any running dev server."
   echo ""

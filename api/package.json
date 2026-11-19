@@ -9,7 +9,8 @@
   "main": "src/functions/*.js",
   "scripts": {
     "test": "vitest run",
-    "lint:contract": "spectral lint openapi.yaml"
+    "lint:contract": "spectral lint openapi.yaml",
+    "postinstall": "node ../scripts/write-deps-marker.mjs"
   },
   "dependencies": {
     "@azure/functions": "^4.17.0",

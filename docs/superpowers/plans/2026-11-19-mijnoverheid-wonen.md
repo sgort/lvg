@@ -234,11 +234,17 @@ Branch: `feat/lvg-api` from `acc`.
 
 - Modify: `.github/workflows/azure-lvg-acc.yml`, `.github/workflows/azure-lvg-stable.yml`, `.husky/pre-push`, `package.json` (scripts), `SECURITY-PIPELINE.md`, `scripts/check-deps.sh` (also check `api/`)
 
-- [ ] **Step 1:** Root scripts: `test:api` (`npm test --prefix api`), `lint:contract` (`npm run lint:contract --prefix api`), `check-bundle` (a script that fails if `dist/` contains `localhost:8081`, `demo:demo` or `operaton.open-regels.nl`).
-- [ ] **Step 2:** In both workflows, after the root `npm ci`: `npm ci --prefix api`, `npm run lint:contract`, `npm run test:api`. After the build: `npm run check-bundle`. Before deploy: `npm prune --omit=dev --prefix api`. Deploy with `api_location: 'api'` and `skip_api_build: true`.
+**Deviation agreed with the owner on 19 November 2026:** `check-bundle` is phased. Until Task 19 it fails on `localhost:8081` and `demo:demo` only, because the old page in `src/` still calls `operaton.open-regels.nl` from the browser and the full check would fail every deployment. Task 19 adds `operaton.open-regels.nl`.
+
+**Note, 19 November 2026:** `api/package.json` gained `postinstall`, which writes the install marker `scripts/check-deps.sh` compares, so `deps:check` (and `npm run dev`) also reports a stale `api/` install. The daily dependency audit and `audit:signatures` still read the root lockfile only; `SECURITY-PIPELINE.md` records that.
+
+**Deviation agreed with the owner on 19 November 2026:** the API is installed, contract-checked and tested on Node 22 (`22.23.4`, as in `ronl-business-api`), which the managed functions run. To keep the front-end on the Node in `.nvmrc`, the API steps run after the build and bundle check, just before the prune and deploy, instead of right after the root `npm ci`.
+
+- [x] **Step 1:** Root scripts: `test:api` (`npm test --prefix api`), `lint:contract` (`npm run lint:contract --prefix api`), `check-bundle` (a script that fails if `dist/` contains `localhost:8081`, `demo:demo` or `operaton.open-regels.nl`).
+- [x] **Step 2:** In both workflows, after the root `npm ci`: `npm ci --prefix api`, `npm run lint:contract`, `npm run test:api`. After the build: `npm run check-bundle`. Before deploy: `npm prune --omit=dev --prefix api`. Deploy with `api_location: 'api'` and `skip_api_build: true`.
 - [ ] **Step 3:** The owner sets the app settings `OPERATON_BASE_URL` on both Static Web Apps, and `LVG_SCENARIOS=on` on the acceptance app only (previews inherit it).
-- [ ] **Step 4:** Pre-push hook: add `npm run test:api` and `npm run lint:contract` after `npm test`.
-- [ ] **Step 5:** `SECURITY-PIPELINE.md`: the API's own lockfile, the vendored ADR ruleset and the bundle check.
+- [x] **Step 4:** Pre-push hook: add `npm run test:api` and `npm run lint:contract` after `npm test`.
+- [x] **Step 5:** `SECURITY-PIPELINE.md`: the API's own lockfile, the vendored ADR ruleset and the bundle check.
 - [ ] **Step 6:** After owner go-ahead, commit `ci: build, test and deploy the LVG API`.
 
 ### Task 10: Ship Part 1
@@ -355,6 +361,8 @@ Branch: `feat/dakisolatie` from `acc`.
 
 - Delete: `src/components/PageHeader.jsx`, `PublicInfoSection.jsx`, `PersonalInfoSection.jsx`, `LoginPrompt.jsx`, `RoofInsulationModal.jsx`, `DataStatus.jsx`; `src/hooks/`; `src/services/`; `src/lib/latestRequest.js` and its test if unused
 - Modify: `README.md` (stack, structure, local setup with `api/`), `docs/runbook.md` if anything changed
+
+**Reminder from Task 9 (agreed 19 November 2026):** add `operaton.open-regels.nl` to `FORBIDDEN` in `scripts/check-bundle.mjs` once the old page is removed, and check that the bundle passes.
 
 - [ ] **Step 1:** Delete. Run `git grep -n "services/\|hooks/\|lucide\|tailwind" -- src` and expect nothing.
 - [ ] **Step 2:** Run all checks from Task 16, Step 1. Expected: pass.

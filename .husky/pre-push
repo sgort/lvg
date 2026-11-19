@@ -4,4 +4,6 @@
 npm run deps:check
 npm run lint
 npm test
+npm run test:api
+npm run lint:contract
 npm run check-format
