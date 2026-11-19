@@ -1,7 +1,8 @@
 import { Readable } from 'node:stream';
 
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { operatonConfig } from '../api/src/operaton/parameters.js';
 import { createApiMiddleware, devApiEnv } from './lvgApiPlugin.js';
 
 const fakeResponse = () => {
@@ -20,12 +21,26 @@ const fakeRequest = ({ method = 'GET', originalUrl, body }) =>
   });
 
 describe('devApiEnv', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it('defaults to local Operaton with the demo login and scenarios on', () => {
-    expect(devApiEnv('test', '/nonexistent')).toEqual({
-      OPERATON_BASE_URL: 'http://localhost:8081/engine-rest',
-      OPERATON_USER: 'demo',
-      OPERATON_PASSWORD: 'demo',
-      LVG_SCENARIOS: 'on',
+    expect(operatonConfig(devApiEnv('test', '/nonexistent'))).toEqual({
+      baseUrl: 'http://localhost:8081/engine-rest',
+      user: 'demo',
+      password: 'demo',
+    });
+    expect(devApiEnv('test', '/nonexistent').LVG_SCENARIOS).toBe('on');
+  });
+
+  it('sends no demo login when only a remote engine is set', () => {
+    vi.stubEnv('OPERATON_BASE_URL', 'https://operaton.open-regels.nl/engine-rest');
+
+    expect(operatonConfig(devApiEnv('test', '/nonexistent'))).toEqual({
+      baseUrl: 'https://operaton.open-regels.nl/engine-rest',
+      user: undefined,
+      password: undefined,
     });
   });
 });

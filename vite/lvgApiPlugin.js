@@ -6,10 +6,10 @@ import { pathToFileURL } from 'node:url';
 
 import { loadEnv } from 'vite';
 
+// The local Operaton and its demo login are the API's own defaults (operatonConfig), which
+// it applies only to the local engine. Setting them here as well would send the demo login
+// to any engine set in OPERATON_BASE_URL.
 const DEFAULTS = {
-  OPERATON_BASE_URL: 'http://localhost:8081/engine-rest',
-  OPERATON_USER: 'demo',
-  OPERATON_PASSWORD: 'demo',
   LVG_SCENARIOS: 'on',
 };
 
