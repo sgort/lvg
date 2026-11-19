@@ -68,7 +68,10 @@ export const placeholderLink = (tekst, extern = false) => ({
 export const externeLink = (tekst, href) => ({ tekst, href, extern: true });
 
 /** The FAQ card. Its questions are a design placeholder until G&B delivers copy. */
-export const veelgesteldeVragen = () => ({
-  vragen: [1, 2, 3].map(() => ({ vraag: '{Label}', antwoord: '{antwoord}' })),
+/** Frequently asked questions: the given ones, or three placeholders until G&B delivers. */
+export const veelgesteldeVragen = (
+  vragen = [1, 2, 3].map(() => ({ vraag: '{Label}', antwoord: '{antwoord}' }))
+) => ({
+  vragen,
   meer: placeholderLink('Bekijk alle veelgestelde vragen'),
 });

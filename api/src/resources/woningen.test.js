@@ -65,6 +65,24 @@ describe('GET /woningen', () => {
     ]);
   });
 
+  it.each(['drie-woningen', 'een-woning', 'geen-woning'])(
+    'answers frequently asked questions about koopwoningen (%s)',
+    async (scenario) => {
+      const response = await get('/api/v1/woningen', scenario);
+
+      expectValidResponse('listWoningen', response);
+      const { vragen, meer } = response.body.veelgesteldeVragen;
+      expect(vragen).toHaveLength(3);
+      expect(vragen[0].vraag).toBe('Waarom staat mijn woning hier niet?');
+      expect(vragen.every((v) => v.antwoord.length > 0)).toBe(true);
+      expect(meer).toEqual({
+        tekst: 'Bekijk alle veelgestelde vragen',
+        href: '#nog-niet-beschikbaar',
+        extern: false,
+      });
+    }
+  );
+
   it('ignores the scenario header unless LVG_SCENARIOS is on', async () => {
     vi.stubEnv('LVG_SCENARIOS', '');
     const response = await get('/api/v1/woningen', 'geen-woning');

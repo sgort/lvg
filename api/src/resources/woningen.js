@@ -1,7 +1,15 @@
 // GET /woningen and GET /woningen/{id}: the list of koopwoningen and the summary of one.
 import { errorName, json } from '../core/http.js';
+import { KOOPWONINGEN } from '../mock/veelgesteldeVragen.js';
 import * as registers from '../sources/registers.js';
-import { adresKort, adresMetPlaats, scenarioOf, woningHref, woningVerwijzing } from './shared.js';
+import {
+  adresKort,
+  adresMetPlaats,
+  scenarioOf,
+  veelgesteldeVragen,
+  woningHref,
+  woningVerwijzing,
+} from './shared.js';
 
 const label = (klasse) => ({ klasse, naam: klasse });
 
@@ -33,6 +41,7 @@ export async function listWoningen(request) {
       energielabel: label(bag.energielabelklasse),
     })),
     acties,
+    veelgesteldeVragen: veelgesteldeVragen(KOOPWONINGEN),
   });
 }
 

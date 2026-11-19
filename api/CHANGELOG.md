@@ -2,6 +2,12 @@
 
 All notable changes to the LVG Wonen API. Versions follow the policy in `README.md`.
 
+## 1.2.0
+
+- `GET /woningen` answers frequently asked questions about koopwoningen
+  (`veelgesteldeVragen`, optional), for the FAQ card on the Koopwoningen page. The questions are
+  mock texts for this sandbox. Existing clients need no change.
+
 ## 1.1.0
 
 Part 1b of the MijnOverheid Wonen plan, after Logius's code and authentication conditions of

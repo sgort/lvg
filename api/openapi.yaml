@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: LVG Wonen API
-  version: 1.1.0
+  version: 1.2.0
   description: |-
     The API behind the MijnOverheid Wonen pages built by LVG. It returns what each page needs,
     already decided: statuses, final amounts, allowed actions (`acties`) and the texts a
@@ -69,7 +69,7 @@ paths:
                     openapi: 3.0.3
                     info:
                       title: LVG Wonen API
-                      version: 1.1.0
+                      version: 1.2.0
                     paths: {}
         '500':
           $ref: '#/components/responses/InternalServerError'
@@ -187,6 +187,18 @@ paths:
                           klasse: C
                           naam: C
                     acties: []
+                    veelgesteldeVragen:
+                      vragen:
+                        - vraag: Waarom staat mijn woning hier niet?
+                          antwoord: U ziet de woningen die in de Basisregistratie Kadaster op uw naam staan. Hebt u net een woning gekocht? Dan kan het een paar weken duren voordat de woning op uw naam staat.
+                        - vraag: Wat betekent het energielabel bij mijn woning?
+                          antwoord: Het energielabel laat zien hoe zuinig uw woning met energie is. A is het zuinigst, G het minst zuinig. Het label komt uit de registratie van RVO.
+                        - vraag: Het bouwjaar of het soort woning klopt niet. Wat moet ik doen?
+                          antwoord: Deze gegevens komen uit de Basisregistratie Adressen en Gebouwen. Uw gemeente houdt die bij. Neem contact op met uw gemeente als een gegeven niet klopt.
+                      meer:
+                        tekst: Bekijk alle veelgestelde vragen
+                        href: '#nog-niet-beschikbaar'
+                        extern: false
                 direct:
                   summary: 'Eén koopwoning: de pagina gaat meteen naar de woning'
                   value:
@@ -201,6 +213,18 @@ paths:
                           klasse: C
                           naam: C
                     acties: []
+                    veelgesteldeVragen:
+                      vragen:
+                        - vraag: Waarom staat mijn woning hier niet?
+                          antwoord: U ziet de woningen die in de Basisregistratie Kadaster op uw naam staan. Hebt u net een woning gekocht? Dan kan het een paar weken duren voordat de woning op uw naam staat.
+                        - vraag: Wat betekent het energielabel bij mijn woning?
+                          antwoord: Het energielabel laat zien hoe zuinig uw woning met energie is. A is het zuinigst, G het minst zuinig. Het label komt uit de registratie van RVO.
+                        - vraag: Het bouwjaar of het soort woning klopt niet. Wat moet ik doen?
+                          antwoord: Deze gegevens komen uit de Basisregistratie Adressen en Gebouwen. Uw gemeente houdt die bij. Neem contact op met uw gemeente als een gegeven niet klopt.
+                      meer:
+                        tekst: Bekijk alle veelgestelde vragen
+                        href: '#nog-niet-beschikbaar'
+                        extern: false
                 leeg:
                   summary: Geen koopwoning
                   value:
@@ -210,6 +234,18 @@ paths:
                       - type: contact-kadaster
                         href: https://www.kadaster.nl/contact
                         tekst: Klopt dit niet? Neem contact op met het Kadaster
+                    veelgesteldeVragen:
+                      vragen:
+                        - vraag: Waarom staat mijn woning hier niet?
+                          antwoord: U ziet de woningen die in de Basisregistratie Kadaster op uw naam staan. Hebt u net een woning gekocht? Dan kan het een paar weken duren voordat de woning op uw naam staat.
+                        - vraag: Wat betekent het energielabel bij mijn woning?
+                          antwoord: Het energielabel laat zien hoe zuinig uw woning met energie is. A is het zuinigst, G het minst zuinig. Het label komt uit de registratie van RVO.
+                        - vraag: Het bouwjaar of het soort woning klopt niet. Wat moet ik doen?
+                          antwoord: Deze gegevens komen uit de Basisregistratie Adressen en Gebouwen. Uw gemeente houdt die bij. Neem contact op met uw gemeente als een gegeven niet klopt.
+                      meer:
+                        tekst: Bekijk alle veelgestelde vragen
+                        href: '#nog-niet-beschikbaar'
+                        extern: false
         '400':
           $ref: '#/components/responses/BadRequest'
         '406':
@@ -1272,7 +1308,7 @@ components:
       description: De volledige versie van deze API.
       schema:
         type: string
-        example: 1.1.0
+        example: 1.2.0
     ContentLanguage:
       description: De taal van de teksten in het antwoord.
       schema:
@@ -1564,6 +1600,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Actie'
+        veelgesteldeVragen:
+          $ref: '#/components/schemas/VeelgesteldeVragen'
     WoningInLijst:
       type: object
       required: [id, adresKort, adresMetPlaats, soort, bouwjaar]

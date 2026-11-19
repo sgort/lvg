@@ -96,6 +96,7 @@ export const WoningenOverzicht = z.object({
   weergave: z.enum(['lijst', 'direct', 'leeg']),
   woningen: z.array(WoningInLijst),
   acties: z.array(Actie),
+  veelgesteldeVragen: VeelgesteldeVragen.optional(),
 });
 export type WoningenOverzicht = z.infer<typeof WoningenOverzicht>;
 
