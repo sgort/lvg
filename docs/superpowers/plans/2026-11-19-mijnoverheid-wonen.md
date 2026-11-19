@@ -201,11 +201,13 @@ Branch: `feat/lvg-api` from `acc`.
 
 - Produces: `getAannemers`, `createToestemming`, `getToestemming`.
 
-- [ ] **Step 1: Write failing tests:** contractors come without ratings; each response lists the four data sets from the spec with `verplicht` and default `aan`, and durations 7, 14, 30 with default 14; `createToestemming` rejects a missing contractor (400, `burgerActie: 'Kies een aannemer.'`) and an attempt to switch off a required set (400); on success it returns 201 with a kenmerk `TS-YYYY-MMDD-NNNN`, `geldigTot` computed by the API, and a `Location` header; `getToestemming` returns it; an unknown kenmerk gives 404.
-- [ ] **Step 2:** Run tests. Expected: FAIL.
-- [ ] **Step 3:** Implement with an in-memory store, cleared when the process restarts.
-- [ ] **Step 4:** Run tests. Expected: PASS.
-- [ ] **Step 5:** After owner go-ahead, commit `feat(api): add contractors and mocked consent`.
+**Note, 19 November 2026:** the contract said required data sets were shared even when left out of the request; it now says the request must contain them, matching this task's 400. Contractors and consent are only offered for a property with building data, like Dakisolatie (404 otherwise). An unknown data set or a duration that is not offered also gives 400, and a consent is visible only to the simulated citizen who gave it.
+
+- [x] **Step 1: Write failing tests:** contractors come without ratings; each response lists the four data sets from the spec with `verplicht` and default `aan`, and durations 7, 14, 30 with default 14; `createToestemming` rejects a missing contractor (400, `burgerActie: 'Kies een aannemer.'`) and an attempt to switch off a required set (400); on success it returns 201 with a kenmerk `TS-YYYY-MMDD-NNNN`, `geldigTot` computed by the API, and a `Location` header; `getToestemming` returns it; an unknown kenmerk gives 404.
+- [x] **Step 2:** Run tests. Expected: FAIL.
+- [x] **Step 3:** Implement with an in-memory store, cleared when the process restarts.
+- [x] **Step 4:** Run tests. Expected: PASS.
+- [x] **Step 5:** After owner go-ahead, commit `feat(api): add contractors and mocked consent`.
 
 ### Task 8: Azure Functions adapters and local development
 

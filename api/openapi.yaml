@@ -324,8 +324,9 @@ paths:
       operationId: createToestemming
       summary: Toestemming geven om gegevens te delen met een aannemer
       description: >-
-        Maakt een nagebootste toestemming. Er verlaten geen gegevens de API. Verplichte
-        gegevenssets worden altijd gedeeld, ook als ze niet in de aanvraag staan.
+        Maakt een nagebootste toestemming. Er verlaten geen gegevens de API. De aanvraag
+        bevat alle verplichte gegevenssets; zonder een verplichte set, of met een aannemer of
+        termijn die niet is aangeboden, antwoordt de API met 400.
       parameters:
         - $ref: '#/components/parameters/AcceptLanguage'
         - $ref: '#/components/parameters/Scenario'
@@ -348,7 +349,7 @@ paths:
               description: Het adres van de nieuwe toestemming.
               schema:
                 type: string
-                example: /api/v1/toestemmingen/TS-2026-000123
+                example: /api/v1/toestemmingen/TS-2026-1119-0001
           content:
             application/json:
               schema:
@@ -379,7 +380,7 @@ paths:
           description: Het kenmerk van de toestemming.
           schema:
             type: string
-            example: TS-2026-000123
+            example: TS-2026-1119-0001
       responses:
         '200':
           description: De toestemming zoals de bevestigingspagina die toont.
@@ -1156,7 +1157,7 @@ components:
       properties:
         kenmerk:
           type: string
-          example: TS-2026-000123
+          example: TS-2026-1119-0001
         woning:
           $ref: '#/components/schemas/WoningVerwijzing'
         gedeeldMet:

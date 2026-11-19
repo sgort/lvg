@@ -1,6 +1,6 @@
 // GET /woningen/{id}/dakisolatie: the current roof and the advice, calculated by Operaton on
 // every request. The API rounds the amounts and decides which actions the page may offer.
-import { json, ProblemError } from '../core/http.js';
+import { json } from '../core/http.js';
 import { evaluateIsolatie } from '../operaton/client.js';
 import {
   buildIsolatieParams,
@@ -10,13 +10,13 @@ import {
   operatonConfig,
   TARGET_R_VALUES,
 } from '../operaton/parameters.js';
-import * as registers from '../sources/registers.js';
 import {
   placeholderLink,
   scenarioOf,
   vandaag,
   veelgesteldeVragen,
   woningHref,
+  woningMetDak,
   woningVerwijzing,
 } from './shared.js';
 
@@ -96,18 +96,7 @@ async function berekenAdvies(gebouwgegevens) {
 export async function getDakisolatie(request) {
   const scenario = scenarioOf(request);
   const { woningId } = request.params;
-  const [bag, gebouwgegevens] = await Promise.all([
-    registers.getWoning(scenario, woningId),
-    registers.getDak(scenario, woningId),
-  ]);
-  if (!gebouwgegevens) {
-    throw new ProblemError(
-      404,
-      'Geen advies voor deze woning',
-      'Voor deze woning zijn geen gegevens over het dak bekend.',
-      'Ga terug naar het energielabel van uw woning.'
-    );
-  }
+  const { bag, gebouwgegevens } = await woningMetDak(scenario, woningId);
 
   const advies = await berekenAdvies(gebouwgegevens);
   const isolatie = gebouwgegevens.bestaande_isolatie;

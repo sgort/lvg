@@ -1,6 +1,8 @@
 // Building blocks shared by the resources: the property reference, placeholders for copy
 // and links that G&B has not delivered yet, and the scenario of a request.
+import { ProblemError } from '../core/http.js';
 import { resolveScenario } from '../core/scenario.js';
+import * as registers from '../sources/registers.js';
 
 /** Where a link points while its real target is not known yet. */
 export const PLACEHOLDER_HREF = '#nog-niet-beschikbaar';
@@ -10,6 +12,33 @@ export const scenarioOf = (request) => resolveScenario(request.headers, process.
 /** Today's date in the Netherlands, as YYYY-MM-DD. */
 export const vandaag = () =>
   new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Amsterdam' }).format(new Date());
+
+/** A YYYY-MM-DD date plus a number of days, as YYYY-MM-DD. */
+export const plusDagen = (datum, dagen) => {
+  const date = new Date(`${datum}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + dagen);
+  return date.toISOString().slice(0, 10);
+};
+
+/**
+ * The property and its building data, for the roof insulation flow. A property without
+ * building data has no advice, so its Dakisolatie, contractor and consent pages are 404.
+ */
+export async function woningMetDak(scenario, woningId) {
+  const [bag, gebouwgegevens] = await Promise.all([
+    registers.getWoning(scenario, woningId),
+    registers.getDak(scenario, woningId),
+  ]);
+  if (!gebouwgegevens) {
+    throw new ProblemError(
+      404,
+      'Geen advies voor deze woning',
+      'Voor deze woning zijn geen gegevens over het dak bekend.',
+      'Ga terug naar het energielabel van uw woning.'
+    );
+  }
+  return { bag, gebouwgegevens };
+}
 
 export const woningHref = (id, ...segments) => ['/api/v1/woningen', id, ...segments].join('/');
 
