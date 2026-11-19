@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
+import { configDefaults } from 'vitest/config';
 
 import { getPageTitle } from './src/lib/siteInfo.js';
 
@@ -24,6 +25,10 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react(), pageTitle],
+    test: {
+      // The API has its own package, Node version and test run (`npm run test:api`).
+      exclude: [...configDefaults.exclude, 'api/**'],
+    },
     server: {
       proxy: {
         // The local Operaton requires a login, so the proxy adds it. Only the call

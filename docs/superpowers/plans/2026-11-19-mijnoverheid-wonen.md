@@ -90,15 +90,17 @@ Branch: `feat/lvg-api` from `acc`.
 
 - Create: `api/src/core/http.js`, `api/src/core/http.test.js`, `api/src/core/router.js`, `api/src/core/router.test.js`, `api/src/core/contract.js`, `api/test/contract.js`
 
+**Deviation agreed with the owner on 19 November 2026:** also modify `vite.config.js` to exclude `api/**` from the root Vitest run, so `npm test` runs only front-end tests and the API tests run once, through their own package.
+
 **Interfaces:**
 
 - Produces: `handle(request: { method, path, headers, body }) → Promise<{ status, headers, body }>`; `problem(status, title, detail, burgerActie)`; `contract.js` exports the parsed contract for `/api/v1/openapi.json`; `test/contract.js` exports `expectValidResponse(operationId, response)` using ajv on the contract's schemas.
 
-- [ ] **Step 1: Write failing tests:** unknown path gives 404 problem+json with `burgerActie`; `Accept-Language: en` gives 406; every response has `Content-Language: nl` and `API-Version: 1.0.0`; `GET /api/v1/openapi.json` returns the contract as JSON.
-- [ ] **Step 2:** Run `npm test --prefix api`. Expected: FAIL.
-- [ ] **Step 3:** Implement `http.js` and `router.js`: a small table of `{ method, pattern, operationId, handler }`, path parameters, header handling, and a catch-all that turns thrown errors into a 500 problem with `burgerActie: 'Probeer het later opnieuw.'`, logging the error without request data.
-- [ ] **Step 4:** Run tests. Expected: PASS.
-- [ ] **Step 5:** After owner go-ahead, commit `feat(api): add core request handling`.
+- [x] **Step 1: Write failing tests:** unknown path gives 404 problem+json with `burgerActie`; `Accept-Language: en` gives 406; every response has `Content-Language: nl` and `API-Version: 1.0.0`; `GET /api/v1/openapi.json` returns the contract as JSON.
+- [x] **Step 2:** Run `npm test --prefix api`. Expected: FAIL.
+- [x] **Step 3:** Implement `http.js` and `router.js`: a small table of `{ method, pattern, operationId, handler }`, path parameters, header handling, and a catch-all that turns thrown errors into a 500 problem with `burgerActie: 'Probeer het later opnieuw.'`, logging the error without request data.
+- [x] **Step 4:** Run tests. Expected: PASS.
+- [x] **Step 5:** After owner go-ahead, commit `feat(api): add core request handling`.
 
 ### Task 3: Mock sources and scenarios
 
