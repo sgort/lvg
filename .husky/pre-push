@@ -3,4 +3,5 @@
 # here with the fix named, instead of lint failing on the wrong tool versions.
 npm run deps:check
 npm run lint
+npm test
 npm run check-format

@@ -82,10 +82,19 @@ jobs:
         run: npm ci
       - name: Run linter
         run: npm run lint
+      - name: Run tests
+        run: npm test
       # Built here, from the tree `npm ci` installed, so the lockfile decides
       # what ships. Azure's own build would run `npm install` on a Node version
       # this repository did not choose.
       - name: Build
+        # Build provenance for the footer: passed in from the workflow, never derived
+        # from git at build time. On a pull request github.sha is the merge commit
+        # GitHub creates, so a preview's SHA is not in the branch history.
+        env:
+          VITE_BUILD_SHA: ${{ github.sha }}
+          VITE_BUILD_RUN: ${{ github.run_number }}
+          VITE_SITE_URL: https://acc.lvg.open-regels.nl
         run: |
           npm run build
           test -f dist/index.html || { echo "::error::dist/index.html not found after build"; exit 1; }
