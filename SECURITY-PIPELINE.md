@@ -18,6 +18,7 @@ or exact version wherever one exists. `lvg` is a sandbox, so this follows
 | ------------------------------ | ------------------------------------------ | ------- | ---------------------------------------------- |
 | `actions/checkout`             | `3d3c42e5aac5ba805825da76410c181273ba90b1` | v7.0.1  | Renovate                                       |
 | `actions/setup-node`           | `949feb2413d6458794dcd2491c4babbbce0c15c1` | v7.1.0  | Renovate                                       |
+| `actions/upload-artifact`      | `cf430e030ddbb5b0abf93d22962f4752f3646cd9` | v7.0.2  | Renovate                                       |
 | `zizmorcore/zizmor-action`     | `45d7276c9ca790aabd705e31ca99c6185c3e76dd` | v0.8.1  | Renovate                                       |
 | `Azure/static-web-apps-deploy` | `4d27395796ac319302594769cfe812bd207490b1` | v1      | manual, because Renovate would pick a 2021 tag |
 | zizmor (the audit tool)        | `version: '1.29.0'` in `zizmor.yml`        | 1.29.0  | Renovate; merge the action update first        |
