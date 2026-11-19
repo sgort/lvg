@@ -57,6 +57,8 @@ describe('KoopwoningenPage', () => {
     expect(links[0]).toHaveTextContent('Voorbeeldlaan 73 B, Rotterdam');
     expect(links[0]).toHaveTextContent('Energielabel C');
     expect(links[0]).toHaveTextContent('Koopwoning, 1990');
+    expect(screen.getByText(/Hier ziet u de woningen die op uw naam staan/)).toBeInTheDocument();
+    expect(document.body.textContent).not.toMatch(/{[A-Za-z][^{}]*}/);
     await expectNoAxeViolations(document.body);
   });
 

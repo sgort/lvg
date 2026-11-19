@@ -105,9 +105,27 @@
   color: var(--lux-color-foreground-on-emphasis);
   background-color: var(--lux-color-donkerblauw-700);
 
-  p {
+  p,
+  ul {
     margin: 0;
   }
+
+  ul {
+    display: grid;
+    gap: var(--lux-space-50);
+    padding: 0;
+    list-style: none;
+  }
+}
+
+.voetKolom {
+  display: grid;
+  gap: var(--lux-space-100);
+  align-content: start;
+}
+
+.voetKop {
+  font-weight: var(--lux-font-weight-bold);
 }
 
 @media (min-width: $breekpunt-desktop) {

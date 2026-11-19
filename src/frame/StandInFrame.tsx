@@ -23,8 +23,15 @@ const MENU = [
   'Instellingen',
 ];
 
-// Placeholders, as the spec's convention marks copy that is not known yet.
-const VOETTEKST_KOLOMMEN = ['{Kolom 1}', '{Kolom 2}', '{Kolom 3}', '{Kolom 4}'];
+// Mock content for the stand-in (owner, plan Task 22): a fictional citizen, and footer columns
+// shaped like MijnOverheid's. All inert text.
+const NAAM_BURGER = 'J. de Vries';
+const VOETTEKST_KOLOMMEN = [
+  { kop: 'Over MijnOverheid', items: ['Wat is MijnOverheid', 'Aangesloten organisaties'] },
+  { kop: 'Hulp en contact', items: ['Veelgestelde vragen', 'Contact'] },
+  { kop: 'Privacy en veiligheid', items: ['Privacy', 'Cookies', 'Veilig internetten'] },
+  { kop: 'Over deze website', items: ['Toegankelijkheid', 'Kwetsbaarheid melden'] },
+];
 
 // The scenario switch is hidden while the pages are built on one fixed path (plan Task 21).
 // Set this to true to show it again; the walkthroughs set the scenario themselves.
@@ -50,7 +57,7 @@ export function StandInFrame({ scenario, scenarioKeuze = TOON_SCENARIO_KEUZE, ch
         <span className={styles.merk}>MijnOverheid</span>
         <span className={styles.kopRechts}>
           <span>English</span>
-          <span>{'{Naam burger}'}</span>
+          <span>{NAAM_BURGER}</span>
           <span>Uitloggen</span>
         </span>
       </header>
@@ -76,8 +83,15 @@ export function StandInFrame({ scenario, scenarioKeuze = TOON_SCENARIO_KEUZE, ch
         <div className={styles.inhoud}>{children}</div>
       </div>
       <footer className={styles.voet}>
-        {VOETTEKST_KOLOMMEN.map((kolom) => (
-          <p key={kolom}>{kolom}</p>
+        {VOETTEKST_KOLOMMEN.map(({ kop, items }) => (
+          <div key={kop} className={styles.voetKolom}>
+            <p className={styles.voetKop}>{kop}</p>
+            <ul>
+              {items.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
         ))}
       </footer>
     </div>

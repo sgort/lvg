@@ -43,7 +43,10 @@ export function KoopwoningenPage() {
           <LuxParagraph>U heeft geen koopwoning op uw naam staan.</LuxParagraph>
         ) : (
           <>
-            <LuxParagraph>{'{intro, algemene informatie}'}</LuxParagraph>
+            <LuxParagraph>
+              Hier ziet u de woningen die op uw naam staan in de Basisregistratie Kadaster. Kies een
+              woning om de gegevens te bekijken.
+            </LuxParagraph>
             <WoningLijst
               kop="Uw gebouwen:"
               labelTekst="Energielabel"

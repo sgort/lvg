@@ -63,6 +63,15 @@ describe('StandInFrame', () => {
     await expectNoAxeViolations(document.body);
   });
 
+  it('shows mock content instead of placeholders', async () => {
+    toon();
+
+    expect(await screen.findByText(BAND)).toBeInTheDocument();
+    expect(screen.getByText('J. de Vries')).toBeInTheDocument();
+    expect(screen.getByText('Over MijnOverheid')).toBeInTheDocument();
+    expect(document.body.textContent).not.toMatch(/{[A-Za-z][^{}]*}/);
+  });
+
   it('shows only the content with ?kader=uit', async () => {
     toon('/nl/wonen?kader=uit');
 
