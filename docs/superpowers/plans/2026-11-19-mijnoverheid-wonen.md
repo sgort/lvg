@@ -287,17 +287,18 @@ Branch: `feat/api-iteration-2` from `acc`.
 
 - Produces: an example under every response's media type (`examples.<name>.value`) in `api/openapi.yaml`; `Advies` as `oneOf` on `status`; `getOpenapi` without a 406 response; `info.version: 1.1.0`.
 
-- [ ] **Step 1: Write the failing test** `api/test/examples.test.js`: for every operation and every response with content, at least one example exists, and each example validates against that response's schema with the same ajv set-up as `api/test/contract.js` (reuse its exports; add an export for the schema lookup if needed). A second test builds an `Advies` with `status: 'berekend'` and no `opties`, and one with `status: 'niet-beschikbaar'` and no `melding`, and expects both to fail validation.
-- [ ] **Step 2:** Run `npm run test:api`. Expected: FAIL (no examples; `Advies` accepts both broken objects).
-- [ ] **Step 3:** In `api/openapi.yaml`:
+- [x] **Step 1: Write the failing test** `api/test/examples.test.js`: for every operation and every response with content, at least one example exists, and each example validates against that response's schema with the same ajv set-up as `api/test/contract.js` (reuse its exports; add an export for the schema lookup if needed). A second test builds an `Advies` with `status: 'berekend'` and no `opties`, and one with `status: 'niet-beschikbaar'` and no `melding`, and expects both to fail validation.
+- [x] **Step 2:** Run `npm run test:api`. Expected: FAIL (no examples; `Advies` accepts both broken objects).
+- [x] **Step 3:** In `api/openapi.yaml`:
   - Split `Advies` into `AdviesBerekend` (required `status` with enum `[berekend]`, `berekendOp`, `opties`, `uitgangspunten`) and `AdviesNietBeschikbaar` (required `status` with enum `[niet-beschikbaar]`, `melding`), and make `Advies` a `oneOf` of the two with a `discriminator` on `status`.
   - Add examples for every response. Take the bodies from the handlers' real output for scenario `drie-woningen` (property `w-7f3a` for the property resources), the Operaton-unavailable case for `getDakisolatie`, and one example per problem response. Keep `{…}` placeholders as the handlers return them.
   - Remove `406` from `getOpenapi`, and say in its description that the contract is readable in any language.
   - Add a "Versiebeleid" section to `info.description` with the policy from the spec, section "Version policy".
   - Set `info.version` to `1.1.0`.
-- [ ] **Step 4:** Write `api/README.md`: what the API is, how to run and test it (pointing to `docs/runbook.md`), the version policy (as in the spec), and where the examples live. Write `api/CHANGELOG.md` with `1.0.0` (19 November 2026, first version) and `1.1.0` (this part: examples, `Advies` bound to status, contract readable in any language, the #35 fixes).
-- [ ] **Step 5:** Run `npm run test:api` and `npm run lint:contract`. Expected: PASS; the linter shows no errors (the known `servers-use-https` warning stays). If a handler's response no longer validates, fix the handler, not the schema, unless the spec says otherwise.
-- [ ] **Step 6:** After owner go-ahead, commit `feat(api): add version policy, examples and status-bound advice to the contract`.
+- [x] **Step 4:** Write `api/README.md`: what the API is, how to run and test it (pointing to `docs/runbook.md`), the version policy (as in the spec), and where the examples live. Write `api/CHANGELOG.md` with `1.0.0` (19 November 2026, first version) and `1.1.0` (this part: examples, `Advies` bound to status, contract readable in any language, the #35 fixes).
+- [x] **Step 5:** Run `npm run test:api` and `npm run lint:contract`. Expected: PASS; the linter shows no errors (the known `servers-use-https` warning stays). If a handler's response no longer validates, fix the handler, not the schema, unless the spec says otherwise.
+      Notes, 19 November 2026: the consent request body has an example as well (the spec asks for example requests too). `getOpenapi` no longer lists the `Accept-Language` parameter, since it ignores it. The 500 and 503 examples are written by hand: no handler returns 503, and the 500 body is the router's fixed answer. The `getOpenapi` example is a shortened contract without `servers`, because the ADR linter applies `servers-use-https` to it. The two 406 tests in `src/core/http.test.js` now use `/woningen`, as the contract no longer declares 406 for `getOpenapi`; Task 12 makes the handler match.
+- [x] **Step 6:** After owner go-ahead, commit `feat(api): add version policy, examples and status-bound advice to the contract`.
 
 ### Task 12: Request handling fixes from #35
 

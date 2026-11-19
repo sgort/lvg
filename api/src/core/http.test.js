@@ -18,12 +18,12 @@ describe('handle', () => {
   });
 
   it('refuses a language other than Dutch with 406', async () => {
-    const response = await get('/api/v1/openapi.json', { 'Accept-Language': 'en' });
+    const response = await get('/api/v1/woningen', { 'Accept-Language': 'en' });
 
     expect(response.status).toBe(406);
     expect(response.headers['Content-Type']).toBe('application/problem+json');
     expect(response.body.burgerActie).toEqual(expect.any(String));
-    expectValidResponse('getOpenapi', response);
+    expectValidResponse('listWoningen', response);
   });
 
   it('accepts Dutch, and a request without Accept-Language', async () => {
@@ -58,12 +58,12 @@ describe('handle', () => {
   it.each([
     ['a success', '/api/v1/openapi.json', {}],
     ['a 404', '/api/v1/bestaat-niet', {}],
-    ['a 406', '/api/v1/openapi.json', { 'Accept-Language': 'en' }],
+    ['a 406', '/api/v1/woningen', { 'Accept-Language': 'en' }],
   ])('sets Content-Language and API-Version on %s', async (_, path, headers) => {
     const response = await get(path, headers);
 
     expect(response.headers['Content-Language']).toBe('nl');
-    expect(response.headers['API-Version']).toBe('1.0.0');
+    expect(response.headers['API-Version']).toBe('1.1.0');
   });
 
   it('serves the contract at /api/v1/openapi.json', async () => {

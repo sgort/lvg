@@ -15,7 +15,7 @@ const ajv = new Ajv({ strict: false, allErrors: true });
 addFormats(ajv);
 ajv.addSchema({ $id: CONTRACT_ID, components: contract.components });
 
-const resolveRef = (node) => {
+export const resolveRef = (node) => {
   if (!node?.$ref) return node;
   const path = node.$ref.replace(/^#\//, '').split('/');
   return path.reduce((value, key) => value[key], contract);
@@ -24,6 +24,9 @@ const resolveRef = (node) => {
 // Point local refs at the registered contract, so ajv can follow them.
 const rewriteRefs = (schema) =>
   JSON.parse(JSON.stringify(schema).replaceAll('"$ref":"#/', `"$ref":"${CONTRACT_ID}#/`));
+
+/** A validator for a schema from the contract; local refs resolve against the contract. */
+export const compileSchema = (schema) => ajv.compile(rewriteRefs(schema));
 
 const findOperation = (operationId) => {
   for (const methods of Object.values(contract.paths)) {
@@ -52,7 +55,7 @@ export function expectValidResponse(operationId, response) {
   if (!contentType) return;
   expect(headerValue(response.headers, 'Content-Type')).toContain(contentType);
 
-  const validate = ajv.compile(rewriteRefs(media.schema));
+  const validate = compileSchema(media.schema);
   const valid = validate(response.body);
   expect(valid, JSON.stringify(validate.errors, null, 2)).toBe(true);
 }
