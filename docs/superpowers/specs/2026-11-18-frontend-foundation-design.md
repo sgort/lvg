@@ -1,7 +1,7 @@
 # LVG frontend foundation design
 
 Date: 18 November 2026
-Status: approved 18 November 2026
+Status: approved 18 November 2026; its non-goals are replaced by `2026-11-19-mijnoverheid-wonen-ux-design.md`
 
 ## Intent
 
