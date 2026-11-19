@@ -26,9 +26,41 @@ function literalValue(node) {
   return undefined;
 }
 
+// All nodes below a node, depth first.
+function* nodes(node) {
+  if (!node || typeof node.type !== 'string') return;
+  yield node;
+  for (const value of Object.values(node)) {
+    for (const child of Array.isArray(value) ? value : [value]) {
+      if (child && typeof child === 'object') yield* nodes(child);
+    }
+  }
+}
+
+// A self-invoking function that appends a <style> element (as `vite-plugin-css-injected-by-js`
+// builds it): returns the CSS of its `document.createTextNode('…')`, or undefined.
+function selfInjectedCss(statement) {
+  const call = statement.type === 'ExpressionStatement' ? statement.expression : undefined;
+  const callee = call?.type === 'CallExpression' ? call.callee : undefined;
+  if (callee?.type !== 'FunctionExpression' && callee?.type !== 'ArrowFunctionExpression') {
+    return undefined;
+  }
+  let makesStyle = false;
+  let css;
+  for (const node of nodes(callee)) {
+    if (node.type !== 'CallExpression' || node.callee.type !== 'MemberExpression') continue;
+    const method = node.callee.property?.name;
+    if (method === 'createElement' && literalValue(node.arguments[0]) === 'style') {
+      makesStyle = true;
+    }
+    if (method === 'createTextNode') css = literalValue(node.arguments[0]);
+  }
+  return makesStyle ? css : undefined;
+}
+
 /**
- * Takes the CSS out of the LUX module. Returns the module without its injection calls, the
- * CSS in source order, and how many stylesheets were found.
+ * Takes the CSS out of the LUX module. Returns the module without its injections, the CSS in
+ * source order, and how many stylesheets were found.
  */
 export function extractLuxCss(code) {
   const ast = parseAst(code);
@@ -36,6 +68,13 @@ export function extractLuxCss(code) {
   const removals = [];
 
   for (const statement of ast.body) {
+    const injected = selfInjectedCss(statement);
+    if (injected !== undefined) {
+      const name = `self-injected-${statement.start}`;
+      css.set(name, injected);
+      removals.push({ start: statement.start, end: statement.end, name });
+      continue;
+    }
     if (statement.type === 'VariableDeclaration') {
       for (const declarator of statement.declarations) {
         const name = declarator.id?.name;

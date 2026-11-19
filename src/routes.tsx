@@ -16,6 +16,7 @@ import {
   haalWonen,
   haalWoz,
 } from './api/wonen';
+import { LoadState } from './components/LoadState';
 import { Hoofdinhoud } from './pages/Hoofdinhoud';
 import { NietBeschikbaarPage } from './pages/NietBeschikbaarPage';
 import { NietGevondenPage } from './pages/NietGevondenPage';
@@ -34,9 +35,17 @@ const woning = ({ params }: LoaderFunctionArgs) => parameter(params, 'woningId')
 
 const placeholder = <NietBeschikbaarPage />;
 
+/** Shown while the first page's data loads, before anything else can render. */
+export const eersteLaden = (
+  <main>
+    <LoadState tekst="Gegevens laden…" />
+  </main>
+);
+
 export const routes: RouteObject[] = [
   {
     element: <Hoofdinhoud />,
+    hydrateFallbackElement: eersteLaden,
     children: [
       {
         errorElement: <RouteFout />,

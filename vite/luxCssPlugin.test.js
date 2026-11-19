@@ -18,6 +18,37 @@ describe('extractLuxCss', () => {
   it('takes every injected stylesheet out of the installed LUX module', () => {
     expect(count).toBeGreaterThan(50);
     expect(code).not.toMatch(/styleInject\$?1?\(css_248z/);
+    expect(code).not.toContain('vite-plugin-css-injected-by-js');
+    expect(code).not.toMatch(/createElement\(\s*["'`]style["'`]\s*\)\s*;?\s*\w+\.appendChild/);
+  });
+
+  it("keeps LUX's own component CSS, which it injects separately", () => {
+    expect(css).toContain('.lux-alert');
+  });
+
+  it('takes out a self-invoking injection of a <style> element', () => {
+    const sample = [
+      'export const x = 1;',
+      '(function() {',
+      '  "use strict";',
+      '  try {',
+      '    if (typeof document != "undefined") {',
+      '      var elementStyle = document.createElement("style");',
+      "      elementStyle.appendChild(document.createTextNode('.lux-a{color:red}'));",
+      '      document.head.appendChild(elementStyle);',
+      '    }',
+      '  } catch (e) {',
+      '    console.error("vite-plugin-css-injected-by-js", e);',
+      '  }',
+      '})();',
+    ].join('\n');
+
+    const result = extractLuxCss(sample);
+
+    expect(result.count).toBe(1);
+    expect(result.css).toBe('.lux-a{color:red}');
+    expect(result.code).not.toContain('createElement');
+    expect(result.code).toContain('export const x = 1;');
   });
 
   it('keeps the CSS of the components the pages use', () => {

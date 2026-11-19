@@ -57,8 +57,14 @@ Required checks match by job name, so renaming a job means updating the rulesets
   Design Rules. The ruleset is vendored in `api/.spectral.yaml`, so CI fetches no rules
   from the network; its first line records the source and download date.
 - **The bundle check.** `npm run check-bundle` runs after the build and fails when `dist/`
-  contains `localhost:8081` or `demo:demo`. `operaton.open-regels.nl` is added when the old
-  page that still calls Operaton from the browser is removed (plan, Task 19).
+  contains `localhost:8081`, `demo:demo` or `operaton.open-regels.nl`: no Operaton address or
+  login reaches the browser (complete since plan Task 19).
+- **The Content-Security-Policy.** Both Static Web Apps send a strict policy from
+  `globalHeaders` in `public/staticwebapp.config.json` (`style-src 'self'`, no `unsafe-inline`
+  or `unsafe-eval`), with `X-Content-Type-Options: nosniff` and `Referrer-Policy: same-origin`.
+  `vite preview` sends the same headers (`vite/swaHeadersPlugin.js`), so a page that breaks the
+  policy fails locally first. The LUX components' run-time style injection is moved into a
+  stylesheet at build time (`vite/luxCssPlugin.js`).
 - **Logs.** The API logs the name of an error only (`TypeError`, `Error`), never its message
   or stack: once real sources replace the mocks, a message can hold a URL with an address or
   a BAG id. A missing `OPERATON_BASE_URL` on Azure is logged once, by name.

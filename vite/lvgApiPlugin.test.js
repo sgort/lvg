@@ -3,7 +3,7 @@ import { Readable } from 'node:stream';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { operatonConfig } from '../api/src/operaton/parameters.js';
-import { createApiMiddleware, devApiEnv } from './lvgApiPlugin.js';
+import { createApiMiddleware, devApiEnv, lvgApiPlugin } from './lvgApiPlugin.js';
 
 const fakeResponse = () => {
   const res = { statusCode: 0, headers: {}, body: undefined };
@@ -100,5 +100,25 @@ describe('createApiMiddleware', () => {
     );
 
     expect(handle.mock.calls[0][0].body).toBeUndefined();
+  });
+});
+
+describe('lvgApiPlugin in vite preview', () => {
+  it('serves the API on /api/ with the same settings as the dev server', async () => {
+    const plugin = lvgApiPlugin();
+    const use = vi.fn();
+    plugin.configResolved({ root: process.cwd(), mode: 'test' });
+
+    await plugin.configurePreviewServer({ middlewares: { use } });
+
+    expect(use).toHaveBeenCalledWith('/api/', expect.any(Function));
+    const middleware = use.mock.calls[0][1];
+    const res = fakeResponse();
+    const req = fakeRequest({ originalUrl: '/api/v1/woningen' });
+    req.headers['x-lvg-scenario'] = 'een-woning';
+    await middleware(req, res);
+
+    expect(res.statusCode).toBe(200);
+    expect(JSON.parse(res.body).weergave).toBe('direct');
   });
 });

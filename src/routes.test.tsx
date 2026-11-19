@@ -94,6 +94,20 @@ describe('routes', () => {
     await expectNoAxeViolations(document.body);
   });
 
+  it('says the data is loading while the first page loads', async () => {
+    const waarschuwing = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => new Promise<Response>(() => {}))
+    );
+
+    toon('/nl/wonen');
+
+    expect(await screen.findByText('Gegevens laden…')).toBeInTheDocument();
+    expect(JSON.stringify(waarschuwing.mock.calls)).not.toContain('HydrateFallback');
+    waarschuwing.mockRestore();
+  });
+
   it('shows "Nog niet beschikbaar" for a placeholder link', async () => {
     vi.stubGlobal('fetch', api);
 

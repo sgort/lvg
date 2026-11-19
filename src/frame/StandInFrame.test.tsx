@@ -95,6 +95,10 @@ describe('StandInFrame', () => {
     expect(screen.getByRole('combobox', { name: 'Scenario' })).toHaveValue('geen-woning');
   });
 
+  it('provides a fallback for the first load, so React Router does not warn', () => {
+    expect(kaderRoute([]).hydrateFallbackElement).toBeDefined();
+  });
+
   it('shows "local build" without build variables', async () => {
     vi.stubEnv('VITE_BUILD_SHA', '');
     vi.stubEnv('VITE_BUILD_RUN', '');

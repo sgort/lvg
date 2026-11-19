@@ -435,12 +435,15 @@ Branch: `feat/wonen-pages` from `acc`.
 - Modify: `public/staticwebapp.config.json`, `scripts/check-bundle.mjs`, `vite/lvgApiPlugin.js`, `vite/lvgApiPlugin.test.js`, `vite.config.js`
 - Create: `vite/swaHeadersPlugin.js`, `vite/swaHeadersPlugin.test.js`
 
-- [ ] **Step 1: Write failing tests:** `swaHeadersPlugin` adds every `globalHeaders` entry of `public/staticwebapp.config.json` to preview responses, and nothing to dev-server responses; `lvgApiPlugin` also serves `/api/` in `vite preview` with the same settings as in `vite dev`.
-- [ ] **Step 2:** Run `npm test`. Expected: FAIL.
-- [ ] **Step 3:** Add `globalHeaders` to `staticwebapp.config.json` with the `Content-Security-Policy` from the spec ("Privacy and security"), plus `X-Content-Type-Options: nosniff` and `Referrer-Policy: same-origin`. Implement `swaHeadersPlugin` (`configurePreviewServer`) and the preview hook in `lvgApiPlugin`. Add `operaton.open-regels.nl` to `FORBIDDEN` in `check-bundle.mjs` and update its header comment: the old page left the bundle in Task 17.
-- [ ] **Step 4:** Run `npm test`, `npm run build`, `npm run check-bundle`. Expected: PASS.
-- [ ] **Step 5:** Owner check: `npm run build && npm run preview`, open `http://localhost:4173/nl/wonen`, open the browser console. Expected: the not-yet-built page renders, the stand-in frame shows, no CSP errors.
-- [ ] **Step 6:** After owner go-ahead, commit `feat: enforce a strict CSP and serve the API in vite preview`.
+- [x] **Step 1: Write failing tests:** `swaHeadersPlugin` adds every `globalHeaders` entry of `public/staticwebapp.config.json` to preview responses, and nothing to dev-server responses; `lvgApiPlugin` also serves `/api/` in `vite preview` with the same settings as in `vite dev`.
+- [x] **Step 2:** Run `npm test`. Expected: FAIL.
+- [x] **Step 3:** Add `globalHeaders` to `staticwebapp.config.json` with the `Content-Security-Policy` from the spec ("Privacy and security"), plus `X-Content-Type-Options: nosniff` and `Referrer-Policy: same-origin`. Implement `swaHeadersPlugin` (`configurePreviewServer`) and the preview hook in `lvgApiPlugin`. Add `operaton.open-regels.nl` to `FORBIDDEN` in `check-bundle.mjs` and update its header comment: the old page left the bundle in Task 17.
+- [x] **Step 4:** Run `npm test`, `npm run build`, `npm run check-bundle`. Expected: PASS.
+      Notes, 19 November 2026: the preview-API test calls the mounted middleware with `X-LVG-Scenario: een-woning` and expects `weergave: direct`, so it checks that preview gets the same settings as the dev server (`LVG_SCENARIOS` on). `SECURITY-PIPELINE.md` describes the CSP and the complete bundle check.
+      Found at the owner's first preview check: one CSP violation remained. Besides its 82 `styleInject` calls, the LUX module ends with a self-invoking function (built by `vite-plugin-css-injected-by-js`) that appends a `<style>` with LUX's own `lux-*` rules. `luxCssPlugin` now extracts that one too (test RED→GREEN); the bundle creates no `<style>` element. The earlier check had searched the minified bundle for `createElement("style")`, which the minifier writes with backticks. The same check showed React Router's warning that no `HydrateFallback` was provided: the content root and the frame route now render `Gegevens laden…` during the first load.
+- [x] **Step 5:** Owner check: `npm run build && npm run preview`, open `http://localhost:4173/nl/wonen`, open the browser console. Expected: the not-yet-built page renders, the stand-in frame shows, no CSP errors.
+      Done on 19 November 2026: after the two fixes above, the console shows no CSP error and no `HydrateFallback` warning; links carry the `.utrecht-link` rules from the served `index-….css`.
+- [x] **Step 6:** After owner go-ahead, commit `feat: enforce a strict CSP and serve the API in vite preview`.
 
 ### Task 20: Playwright walkthroughs in CI
 
