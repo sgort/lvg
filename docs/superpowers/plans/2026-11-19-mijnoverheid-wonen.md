@@ -327,14 +327,15 @@ Branch: `feat/api-iteration-2` from `acc`.
 
 - Modify: `api/src/resources/toestemmingen.js`, `api/src/operaton/parameters.js`, `api/src/resources/woningen.js`, `api/src/resources/dakisolatie.js`, `api/src/core/router.js`, their tests, `api/README.md`, `SECURITY-PIPELINE.md` ("The LVG API")
 
-- [ ] **Step 1: Write failing tests:**
+- [x] **Step 1: Write failing tests:**
   - The consent store keeps consents of today and the previous day only; a consent from two days ago gives 404. Use an injectable clock (`vandaag` already exists in `shared.js`; make it overridable for tests).
   - Without `request.env` and without `process.env.OPERATON_BASE_URL`, `getDakisolatie` reports the advice as unavailable without calling `localhost:8081`, and logs once `[lvg-api] OPERATON_BASE_URL is not set`. With `request.env` (a development host), the local default still applies.
   - When a source or Operaton throws an error whose message contains a URL, the logged line contains only the error name (`TypeError`, `Error`), not the message. Spy on `console.error`.
-- [ ] **Step 2:** Run `npm run test:api`. Expected: FAIL.
-- [ ] **Step 3:** Implement. Document in `api/README.md` that consent numbering is per instance and per day, and is a mock property: two instances can hand out the same reference. In `SECURITY-PIPELINE.md`, note that the API logs error names only.
-- [ ] **Step 4:** Run `npm run test:api`. Expected: PASS.
-- [ ] **Step 5:** After owner go-ahead, commit `fix(api): cap the consent store, require the Operaton setting on Azure, and log error names only`.
+- [x] **Step 2:** Run `npm run test:api`. Expected: FAIL.
+- [x] **Step 3:** Implement. Document in `api/README.md` that consent numbering is per instance and per day, and is a mock property: two instances can hand out the same reference. In `SECURITY-PIPELINE.md`, note that the API logs error names only.
+- [x] **Step 4:** Run `npm run test:api`. Expected: PASS.
+      Notes, 19 November 2026: the clock is Vitest's fake `Date` (`vi.setSystemTime`), which `vandaag()` already follows, so no override was added to `shared.js`. `operatonConfig(env, { lokaalStandaard })` returns null without `OPERATON_BASE_URL` when the host passes no `request.env`. Errors are logged through `errorName()` in `src/core/http.js`. `docs/runbook.md` now says that the SWA CLI check needs `OPERATON_BASE_URL` in the shell.
+- [x] **Step 5:** After owner go-ahead, commit `fix(api): cap the consent store, require the Operaton setting on Azure, and log error names only`.
 
 ### Task 14: Ship Part 1b
 

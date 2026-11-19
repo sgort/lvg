@@ -1,5 +1,5 @@
 // GET /woningen and GET /woningen/{id}: the list of koopwoningen and the summary of one.
-import { json } from '../core/http.js';
+import { errorName, json } from '../core/http.js';
 import * as registers from '../sources/registers.js';
 import { adresKort, adresMetPlaats, scenarioOf, woningHref, woningVerwijzing } from './shared.js';
 
@@ -41,7 +41,7 @@ async function sectie(load, map) {
   try {
     return { status: 'beschikbaar', ...map(await load()) };
   } catch (error) {
-    console.error('[lvg-api] source unavailable:', error?.message ?? String(error));
+    console.error('[lvg-api] source unavailable:', errorName(error));
     return { status: 'niet-beschikbaar' };
   }
 }

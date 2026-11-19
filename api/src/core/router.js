@@ -9,7 +9,7 @@ import { getWoning, listWoningen } from '../resources/woningen.js';
 import { getWonen } from '../resources/wonen.js';
 import { getWoz } from '../resources/woz.js';
 import { contract } from './contract.js';
-import { getHeader, json, LANGUAGE, problem, ProblemError } from './http.js';
+import { errorName, getHeader, json, LANGUAGE, problem, ProblemError } from './http.js';
 
 export const BASE_PATH = '/api/v1';
 
@@ -148,8 +148,8 @@ export function createHandler(table) {
       return await route.handler({ ...request, params, operationId: route.operationId });
     } catch (error) {
       if (error instanceof ProblemError) return error.toResponse();
-      // Log the error only: request data can contain personal details.
-      console.error('[lvg-api] unhandled error:', error?.stack ?? String(error));
+      // Log the error's name only: its message or stack can contain request data.
+      console.error('[lvg-api] unhandled error:', errorName(error));
       return problem(500, 'Er ging iets mis', undefined, RETRY_ACTION);
     }
   };

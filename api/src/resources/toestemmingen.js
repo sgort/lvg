@@ -1,6 +1,7 @@
 // POST /woningen/{id}/toestemmingen and GET /toestemmingen/{kenmerk}: a mocked consent,
-// following DvTP pattern C. No data leaves the API. Consents live in memory only and are
-// gone when the process restarts.
+// following DvTP pattern C. No data leaves the API. Consents live in memory only: they are
+// kept for today and the previous day, and are gone when the process restarts. Numbering is
+// per instance and per day, so two instances can hand out the same kenmerk (a mock property).
 import { json, ProblemError } from '../core/http.js';
 import * as registers from '../sources/registers.js';
 import { DOEL, GEGEVENSSETS, TERMIJNEN } from './aannemers.js';
@@ -16,6 +17,14 @@ import {
 
 const store = new Map();
 const volgnummers = new Map();
+
+// Drops consents and day counters older than the previous day, so the store stays small.
+function ruimOp() {
+  const vandaagDatum = vandaag();
+  const bewaren = new Set([vandaagDatum, plusDagen(vandaagDatum, -1)]);
+  for (const [kenmerk, entry] of store) if (!bewaren.has(entry.datum)) store.delete(kenmerk);
+  for (const datum of volgnummers.keys()) if (!bewaren.has(datum)) volgnummers.delete(datum);
+}
 
 export function resetToestemmingenForTests() {
   store.clear();
@@ -52,6 +61,7 @@ function nieuwKenmerk(datum) {
 }
 
 export async function createToestemming(request) {
+  ruimOp();
   const scenario = scenarioOf(request);
   const { woningId } = request.params;
   const { bag } = await woningMetDak(scenario, woningId);
@@ -94,12 +104,13 @@ export async function createToestemming(request) {
       { type: 'beheer-gegevens', href: PLACEHOLDER_HREF, tekst: 'Beheer gegevens' },
     ],
   };
-  store.set(kenmerk, { scenario, toestemming });
+  store.set(kenmerk, { scenario, datum, toestemming });
 
   return json(201, toestemming, { Location: `/api/v1/toestemmingen/${kenmerk}` });
 }
 
 export async function getToestemming(request) {
+  ruimOp();
   const entry = store.get(request.params.kenmerk);
   // A consent of another simulated citizen is treated as unknown.
   if (!entry || entry.scenario !== scenarioOf(request)) {

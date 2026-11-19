@@ -62,3 +62,13 @@ When a handler's output changes, update its example in the same commit.
 
 A version change touches `info.version` in `openapi.yaml`, its `ApiVersion` header example, and
 `CHANGELOG.md`.
+
+## Mock properties
+
+- **Consents** live in memory. The API keeps those of today and the previous day; older ones
+  answer 404. Numbering (`TS-YYYY-MMDD-NNNN`) is per instance and per day, so two instances,
+  or one after a restart, can hand out the same reference. A real consent register replaces
+  this.
+- **Operaton** is called at `OPERATON_BASE_URL`. Only the Vite dev server falls back to the
+  local engine; on Azure a missing setting is logged once and the advice shows as unavailable.
+- **Logs** carry the name of an error only, never its message (see `SECURITY-PIPELINE.md`).

@@ -54,7 +54,7 @@ describe('createHandler', () => {
     });
   });
 
-  it('turns any other error into a 500 problem and logs it without request data', async () => {
+  it('turns any other error into a 500 problem and logs only its name', async () => {
     const log = vi.spyOn(console, 'error').mockImplementation(() => {});
     const handle = createHandler([
       {
@@ -62,7 +62,7 @@ describe('createHandler', () => {
         pattern: '/woningen/{woningId}/toestemmingen',
         operationId: 'createToestemming',
         handler: async () => {
-          throw new Error('boom');
+          throw new Error('fetch failed for https://bron.example/woningen/Lange%20Hilleweg%2073');
         },
       },
     ]);
@@ -75,7 +75,8 @@ describe('createHandler', () => {
     expect(response.body.burgerActie).toBe('Probeer het later opnieuw.');
     expect(response.headers['Content-Language']).toBe('nl');
     const logged = JSON.stringify(log.mock.calls);
-    expect(logged).toContain('boom');
+    expect(logged).toContain('Error');
+    expect(logged).not.toContain('https://');
     expect(logged).not.toContain('w-7f3a');
     expect(logged).not.toContain('geheim');
   });

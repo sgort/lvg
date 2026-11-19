@@ -139,6 +139,19 @@ describe('GET /toestemmingen/{kenmerk}', () => {
     expectValidResponse('getToestemming', response);
   });
 
+  it('keeps consents of today and the previous day only', async () => {
+    vi.setSystemTime(new Date('2026-11-17T12:00:00Z'));
+    const eergisteren = (await geef(aanvraag())).body.kenmerk;
+    vi.setSystemTime(new Date('2026-11-18T12:00:00Z'));
+    const gisteren = (await geef(aanvraag())).body.kenmerk;
+    vi.setSystemTime(new Date('2026-11-19T12:00:00Z'));
+
+    expect((await bekijk(gisteren)).status).toBe(200);
+    const response = await bekijk(eergisteren);
+    expect(response.status).toBe(404);
+    expectValidResponse('getToestemming', response);
+  });
+
   it('does not show one simulated citizen the consent of another', async () => {
     vi.stubEnv('LVG_SCENARIOS', 'on');
     const { body } = await geef(aanvraag(), 'w-7f3a', { 'X-LVG-Scenario': 'een-woning' });
