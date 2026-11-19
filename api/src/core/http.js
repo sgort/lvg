@@ -58,3 +58,9 @@ export function getHeader(headers, name) {
   const key = Object.keys(headers).find((k) => k.toLowerCase() === name.toLowerCase());
   return key === undefined ? undefined : headers[key];
 }
+
+/**
+ * What may be logged of an error: its name only. A message can carry request data, such as
+ * a source URL with an address in it, once real sources replace the mocks.
+ */
+export const errorName = (error) => (error instanceof Error ? error.name : typeof error);

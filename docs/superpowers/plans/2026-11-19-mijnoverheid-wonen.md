@@ -287,17 +287,18 @@ Branch: `feat/api-iteration-2` from `acc`.
 
 - Produces: an example under every response's media type (`examples.<name>.value`) in `api/openapi.yaml`; `Advies` as `oneOf` on `status`; `getOpenapi` without a 406 response; `info.version: 1.1.0`.
 
-- [ ] **Step 1: Write the failing test** `api/test/examples.test.js`: for every operation and every response with content, at least one example exists, and each example validates against that response's schema with the same ajv set-up as `api/test/contract.js` (reuse its exports; add an export for the schema lookup if needed). A second test builds an `Advies` with `status: 'berekend'` and no `opties`, and one with `status: 'niet-beschikbaar'` and no `melding`, and expects both to fail validation.
-- [ ] **Step 2:** Run `npm run test:api`. Expected: FAIL (no examples; `Advies` accepts both broken objects).
-- [ ] **Step 3:** In `api/openapi.yaml`:
+- [x] **Step 1: Write the failing test** `api/test/examples.test.js`: for every operation and every response with content, at least one example exists, and each example validates against that response's schema with the same ajv set-up as `api/test/contract.js` (reuse its exports; add an export for the schema lookup if needed). A second test builds an `Advies` with `status: 'berekend'` and no `opties`, and one with `status: 'niet-beschikbaar'` and no `melding`, and expects both to fail validation.
+- [x] **Step 2:** Run `npm run test:api`. Expected: FAIL (no examples; `Advies` accepts both broken objects).
+- [x] **Step 3:** In `api/openapi.yaml`:
   - Split `Advies` into `AdviesBerekend` (required `status` with enum `[berekend]`, `berekendOp`, `opties`, `uitgangspunten`) and `AdviesNietBeschikbaar` (required `status` with enum `[niet-beschikbaar]`, `melding`), and make `Advies` a `oneOf` of the two with a `discriminator` on `status`.
   - Add examples for every response. Take the bodies from the handlers' real output for scenario `drie-woningen` (property `w-7f3a` for the property resources), the Operaton-unavailable case for `getDakisolatie`, and one example per problem response. Keep `{…}` placeholders as the handlers return them.
   - Remove `406` from `getOpenapi`, and say in its description that the contract is readable in any language.
   - Add a "Versiebeleid" section to `info.description` with the policy from the spec, section "Version policy".
   - Set `info.version` to `1.1.0`.
-- [ ] **Step 4:** Write `api/README.md`: what the API is, how to run and test it (pointing to `docs/runbook.md`), the version policy (as in the spec), and where the examples live. Write `api/CHANGELOG.md` with `1.0.0` (19 November 2026, first version) and `1.1.0` (this part: examples, `Advies` bound to status, contract readable in any language, the #35 fixes).
-- [ ] **Step 5:** Run `npm run test:api` and `npm run lint:contract`. Expected: PASS; the linter shows no errors (the known `servers-use-https` warning stays). If a handler's response no longer validates, fix the handler, not the schema, unless the spec says otherwise.
-- [ ] **Step 6:** After owner go-ahead, commit `feat(api): add version policy, examples and status-bound advice to the contract`.
+- [x] **Step 4:** Write `api/README.md`: what the API is, how to run and test it (pointing to `docs/runbook.md`), the version policy (as in the spec), and where the examples live. Write `api/CHANGELOG.md` with `1.0.0` (19 November 2026, first version) and `1.1.0` (this part: examples, `Advies` bound to status, contract readable in any language, the #35 fixes).
+- [x] **Step 5:** Run `npm run test:api` and `npm run lint:contract`. Expected: PASS; the linter shows no errors (the known `servers-use-https` warning stays). If a handler's response no longer validates, fix the handler, not the schema, unless the spec says otherwise.
+      Notes, 19 November 2026: the consent request body has an example as well (the spec asks for example requests too). `getOpenapi` no longer lists the `Accept-Language` parameter, since it ignores it. The 500 and 503 examples are written by hand: no handler returns 503, and the 500 body is the router's fixed answer. The `getOpenapi` example is a shortened contract without `servers`, because the ADR linter applies `servers-use-https` to it. The two 406 tests in `src/core/http.test.js` now use `/woningen`, as the contract no longer declares 406 for `getOpenapi`; Task 12 makes the handler match.
+- [x] **Step 6:** After owner go-ahead, commit `feat(api): add version policy, examples and status-bound advice to the contract`.
 
 ### Task 12: Request handling fixes from #35
 
@@ -305,19 +306,20 @@ Branch: `feat/api-iteration-2` from `acc`.
 
 - Modify: `api/src/core/router.js`, `api/src/core/router.test.js`, `api/src/resources/toestemmingen.js`, `api/src/resources/toestemmingen.test.js`
 
-- [ ] **Step 1: Write failing tests:**
+- [x] **Step 1: Write failing tests:**
   - `POST /api/v1/woningen/w-7f3a/toestemmingen` with body `null` (string `'null'` and the value `null`) answers 400 `Aanvraag niet leesbaar`, not 500. The same for a JSON array and a JSON string.
   - `GET /api/v1/woningen/%E0` answers 404 problem+json with the not-found `burgerActie`, not 500.
   - `Accept-Language: nl;q=0, *` answers 406; `Accept-Language: nl-NL;q=0, *` answers 406; `Accept-Language: *;q=0.5` is accepted; `Accept-Language: en-US,en;q=0.9` still answers 406 on `/woningen`.
   - `GET /api/v1/openapi.json` with `Accept-Language: en-US,en;q=0.9` answers 200 with the contract.
-- [ ] **Step 2:** Run `npm run test:api`. Expected: FAIL on each.
-- [ ] **Step 3:** Implement:
+- [x] **Step 2:** Run `npm run test:api`. Expected: FAIL on each.
+- [x] **Step 3:** Implement:
   - `leesAanvraag` accepts only a plain object; anything else throws the existing 400.
   - The router catches `URIError` from `decodeURIComponent` and answers the route's 404.
   - `acceptsDutch` follows RFC 9110: an explicit `nl` or `nl-*` range with `q=0` makes Dutch unacceptable before `*` is considered; otherwise Dutch is acceptable when `nl`, `nl-*` or `*` has q above 0.
   - `getOpenapi` skips language negotiation.
-- [ ] **Step 4:** Run `npm run test:api` and `npm run lint:contract`. Expected: PASS.
-- [ ] **Step 5:** After owner go-ahead, commit `fix(api): reject unreadable bodies and paths, and negotiate language per RFC 9110`.
+- [x] **Step 4:** Run `npm run test:api` and `npm run lint:contract`. Expected: PASS.
+      Notes, 19 November 2026: the existing negotiation tests in `src/core/http.test.js` moved from `/openapi.json` to `/woningen`, because the contract is now served in any language. A malformed path answers the router's own 404 (`Niet gevonden`, `Ga naar de pagina Wonen in MijnOverheid.`), which every route declares. A consent request without a body now also answers 400 `Aanvraag niet leesbaar`.
+- [x] **Step 5:** After owner go-ahead, commit `fix(api): reject unreadable bodies and paths, and negotiate language per RFC 9110`.
 
 ### Task 13: Operation and privacy fixes from #35
 
@@ -325,14 +327,15 @@ Branch: `feat/api-iteration-2` from `acc`.
 
 - Modify: `api/src/resources/toestemmingen.js`, `api/src/operaton/parameters.js`, `api/src/resources/woningen.js`, `api/src/resources/dakisolatie.js`, `api/src/core/router.js`, their tests, `api/README.md`, `SECURITY-PIPELINE.md` ("The LVG API")
 
-- [ ] **Step 1: Write failing tests:**
+- [x] **Step 1: Write failing tests:**
   - The consent store keeps consents of today and the previous day only; a consent from two days ago gives 404. Use an injectable clock (`vandaag` already exists in `shared.js`; make it overridable for tests).
   - Without `request.env` and without `process.env.OPERATON_BASE_URL`, `getDakisolatie` reports the advice as unavailable without calling `localhost:8081`, and logs once `[lvg-api] OPERATON_BASE_URL is not set`. With `request.env` (a development host), the local default still applies.
   - When a source or Operaton throws an error whose message contains a URL, the logged line contains only the error name (`TypeError`, `Error`), not the message. Spy on `console.error`.
-- [ ] **Step 2:** Run `npm run test:api`. Expected: FAIL.
-- [ ] **Step 3:** Implement. Document in `api/README.md` that consent numbering is per instance and per day, and is a mock property: two instances can hand out the same reference. In `SECURITY-PIPELINE.md`, note that the API logs error names only.
-- [ ] **Step 4:** Run `npm run test:api`. Expected: PASS.
-- [ ] **Step 5:** After owner go-ahead, commit `fix(api): cap the consent store, require the Operaton setting on Azure, and log error names only`.
+- [x] **Step 2:** Run `npm run test:api`. Expected: FAIL.
+- [x] **Step 3:** Implement. Document in `api/README.md` that consent numbering is per instance and per day, and is a mock property: two instances can hand out the same reference. In `SECURITY-PIPELINE.md`, note that the API logs error names only.
+- [x] **Step 4:** Run `npm run test:api`. Expected: PASS.
+      Notes, 19 November 2026: the clock is Vitest's fake `Date` (`vi.setSystemTime`), which `vandaag()` already follows, so no override was added to `shared.js`. `operatonConfig(env, { lokaalStandaard })` returns null without `OPERATON_BASE_URL` when the host passes no `request.env`. Errors are logged through `errorName()` in `src/core/http.js`. `docs/runbook.md` now says that the SWA CLI check needs `OPERATON_BASE_URL` in the shell.
+- [x] **Step 5:** After owner go-ahead, commit `fix(api): cap the consent store, require the Operaton setting on Azure, and log error names only`.
 
 ### Task 14: Ship Part 1b
 

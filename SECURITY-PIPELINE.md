@@ -57,6 +57,9 @@ Required checks match by job name, so renaming a job means updating the rulesets
 - **The bundle check.** `npm run check-bundle` runs after the build and fails when `dist/`
   contains `localhost:8081` or `demo:demo`. `operaton.open-regels.nl` is added when the old
   page that still calls Operaton from the browser is removed (plan, Task 19).
+- **Logs.** The API logs the name of an error only (`TypeError`, `Error`), never its message
+  or stack: once real sources replace the mocks, a message can hold a URL with an address or
+  a BAG id. A missing `OPERATON_BASE_URL` on Azure is logged once, by name.
 - **Not yet covered.** The daily dependency audit and `audit:signatures` read the root
   lockfile only. The API's lockfile is covered by Renovate, Dependabot alerts and Semgrep
   Supply Chain.

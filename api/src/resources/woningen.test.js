@@ -126,6 +126,19 @@ describe('GET /woningen/{id}', () => {
     expect(response.body.energielabel.status).toBe('beschikbaar');
   });
 
+  it('logs only the name of a source error', async () => {
+    const log = vi.spyOn(console, 'error').mockImplementation(() => {});
+    registers.getWoz.mockRejectedValueOnce(
+      new TypeError('fetch failed for https://bron.example/woningen/Lange%20Hilleweg%2073')
+    );
+
+    await get('/api/v1/woningen/w-7f3a');
+
+    const logged = JSON.stringify(log.mock.calls);
+    expect(logged).toContain('TypeError');
+    expect(logged).not.toContain('https://');
+  });
+
   it('answers 404 for a property that is not the citizen’s', async () => {
     const response = await get('/api/v1/woningen/w-2c91', 'een-woning');
 

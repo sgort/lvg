@@ -91,7 +91,10 @@ npm run build
 npx @azure/static-web-apps-cli start dist --api-location api
 ```
 
-The site then runs on http://localhost:4280.
+The site then runs on http://localhost:4280. The Azure runtime reads its settings from the
+process, not from `.env.local`, and the API uses the local Operaton only on the Vite dev
+server. Set `OPERATON_BASE_URL` in the shell (and `OPERATON_USER`/`OPERATON_PASSWORD` for the
+local engine), or the advice shows as unavailable.
 
 ## Scenarios
 
