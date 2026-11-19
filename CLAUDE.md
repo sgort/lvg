@@ -90,8 +90,10 @@ code v34, sections 6.3, 9, 10 and 12) and from the spec. Breaking one fails the 
 ## Language
 
 - Conversation, code, comments, commit messages and documentation: English, Markdown.
-- Interface copy: Dutch at B1 level, exactly as in the spec. Copy marked `{…}` in the spec is a
-  design placeholder and is built as written.
+- Interface copy: Dutch at B1 level, exactly as in the spec. Where the spec marks copy `{…}` (a
+  design placeholder), build mock content instead, in B1 Dutch, so the deployed pages look
+  finished: API copy goes in `api/src/mock/` (`teksten.js`, `veelgesteldeVragen.js`), and no
+  response or page shows `{…}` (owner, 19 November 2026; spec, "Page designs").
 - API field and schema names: Dutch, as in the spec's examples.
 - New front-end code: strict TypeScript (`.ts`, `.tsx`). `api/` stays JavaScript.
 
