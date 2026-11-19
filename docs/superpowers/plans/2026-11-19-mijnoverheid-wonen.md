@@ -109,15 +109,17 @@ Branch: `feat/lvg-api` from `acc`.
 - Create: `api/src/mock/scenarios.js`, `api/src/sources/registers.js`, `api/src/sources/registers.test.js`, `api/src/core/scenario.js`, `api/src/core/scenario.test.js`
 - Source for data: `src/services/mockPropertyData.js` (Rotterdam property and building data, contractors)
 
+**Decision agreed with the owner on 19 November 2026:** the Rotterdam property keeps its existing mock values (WOZ € 317.000, cadastral size 158 m², label C, build year 1990); the design values only fill the fields it lacked. The other two properties use the design values, with invented postcodes, parcels and WOZ numbers. The photos use `public/foto-placeholder.svg`.
+
 **Interfaces:**
 
 - Produces: `resolveScenario(headers, env) → 'geen-woning' | 'een-woning' | 'drie-woningen'`; `registers.listWoningen(scenario)`, `getWoning(scenario, id)`, `getKadaster`, `getWoz`, `getEnergielabel`, `getDak`, `getAannemers`. All async; unknown id rejects with a not-found error.
 
-- [ ] **Step 1: Write failing tests:** the header is honoured only when `env.LVG_SCENARIOS === 'on'`; without it the scenario is `drie-woningen`; unknown scenario names fall back to `drie-woningen`; `een-woning` lists one property; `geen-woning` lists none; ids are opaque (no digits of a postcode or house number); returned objects are copies.
-- [ ] **Step 2:** Run tests. Expected: FAIL.
-- [ ] **Step 3:** Implement. The Rotterdam property gets id `w-7f3a`, the design's other two get `w-2c91` (Straatnaam 23, Drechtstad, label A, 1994) and `w-b04e` (Regenboogweg 9, Nintendorp, label C, 1967). The rental property from the design is not mocked: rental is out of scope. Give the Rotterdam property's building data a roof area, `dak.oppervlakte_m2`, separate from `gebouw.vloeroppervlakte_m2`; use 120 so today's results stay comparable. Fill the Kadaster, WOZ and energy label fields with the values shown in the designs; the photos use `public/perceel-1560.png` and a placeholder.
-- [ ] **Step 4:** Run tests. Expected: PASS.
-- [ ] **Step 5:** After owner go-ahead, commit `feat(api): add mock registers and scenarios`.
+- [x] **Step 1: Write failing tests:** the header is honoured only when `env.LVG_SCENARIOS === 'on'`; without it the scenario is `drie-woningen`; unknown scenario names fall back to `drie-woningen`; `een-woning` lists one property; `geen-woning` lists none; ids are opaque (no digits of a postcode or house number); returned objects are copies.
+- [x] **Step 2:** Run tests. Expected: FAIL.
+- [x] **Step 3:** Implement. The Rotterdam property gets id `w-7f3a`, the design's other two get `w-2c91` (Straatnaam 23, Drechtstad, label A, 1994) and `w-b04e` (Regenboogweg 9, Nintendorp, label C, 1967). The rental property from the design is not mocked: rental is out of scope. Give the Rotterdam property's building data a roof area, `dak.oppervlakte_m2`, separate from `gebouw.vloeroppervlakte_m2`; use 120 so today's results stay comparable. Fill the Kadaster, WOZ and energy label fields with the values shown in the designs; the photos use `public/perceel-1560.png` and a placeholder.
+- [x] **Step 4:** Run tests. Expected: PASS.
+- [x] **Step 5:** After owner go-ahead, commit `feat(api): add mock registers and scenarios`.
 
 ### Task 4: Register resources
 
