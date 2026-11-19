@@ -42,6 +42,7 @@ describe('handle', () => {
     ['any language', '*'],
     ['upper case and spaces', ' NL-nl ; q=0.5 , en'],
     ['any language with a lower weight', '*;q=0.5'],
+    ['a header of empty items only', ' , '],
   ])('accepts %s', async (_, value) => {
     const response = await get('/api/v1/woningen', { 'Accept-Language': value });
 

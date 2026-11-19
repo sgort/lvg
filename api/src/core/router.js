@@ -88,11 +88,16 @@ const LANGUAGE_FREE = new Set(['getOpenapi']);
 function acceptsDutch(headers) {
   const value = getHeader(headers, 'Accept-Language')?.trim();
   if (!value) return true;
-  const ranges = value.split(',').map((item) => {
-    const [range, ...params] = item.split(';').map((part) => part.trim().toLowerCase());
-    const q = params.find((p) => p.startsWith('q='));
-    return { range, quality: q === undefined ? 1 : Number(q.slice(2)) };
-  });
+  const ranges = value
+    .split(',')
+    .map((item) => {
+      const [range, ...params] = item.split(';').map((part) => part.trim().toLowerCase());
+      const q = params.find((p) => p.startsWith('q='));
+      return { range, quality: q === undefined ? 1 : Number(q.slice(2)) };
+    })
+    // Empty list items are ignored (RFC 9110, 5.6.1); a header of only those means any.
+    .filter(({ range }) => range !== '');
+  if (ranges.length === 0) return true;
   const explicit = ranges.filter(
     ({ range }) => range === LANGUAGE || range.startsWith(`${LANGUAGE}-`)
   );

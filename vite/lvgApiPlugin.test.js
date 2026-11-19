@@ -76,6 +76,21 @@ describe('createApiMiddleware', () => {
     expect(JSON.parse(res.body)).toEqual({ ok: true });
   });
 
+  it('logs only the name of an error', async () => {
+    const log = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const handle = vi.fn(async () => {
+      throw new TypeError('fetch failed for https://bron.example/Lange%20Hilleweg');
+    });
+    const res = fakeResponse();
+
+    await createApiMiddleware(handle, {})(fakeRequest({ originalUrl: '/api/v1/wonen' }), res);
+
+    expect(res.statusCode).toBe(500);
+    const logged = JSON.stringify(log.mock.calls);
+    expect(logged).toContain('TypeError');
+    expect(logged).not.toContain('https://');
+  });
+
   it('sends no body to the core for a GET', async () => {
     const handle = vi.fn(async () => ({ status: 200, headers: {}, body: {} }));
 

@@ -269,7 +269,7 @@ paths:
                         bedragEur: 317000
                         uitleg: '{uitleg WOZ-waarde}'
                       waardepeildatum:
-                        datum: 2025-01-01
+                        datum: '2025-01-01'
                         uitleg: '{uitleg waardepeildatum}'
                       actie:
                         type: bekijk-woz
@@ -279,7 +279,7 @@ paths:
                       label:
                         klasse: C
                         naam: C
-                      opnamedatum: 2020-12-06
+                      opnamedatum: '2020-12-06'
                       actie:
                         type: bekijk-energielabel
                         href: /api/v1/woningen/w-7f3a/energielabel
@@ -445,7 +445,7 @@ paths:
                         bedragEur: 317000
                         uitleg: '{uitleg WOZ-waarde}'
                       waardepeildatum:
-                        datum: 2025-01-01
+                        datum: '2025-01-01'
                         uitleg: '{uitleg waardepeildatum}'
                       grondoppervlakteM2:
                         waarde: 160
@@ -527,9 +527,9 @@ paths:
                       klasse: C
                       naam: C
                     objectAanduiding: woning
-                    registratiedatum: 2021-02-04
-                    opnamedatum: 2020-12-06
-                    geldigTot: 2030-12-06
+                    registratiedatum: '2021-02-04'
+                    opnamedatum: '2020-12-06'
+                    geldigTot: '2030-12-06'
                     geldigheid: geldig
                     labelDocument:
                       tekst: Energielabel C 3073BJ 73 B (pdf)
@@ -626,7 +626,7 @@ paths:
                         extern: false
                     advies:
                       status: berekend
-                      berekendOp: 2026-11-19
+                      berekendOp: '2026-11-19'
                       opties:
                         - doelRWaarde: 3
                           aanbevolen: false
@@ -831,13 +831,13 @@ paths:
                             standaardAan: false
                         termijnen:
                           - dagen: 7
-                            verlooptOp: 2026-11-26
+                            verlooptOp: '2026-11-26'
                             standaard: false
                           - dagen: 14
-                            verlooptOp: 2026-12-03
+                            verlooptOp: '2026-12-03'
                             standaard: true
                           - dagen: 30
-                            verlooptOp: 2026-12-19
+                            verlooptOp: '2026-12-19'
                             standaard: false
                       - id: a-4e07
                         naam: EcoTherm Isolatie
@@ -879,13 +879,13 @@ paths:
                             standaardAan: false
                         termijnen:
                           - dagen: 7
-                            verlooptOp: 2026-11-26
+                            verlooptOp: '2026-11-26'
                             standaard: false
                           - dagen: 14
-                            verlooptOp: 2026-12-03
+                            verlooptOp: '2026-12-03'
                             standaard: true
                           - dagen: 30
-                            verlooptOp: 2026-12-19
+                            verlooptOp: '2026-12-19'
                             standaard: false
                       - id: a-c3b8
                         naam: DakTotaal B.V.
@@ -927,13 +927,13 @@ paths:
                             standaardAan: false
                         termijnen:
                           - dagen: 7
-                            verlooptOp: 2026-11-26
+                            verlooptOp: '2026-11-26'
                             standaard: false
                           - dagen: 14
-                            verlooptOp: 2026-12-03
+                            verlooptOp: '2026-12-03'
                             standaard: true
                           - dagen: 30
-                            verlooptOp: 2026-12-19
+                            verlooptOp: '2026-12-19'
                             standaard: false
                       - id: a-17fa
                         naam: WarmteWerken
@@ -975,13 +975,13 @@ paths:
                             standaardAan: false
                         termijnen:
                           - dagen: 7
-                            verlooptOp: 2026-11-26
+                            verlooptOp: '2026-11-26'
                             standaard: false
                           - dagen: 14
-                            verlooptOp: 2026-12-03
+                            verlooptOp: '2026-12-03'
                             standaard: true
                           - dagen: 30
-                            verlooptOp: 2026-12-19
+                            verlooptOp: '2026-12-19'
                             standaard: false
                       - id: a-6d53
                         naam: IsolatieXpert
@@ -1023,13 +1023,13 @@ paths:
                             standaardAan: false
                         termijnen:
                           - dagen: 7
-                            verlooptOp: 2026-11-26
+                            verlooptOp: '2026-11-26'
                             standaard: false
                           - dagen: 14
-                            verlooptOp: 2026-12-03
+                            verlooptOp: '2026-12-03'
                             standaard: true
                           - dagen: 30
-                            verlooptOp: 2026-12-19
+                            verlooptOp: '2026-12-19'
                             standaard: false
                       - id: a-a820
                         naam: GreenRoof Solutions
@@ -1071,13 +1071,13 @@ paths:
                             standaardAan: false
                         termijnen:
                           - dagen: 7
-                            verlooptOp: 2026-11-26
+                            verlooptOp: '2026-11-26'
                             standaard: false
                           - dagen: 14
-                            verlooptOp: 2026-12-03
+                            verlooptOp: '2026-12-03'
                             standaard: true
                           - dagen: 30
-                            verlooptOp: 2026-12-19
+                            verlooptOp: '2026-12-19'
                             standaard: false
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -1150,7 +1150,7 @@ paths:
                       - Woning en dak
                       - Huidige isolatie
                       - Energiegegevens
-                    geldigTot: 2026-12-03
+                    geldigTot: '2026-12-03'
                     termijnDagen: 14
                     acties:
                       - type: terug-naar-woning
@@ -1213,7 +1213,7 @@ paths:
                       - Woning en dak
                       - Huidige isolatie
                       - Energiegegevens
-                    geldigTot: 2026-12-03
+                    geldigTot: '2026-12-03'
                     termijnDagen: 14
                     acties:
                       - type: terug-naar-woning
@@ -1239,11 +1239,12 @@ components:
       in: header
       required: false
       description: >-
-        Alleen Nederlands wordt ondersteund. De API onderhandelt zoals HTTP voorschrijft: de
-        aanvraag wordt geaccepteerd als Nederlands ergens in de lijst acceptabel is (`nl`,
-        `nl-NL` of `*`, met een q-waarde boven 0), zodat ook de eigen header van een browser
-        werkt. Is Nederlands niet acceptabel, dan antwoordt de API met 406. Antwoorden zijn
-        altijd in het Nederlands.
+        Alleen Nederlands wordt ondersteund. De API onderhandelt volgens RFC 9110: Nederlands
+        is acceptabel als `nl`, een `nl-`-variant of `*` een q-waarde boven 0 heeft, zodat ook
+        de eigen header van een browser werkt. Weigert de header `nl` of een `nl-`-variant
+        uitdrukkelijk (q=0), dan is Nederlands niet acceptabel, ook als `*` wel acceptabel is.
+        Is Nederlands niet acceptabel, dan antwoordt de API met 406. Antwoorden zijn altijd in
+        het Nederlands. Het contract zelf (`/openapi.json`) is in elke taal te lezen.
       schema:
         type: string
         default: nl
@@ -1304,6 +1305,13 @@ components:
                 title: Verplichte gegevens ontbreken
                 status: 400
                 burgerActie: De verplichte gegevens worden altijd gedeeld. Ga terug en probeer het opnieuw.
+            aanvraag-niet-leesbaar:
+              summary: De aanvraag is geen JSON-object
+              value:
+                type: about:blank
+                title: Aanvraag niet leesbaar
+                status: 400
+                burgerActie: Ga terug en probeer het opnieuw.
     NotFound:
       description: Dit bestaat niet, of hoort niet bij deze burger.
       headers:
