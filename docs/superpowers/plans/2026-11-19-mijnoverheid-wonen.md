@@ -146,12 +146,12 @@ Branch: `feat/lvg-api` from `acc`.
 
 - Create: `dmn/bereken_isolatie_opties.dmn`, `dmn/README.md`, `scripts/deploy-dmn-local.sh`
 
-- [ ] **Step 1:** Ask the owner to save the deployed source:
+- [x] **Step 1:** Ask the owner to save the deployed source:
       `curl -s https://operaton.open-regels.nl/engine-rest/decision-definition/key/bereken_isolatie_opties/xml`
       returns JSON with `dmnXml`. Write that string, unescaped, to `dmn/bereken_isolatie_opties.dmn`.
       Commit it unchanged first, so the patch is a reviewable diff. Note the deployed version
       and id in `dmn/README.md`.
-- [ ] **Step 2:** After owner go-ahead, commit `chore(dmn): add bereken_isolatie_opties as deployed (version 21)`.
+- [x] **Step 2:** After owner go-ahead, commit `chore(dmn): add bereken_isolatie_opties as deployed (version 21)`.
 - [ ] **Step 3:** Add an output column `aanbevolen` (label `Aanbevolen`, `typeRef="boolean"`) to the
       decision table. Every rule gets a value: `true` for the rule with the recommendation text
       (target R 6.0), `false` for the others. Do not change the decision key, inputs or other
