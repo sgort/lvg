@@ -1,0 +1,6 @@
+# Not deployed with the functions app. openapi.yaml stays: the API serves it.
+*.test.js
+test/
+vitest.config.js
+.spectral.yaml
+.npmrc

@@ -1,0 +1,25 @@
+{
+  "name": "lvg-api",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "main": "src/functions/lvg.js",
+  "scripts": {
+    "test": "vitest run",
+    "lint:contract": "spectral lint openapi.yaml",
+    "postinstall": "node ../scripts/write-deps-marker.mjs"
+  },
+  "dependencies": {
+    "@azure/functions": "^4.17.0",
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@stoplight/spectral-cli": "^6.17.0",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "vitest": "^5.1.0"
+  }
+}

@@ -1,0 +1,1187 @@
+openapi: 3.0.3
+info:
+  title: LVG Wonen API
+  version: 1.0.0
+  description: >-
+    The API behind the MijnOverheid Wonen pages built by LVG. It returns what each page needs,
+    already decided: statuses, final amounts, allowed actions (`acties`) and the texts a
+    citizen must see. The front-end only presents them. Data and consent are mocked in this
+    iteration.
+  contact:
+    name: LVG, Open Regels
+    url: https://lvg.open-regels.nl
+    email: steven.gort@ictu.nl
+  license:
+    name: EUPL-1.2
+    url: https://eupl.eu/1.2/nl/
+servers:
+  - url: /api/v1
+    description: Same origin as the pages that use it.
+tags:
+  - name: Contract
+  - name: Wonen
+  - name: Registers
+  - name: Dakisolatie
+  - name: Toestemming
+paths:
+  /openapi.json:
+    get:
+      tags: [Contract]
+      operationId: getOpenapi
+      summary: Het contract van deze API
+      description: >-
+        Geeft dit contract als JSON, zoals de API Design Rules vragen.
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+      responses:
+        '200':
+          description: Dit contract als JSON.
+          headers:
+            API-Version:
+              $ref: '#/components/headers/ApiVersion'
+            Content-Language:
+              $ref: '#/components/headers/ContentLanguage'
+            access-control-allow-origin:
+              description: Anyone may read the contract.
+              schema:
+                type: string
+                enum: ['*']
+          content:
+            application/json:
+              schema:
+                type: object
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /wonen:
+    get:
+      tags: [Wonen]
+      operationId: getWonen
+      summary: De kaarten van de pagina Wonen
+      description: >-
+        Geeft de kaarten van de landingspagina Wonen. De API bepaalt welke kaarten er zijn en waar hun knoppen naartoe gaan.
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/Scenario'
+      responses:
+        '200':
+          description: De kaarten die de pagina toont.
+          headers:
+            API-Version:
+              $ref: '#/components/headers/ApiVersion'
+            Content-Language:
+              $ref: '#/components/headers/ContentLanguage'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wonen'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /woningen:
+    get:
+      tags: [Wonen]
+      operationId: listWoningen
+      summary: De koopwoningen van de burger
+      description: >-
+        Geeft de koopwoningen van de burger en hoe de pagina ze toont: als lijst, meteen de enige woning, of de melding dat er geen woning is.
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/Scenario'
+      responses:
+        '200':
+          description: >-
+            De woningen en hoe de pagina ze toont. `direct` betekent dat de pagina meteen naar
+            de enige woning gaat.
+          headers:
+            API-Version:
+              $ref: '#/components/headers/ApiVersion'
+            Content-Language:
+              $ref: '#/components/headers/ContentLanguage'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WoningenOverzicht'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /woningen/{woningId}:
+    get:
+      tags: [Registers]
+      operationId: getWoning
+      summary: Samenvatting van een woning
+      description: >-
+        Geeft de vier secties van de samenvatting: BAG, Kadaster, WOZ en energielabel. Elke sectie heeft een eigen status, zodat een bron die niet werkt de andere secties niet tegenhoudt.
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/Scenario'
+        - $ref: '#/components/parameters/WoningId'
+      responses:
+        '200':
+          description: Vier secties, elk met een eigen status.
+          headers:
+            API-Version:
+              $ref: '#/components/headers/ApiVersion'
+            Content-Language:
+              $ref: '#/components/headers/ContentLanguage'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Woning'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /woningen/{woningId}/kadaster:
+    get:
+      tags: [Registers]
+      operationId: getKadaster
+      summary: Kadastrale gegevens van een woning
+      description: >-
+        Geeft de kadastrale gegevens van het perceel, de kaart, de foto’s, de links naar producten van het Kadaster en de contactgegevens.
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/Scenario'
+        - $ref: '#/components/parameters/WoningId'
+      responses:
+        '200':
+          description: Perceel, kaart, foto's, producten van het Kadaster en contact.
+          headers:
+            API-Version:
+              $ref: '#/components/headers/ApiVersion'
+            Content-Language:
+              $ref: '#/components/headers/ContentLanguage'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Kadaster'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /woningen/{woningId}/woz:
+    get:
+      tags: [Registers]
+      operationId: getWoz
+      summary: WOZ-gegevens van een woning
+      description: >-
+        Geeft de WOZ-gegevens met de uitleg achter elke infoknop, het taxatieverslag en de contactgegevens.
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/Scenario'
+        - $ref: '#/components/parameters/WoningId'
+      responses:
+        '200':
+          description: WOZ-velden met hun uitleg, het taxatieverslag en contact.
+          headers:
+            API-Version:
+              $ref: '#/components/headers/ApiVersion'
+            Content-Language:
+              $ref: '#/components/headers/ContentLanguage'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Woz'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /woningen/{woningId}/energielabel:
+    get:
+      tags: [Registers]
+      operationId: getEnergielabel
+      summary: Energielabel van een woning
+      description: >-
+        Geeft het energielabel met de geldigheid als status, de documenten, de ISDE-gegevens en de acties die de pagina mag aanbieden.
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/Scenario'
+        - $ref: '#/components/parameters/WoningId'
+      responses:
+        '200':
+          description: >-
+            Het label, de geldigheid als status, de documenten en de acties die de pagina mag
+            aanbieden.
+          headers:
+            API-Version:
+              $ref: '#/components/headers/ApiVersion'
+            Content-Language:
+              $ref: '#/components/headers/ContentLanguage'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Energielabel'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /woningen/{woningId}/dakisolatie:
+    get:
+      tags: [Dakisolatie]
+      operationId: getDakisolatie
+      summary: Advies voor dakisolatie
+      description: >-
+        Het advies wordt bij elke aanvraag door Operaton berekend. Lukt dat niet, dan is
+        `advies.status` `niet-beschikbaar` met een melding voor de burger, en biedt de API geen
+        actie om gegevens te delen. De gegevens over het dak blijven zichtbaar.
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/Scenario'
+        - $ref: '#/components/parameters/WoningId'
+      responses:
+        '200':
+          description: Het huidige dak, de opties met eindbedragen, de uitgangspunten en de acties.
+          headers:
+            API-Version:
+              $ref: '#/components/headers/ApiVersion'
+            Content-Language:
+              $ref: '#/components/headers/ContentLanguage'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dakisolatie'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /woningen/{woningId}/aannemers:
+    get:
+      tags: [Toestemming]
+      operationId: listAannemers
+      summary: Aannemers die de burger kan kiezen
+      description: >-
+        Geeft de aannemers die de burger kan kiezen. Per aannemer staan de gegevenssets die gedeeld kunnen worden en de termijnen voor de toestemming.
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/Scenario'
+        - $ref: '#/components/parameters/WoningId'
+      responses:
+        '200':
+          description: De aannemers, met per aannemer de gegevenssets en termijnen voor de toestemming.
+          headers:
+            API-Version:
+              $ref: '#/components/headers/ApiVersion'
+            Content-Language:
+              $ref: '#/components/headers/ContentLanguage'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AannemersOverzicht'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /woningen/{woningId}/toestemmingen:
+    post:
+      tags: [Toestemming]
+      operationId: createToestemming
+      summary: Toestemming geven om gegevens te delen met een aannemer
+      description: >-
+        Maakt een nagebootste toestemming. Er verlaten geen gegevens de API. De aanvraag
+        bevat alle verplichte gegevenssets; zonder een verplichte set, of met een aannemer of
+        termijn die niet is aangeboden, antwoordt de API met 400.
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/Scenario'
+        - $ref: '#/components/parameters/WoningId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToestemmingAanvraag'
+      responses:
+        '201':
+          description: De toestemming is gegeven.
+          headers:
+            API-Version:
+              $ref: '#/components/headers/ApiVersion'
+            Content-Language:
+              $ref: '#/components/headers/ContentLanguage'
+            Location:
+              description: Het adres van de nieuwe toestemming.
+              schema:
+                type: string
+                example: /api/v1/toestemmingen/TS-2026-1119-0001
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Toestemming'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /toestemmingen/{kenmerk}:
+    get:
+      tags: [Toestemming]
+      operationId: getToestemming
+      summary: Een gegeven toestemming
+      description: >-
+        Geeft een gegeven toestemming, zoals de bevestigingspagina die toont.
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+        - $ref: '#/components/parameters/Scenario'
+        - name: kenmerk
+          in: path
+          required: true
+          description: Het kenmerk van de toestemming.
+          schema:
+            type: string
+            example: TS-2026-1119-0001
+      responses:
+        '200':
+          description: De toestemming zoals de bevestigingspagina die toont.
+          headers:
+            API-Version:
+              $ref: '#/components/headers/ApiVersion'
+            Content-Language:
+              $ref: '#/components/headers/ContentLanguage'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Toestemming'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+components:
+  parameters:
+    AcceptLanguage:
+      name: Accept-Language
+      in: header
+      required: false
+      description: >-
+        Alleen Nederlands wordt ondersteund. De API onderhandelt zoals HTTP voorschrijft: de
+        aanvraag wordt geaccepteerd als Nederlands ergens in de lijst acceptabel is (`nl`,
+        `nl-NL` of `*`, met een q-waarde boven 0), zodat ook de eigen header van een browser
+        werkt. Is Nederlands niet acceptabel, dan antwoordt de API met 406. Antwoorden zijn
+        altijd in het Nederlands.
+      schema:
+        type: string
+        default: nl
+        example: nl-NL,nl;q=0.9,en;q=0.8
+    Scenario:
+      name: X-LVG-Scenario
+      in: header
+      required: false
+      description: >-
+        Alleen voor ontwikkeling en acceptatie: kiest een nagebootste burger. De API negeert
+        deze header tenzij `LVG_SCENARIOS=on` is ingesteld.
+      schema:
+        type: string
+        enum: [geen-woning, een-woning, drie-woningen]
+    WoningId:
+      name: woningId
+      in: path
+      required: true
+      description: Een ondoorzichtige id van de woning. Bevat geen adres of BAG-id.
+      schema:
+        type: string
+        example: w-7f3a
+  headers:
+    ApiVersion:
+      description: De volledige versie van deze API.
+      schema:
+        type: string
+        example: 1.0.0
+    ContentLanguage:
+      description: De taal van de teksten in het antwoord.
+      schema:
+        type: string
+        enum: [nl]
+  responses:
+    BadRequest:
+      description: De aanvraag is niet goed.
+      headers:
+        API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Content-Language:
+          $ref: '#/components/headers/ContentLanguage'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Probleem'
+    NotFound:
+      description: Dit bestaat niet, of hoort niet bij deze burger.
+      headers:
+        API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Content-Language:
+          $ref: '#/components/headers/ContentLanguage'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Probleem'
+    NotAcceptable:
+      description: De gevraagde taal wordt niet ondersteund.
+      headers:
+        API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Content-Language:
+          $ref: '#/components/headers/ContentLanguage'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Probleem'
+    InternalServerError:
+      description: Er ging iets mis in de API.
+      headers:
+        API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Content-Language:
+          $ref: '#/components/headers/ContentLanguage'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Probleem'
+    ServiceUnavailable:
+      description: Een bron is nu niet bereikbaar.
+      headers:
+        API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        Content-Language:
+          $ref: '#/components/headers/ContentLanguage'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Probleem'
+  schemas:
+    Probleem:
+      type: object
+      description: Een fout volgens RFC 9457, met wat de burger kan doen.
+      required: [type, title, status, burgerActie]
+      properties:
+        type:
+          type: string
+          format: uri-reference
+          example: about:blank
+        title:
+          type: string
+          example: Woning niet gevonden
+        status:
+          type: integer
+          example: 404
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri-reference
+        burgerActie:
+          type: string
+          description: Wat de burger nu kan doen. De pagina toont deze tekst zoals hij is.
+          example: Ga terug naar uw koopwoningen.
+    Actie:
+      type: object
+      description: Een link of knop die de pagina mag aanbieden.
+      required: [type, href]
+      properties:
+        type:
+          type: string
+          description: Wat de actie is. De pagina kiest op basis hiervan waar de actie staat.
+          example: bekijk-dakisolatie
+        href:
+          type: string
+          format: uri-reference
+          example: /api/v1/woningen/w-7f3a/dakisolatie
+        tekst:
+          type: string
+          description: De tekst van de link of knop, als de API die bepaalt.
+    Link:
+      type: object
+      required: [tekst, href]
+      properties:
+        tekst:
+          type: string
+          example: Taxatieverslag (pdf)
+        href:
+          type: string
+          format: uri-reference
+        extern:
+          type: boolean
+          description: Opent een website buiten MijnOverheid.
+          default: false
+    Afbeelding:
+      type: object
+      required: [src, alt]
+      properties:
+        src:
+          type: string
+          format: uri-reference
+        alt:
+          type: string
+          description: Tekstalternatief voor schermlezers.
+    Contact:
+      type: object
+      required: [organisatie]
+      properties:
+        organisatie:
+          type: string
+          example: Kadaster
+        website:
+          $ref: '#/components/schemas/Link'
+        email:
+          type: string
+          format: email
+    VeelgesteldeVraag:
+      type: object
+      required: [vraag, antwoord]
+      properties:
+        vraag:
+          type: string
+        antwoord:
+          type: string
+    VeelgesteldeVragen:
+      type: object
+      required: [vragen]
+      properties:
+        vragen:
+          type: array
+          items:
+            $ref: '#/components/schemas/VeelgesteldeVraag'
+        meer:
+          $ref: '#/components/schemas/Link'
+    WoningVerwijzing:
+      type: object
+      description: De woning waar een pagina over gaat.
+      required: [id, adresKort, adres]
+      properties:
+        id:
+          type: string
+          example: w-7f3a
+        adresKort:
+          type: string
+          description: Straat en huisnummer, voor titel en kruimelpad.
+          example: Lange Hilleweg 73 B
+        adres:
+          type: string
+          description: Het volledige adres.
+          example: Lange Hilleweg 73 B, 3073 BJ Rotterdam
+    Energielabelklasse:
+      type: object
+      required: [klasse, naam]
+      properties:
+        klasse:
+          type: string
+          description: Een van de zeven klassen op de schaal. Een klasse boven A valt onder A.
+          enum: [A, B, C, D, E, F, G]
+        naam:
+          type: string
+          description: De volledige naam, zoals op het label.
+          example: A++
+    Wonen:
+      type: object
+      required: [kaarten]
+      properties:
+        kaarten:
+          type: array
+          items:
+            $ref: '#/components/schemas/WonenKaart'
+    WonenKaart:
+      type: object
+      required: [id, titel, bron, tekst, actie]
+      properties:
+        id:
+          type: string
+          example: woningeigenaar
+        titel:
+          type: string
+          example: Ik ben woningeigenaar
+        bron:
+          type: string
+          example: LVG
+        tekst:
+          type: string
+        actie:
+          $ref: '#/components/schemas/Actie'
+    WoningenOverzicht:
+      type: object
+      required: [weergave, woningen, acties]
+      properties:
+        weergave:
+          type: string
+          enum: [lijst, direct, leeg]
+          description: >-
+            `direct`: de pagina gaat meteen naar de enige woning. `leeg`: de burger heeft geen
+            koopwoning.
+        woningen:
+          type: array
+          items:
+            $ref: '#/components/schemas/WoningInLijst'
+        acties:
+          type: array
+          items:
+            $ref: '#/components/schemas/Actie'
+    WoningInLijst:
+      type: object
+      required: [id, adresKort, adresMetPlaats, soort, bouwjaar]
+      properties:
+        id:
+          type: string
+          example: w-2c91
+        adresKort:
+          type: string
+          example: Straatnaam 23
+        adresMetPlaats:
+          type: string
+          description: Straat, huisnummer en woonplaats, zoals de lijst ze toont.
+          example: Straatnaam 23, Drechtstad
+        soort:
+          type: string
+          example: Koopwoning
+        bouwjaar:
+          type: integer
+          example: 1994
+        energielabel:
+          $ref: '#/components/schemas/Energielabelklasse'
+    SectieStatus:
+      type: string
+      enum: [beschikbaar, niet-beschikbaar]
+    Woning:
+      type: object
+      required: [woning, bag, kadaster, woz, energielabel]
+      properties:
+        woning:
+          $ref: '#/components/schemas/WoningVerwijzing'
+        bag:
+          type: object
+          required: [status]
+          properties:
+            status:
+              $ref: '#/components/schemas/SectieStatus'
+            adres:
+              type: string
+            bouwjaar:
+              type: integer
+            gebruiksdoel:
+              type: string
+              example: Woonfunctie
+            oppervlakteM2:
+              type: number
+            verblijfsobject:
+              type: string
+              description: De id van het verblijfsobject in de BAG.
+        kadaster:
+          type: object
+          required: [status]
+          properties:
+            status:
+              $ref: '#/components/schemas/SectieStatus'
+            aanduiding:
+              type: string
+              example: Rotterdam G 3916
+            grootteM2:
+              type: number
+            actie:
+              $ref: '#/components/schemas/Actie'
+        woz:
+          type: object
+          required: [status]
+          properties:
+            status:
+              $ref: '#/components/schemas/SectieStatus'
+            waarde:
+              $ref: '#/components/schemas/BedragMetUitleg'
+            waardepeildatum:
+              $ref: '#/components/schemas/DatumMetUitleg'
+            actie:
+              $ref: '#/components/schemas/Actie'
+        energielabel:
+          type: object
+          required: [status]
+          properties:
+            status:
+              $ref: '#/components/schemas/SectieStatus'
+            label:
+              $ref: '#/components/schemas/Energielabelklasse'
+            opnamedatum:
+              type: string
+              format: date
+            actie:
+              $ref: '#/components/schemas/Actie'
+    BedragMetUitleg:
+      type: object
+      required: [bedragEur]
+      properties:
+        bedragEur:
+          type: number
+          description: Eindbedrag in euro's.
+        uitleg:
+          type: string
+          description: De tekst achter de infoknop.
+    DatumMetUitleg:
+      type: object
+      required: [datum]
+      properties:
+        datum:
+          type: string
+          format: date
+        uitleg:
+          type: string
+    TekstMetUitleg:
+      type: object
+      required: [tekst]
+      properties:
+        tekst:
+          type: string
+        uitleg:
+          type: string
+    Kadaster:
+      type: object
+      required: [woning, kaart, gegevens, producten, eigenaarsinformatie, fotos, contact]
+      properties:
+        woning:
+          $ref: '#/components/schemas/WoningVerwijzing'
+        kaart:
+          type: object
+          required: [afbeelding]
+          properties:
+            afbeelding:
+              $ref: '#/components/schemas/Afbeelding'
+            download:
+              $ref: '#/components/schemas/Link'
+        gegevens:
+          type: object
+          required: [aanduiding, grootteM2]
+          properties:
+            aanduiding:
+              type: string
+            grootteM2:
+              type: number
+            koopsomEur:
+              type: number
+            publiekrechtelijkeBeperkingen:
+              type: string
+            bebouwing:
+              type: string
+        producten:
+          type: array
+          description: >-
+            Links naar producten van het Kadaster, zoals beperkte rechten en hypotheekgegevens.
+          items:
+            type: object
+            required: [label, link]
+            properties:
+              label:
+                type: string
+                example: Hypotheekbedrag
+              link:
+                $ref: '#/components/schemas/Link'
+        eigenaarsinformatie:
+          type: object
+          required: [tekst, meerInformatie]
+          properties:
+            tekst:
+              type: string
+            meerInformatie:
+              $ref: '#/components/schemas/Link'
+            download:
+              $ref: '#/components/schemas/Link'
+        fotos:
+          type: object
+          required: [luchtfotos, panoramafotos]
+          properties:
+            luchtfotos:
+              type: array
+              items:
+                $ref: '#/components/schemas/Afbeelding'
+            panoramafotos:
+              type: array
+              items:
+                $ref: '#/components/schemas/Afbeelding'
+        contact:
+          $ref: '#/components/schemas/Contact'
+        veelgesteldeVragen:
+          $ref: '#/components/schemas/VeelgesteldeVragen'
+    Woz:
+      type: object
+      required: [woning, gegevens, contact]
+      properties:
+        woning:
+          $ref: '#/components/schemas/WoningVerwijzing'
+        gegevens:
+          type: object
+          required: [waarde, waardepeildatum]
+          properties:
+            waarde:
+              $ref: '#/components/schemas/BedragMetUitleg'
+            waardepeildatum:
+              $ref: '#/components/schemas/DatumMetUitleg'
+            grondoppervlakteM2:
+              type: object
+              required: [waarde]
+              properties:
+                waarde:
+                  type: number
+                uitleg:
+                  type: string
+            objectnummer:
+              $ref: '#/components/schemas/TekstMetUitleg'
+            objecttype:
+              $ref: '#/components/schemas/TekstMetUitleg'
+            taxatieverslag:
+              type: object
+              required: [link]
+              properties:
+                link:
+                  $ref: '#/components/schemas/Link'
+                uitleg:
+                  type: string
+        contact:
+          $ref: '#/components/schemas/Contact'
+        veelgesteldeVragen:
+          $ref: '#/components/schemas/VeelgesteldeVragen'
+    Energielabel:
+      type: object
+      required:
+        [
+          woning,
+          label,
+          objectAanduiding,
+          registratiedatum,
+          opnamedatum,
+          geldigTot,
+          geldigheid,
+          acties,
+        ]
+      properties:
+        woning:
+          $ref: '#/components/schemas/WoningVerwijzing'
+        label:
+          $ref: '#/components/schemas/Energielabelklasse'
+        objectAanduiding:
+          type: string
+          enum: [woning, gebouw]
+          description: Hoe de pagina het object noemt. De pagina leidt dit niet zelf af.
+        registratiedatum:
+          type: string
+          format: date
+        opnamedatum:
+          type: string
+          format: date
+        geldigTot:
+          type: string
+          format: date
+        geldigheid:
+          type: string
+          enum: [geldig, verlopen]
+          description: Door de API bepaald uit de datums. De pagina vergelijkt geen datums.
+        labelDocument:
+          $ref: '#/components/schemas/Link'
+        opnamegegevens:
+          $ref: '#/components/schemas/Link'
+        isde:
+          type: object
+          required: [link]
+          properties:
+            link:
+              $ref: '#/components/schemas/Link'
+            uitleg:
+              type: string
+        contact:
+          $ref: '#/components/schemas/Contact'
+        veelgesteldeVragen:
+          $ref: '#/components/schemas/VeelgesteldeVragen'
+        acties:
+          type: array
+          description: Bevat `bekijk-dakisolatie` als er een advies voor deze woning is.
+          items:
+            $ref: '#/components/schemas/Actie'
+    Dakisolatie:
+      type: object
+      required: [woning, huidigDak, advies, acties]
+      properties:
+        woning:
+          $ref: '#/components/schemas/WoningVerwijzing'
+        huidigDak:
+          type: object
+          required: [isolatie, dakoppervlakteM2, daktype, bronnen]
+          properties:
+            isolatie:
+              type: object
+              required: [soort, dikteMm, rWaarde]
+              properties:
+                soort:
+                  type: string
+                  example: Glaswol
+                dikteMm:
+                  type: number
+                  example: 100
+                rWaarde:
+                  type: number
+                  example: 2.8
+            dakoppervlakteM2:
+              type: number
+              example: 120
+            daktype:
+              type: string
+              example: Zadeldak
+            bronnen:
+              type: array
+              items:
+                type: string
+              example: [Kadaster, BAG, LVG]
+            klopDitNiet:
+              $ref: '#/components/schemas/Link'
+        advies:
+          $ref: '#/components/schemas/Advies'
+        contact:
+          $ref: '#/components/schemas/Contact'
+        veelgesteldeVragen:
+          $ref: '#/components/schemas/VeelgesteldeVragen'
+        acties:
+          type: array
+          description: >-
+            Bevat `deel-met-aannemer` alleen als het advies berekend is, en
+            `meer-over-subsidie`.
+          items:
+            $ref: '#/components/schemas/Actie'
+    Advies:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [berekend, niet-beschikbaar]
+        berekendOp:
+          type: string
+          format: date
+        opties:
+          type: array
+          description: >-
+            Eén optie per doel-R-waarde. Een optie is alleen `aanbevolen` als de beslissing dat
+            zegt; anders is geen optie aanbevolen.
+          items:
+            $ref: '#/components/schemas/Isolatieoptie'
+        uitgangspunten:
+          type: array
+          items:
+            type: object
+            required: [label, waarde]
+            properties:
+              label:
+                type: string
+                example: Warmtegeleiding isolatiemateriaal
+              waarde:
+                type: string
+                description: Al opgemaakt voor weergave.
+                example: 0,035 W/m·K
+        toelichting:
+          type: string
+          description: Tekst onder de uitgangspunten.
+        melding:
+          $ref: '#/components/schemas/Probleem'
+    Isolatieoptie:
+      type: object
+      required:
+        - doelRWaarde
+        - aanbevolen
+        - extraDikteMm
+        - kostenEur
+        - kostenPerM2Eur
+        - subsidieEur
+        - nettoKostenEur
+        - besparingPerJaarEur
+        - terugverdientijdJaar
+      properties:
+        doelRWaarde:
+          type: number
+          example: 6.0
+        aanbevolen:
+          type: boolean
+        extraDikteMm:
+          type: number
+          example: 112
+        kostenEur:
+          type: number
+          description: Eindbedrag, al afgerond.
+          example: 4080
+        kostenPerM2Eur:
+          type: number
+          example: 34
+        subsidieEur:
+          type: number
+          example: 1000
+        nettoKostenEur:
+          type: number
+          example: 3080
+        besparingPerJaarEur:
+          type: number
+          example: 350
+        terugverdientijdJaar:
+          type: number
+          example: 8.8
+        toelichting:
+          type: string
+          description: De aanbeveling uit de beslissing, als die er is.
+    AannemersOverzicht:
+      type: object
+      required: [woning, doel, aannemers]
+      properties:
+        woning:
+          $ref: '#/components/schemas/WoningVerwijzing'
+        doel:
+          type: string
+          example: Offerte voor dakisolatie maken
+        aannemers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Aannemer'
+    Aannemer:
+      type: object
+      required: [id, naam, specialisme, gegevenssets, termijnen]
+      properties:
+        id:
+          type: string
+          example: a-91d2
+        naam:
+          type: string
+          example: IsolatieGroep Rotterdam
+        specialisme:
+          type: string
+          example: Dakisolatie specialist
+        gegevenssets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Gegevensset'
+        termijnen:
+          type: array
+          items:
+            $ref: '#/components/schemas/Termijn'
+    Gegevensset:
+      type: object
+      required: [id, naam, bron, elementen, verplicht, standaardAan]
+      properties:
+        id:
+          type: string
+          example: woning-en-dak
+        naam:
+          type: string
+          example: Woning en dak
+        bron:
+          type: string
+          example: LVG (Kadaster, BAG)
+        elementen:
+          type: array
+          items:
+            type: string
+          example: [adres, bouwjaar, dakoppervlakte, daktype]
+        verplicht:
+          type: boolean
+        standaardAan:
+          type: boolean
+    Termijn:
+      type: object
+      required: [dagen, verlooptOp, standaard]
+      properties:
+        dagen:
+          type: integer
+          example: 14
+        verlooptOp:
+          type: string
+          format: date
+          description: Door de API berekend.
+        standaard:
+          type: boolean
+    ToestemmingAanvraag:
+      type: object
+      required: [aannemerId, gegevenssets, termijnDagen]
+      properties:
+        aannemerId:
+          type: string
+          example: a-91d2
+        gegevenssets:
+          type: array
+          description: De ids van de sets die de burger deelt.
+          items:
+            type: string
+        termijnDagen:
+          type: integer
+          example: 14
+    Toestemming:
+      type: object
+      required: [kenmerk, woning, gedeeldMet, doel, gegevenssets, geldigTot, termijnDagen, acties]
+      properties:
+        kenmerk:
+          type: string
+          example: TS-2026-1119-0001
+        woning:
+          $ref: '#/components/schemas/WoningVerwijzing'
+        gedeeldMet:
+          type: string
+          example: IsolatieGroep Rotterdam
+        doel:
+          type: string
+          example: Offerte voor dakisolatie maken
+        gegevenssets:
+          type: array
+          items:
+            type: string
+          description: De namen van de gedeelde sets.
+        geldigTot:
+          type: string
+          format: date
+        termijnDagen:
+          type: integer
+        acties:
+          type: array
+          items:
+            $ref: '#/components/schemas/Actie'
