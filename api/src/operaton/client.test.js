@@ -18,13 +18,23 @@ const params = {
 
 const okResponse = (body) => ({ ok: true, status: 200, json: async () => body });
 
+// A complete result for one target value, as Operaton returns it.
+const RESULT = {
+  extra_dikte_mm: { value: 112 },
+  totale_kosten: { value: 4435 },
+  subsidie: { value: 2185 },
+  netto_kosten: { value: 2250 },
+  besparing_jaar: { value: 640 },
+  terugverdientijd: { value: 3.5 },
+};
+
 describe('evaluateIsolatie', () => {
   it('posts the inputs with their types to the decision on baseUrl', async () => {
-    const fetch = vi.fn(async () => okResponse([{ totale_kosten: { value: 2400 } }]));
+    const fetch = vi.fn(async () => okResponse([RESULT]));
 
     const result = await evaluateIsolatie(params, { baseUrl: BASE_URL, fetch });
 
-    expect(result).toEqual({ totale_kosten: { value: 2400 } });
+    expect(result).toEqual(RESULT);
     const [url, init] = fetch.mock.calls[0];
     expect(url).toBe(EVALUATE_URL);
     expect(init.method).toBe('POST');
@@ -41,7 +51,7 @@ describe('evaluateIsolatie', () => {
   });
 
   it('sends no Authorization header without a login', async () => {
-    const fetch = vi.fn(async () => okResponse([{}]));
+    const fetch = vi.fn(async () => okResponse([RESULT]));
 
     await evaluateIsolatie(params, { baseUrl: BASE_URL, fetch });
 
@@ -49,7 +59,7 @@ describe('evaluateIsolatie', () => {
   });
 
   it('sends Basic authentication when a login is set', async () => {
-    const fetch = vi.fn(async () => okResponse([{}]));
+    const fetch = vi.fn(async () => okResponse([RESULT]));
 
     await evaluateIsolatie(params, { baseUrl: BASE_URL, user: 'demo', password: 'demo', fetch });
 
@@ -60,11 +70,22 @@ describe('evaluateIsolatie', () => {
   });
 
   it('limits each call to 10 seconds', async () => {
-    const fetch = vi.fn(async () => okResponse([{}]));
+    const fetch = vi.fn(async () => okResponse([RESULT]));
 
     await evaluateIsolatie(params, { baseUrl: BASE_URL, fetch });
 
     expect(fetch.mock.calls[0][1].signal).toBeInstanceOf(AbortSignal);
+  });
+
+  it.each([
+    ['no result', []],
+    ['a result without the amounts', [{ aanbeveling: { value: '' } }]],
+  ])('throws when the decision gives %s', async (_, body) => {
+    const fetch = vi.fn(async () => okResponse(body));
+
+    await expect(evaluateIsolatie(params, { baseUrl: BASE_URL, fetch })).rejects.toThrow(
+      'DMN evaluation gave no usable result'
+    );
   });
 
   it('throws on a non-OK response', async () => {

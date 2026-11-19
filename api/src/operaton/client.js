@@ -4,6 +4,17 @@
 const DECISION_KEY = 'bereken_isolatie_opties';
 const TIMEOUT_MS = 10_000;
 
+// The outputs an option needs. `aanbevolen` and `aanbeveling` are optional: an older
+// version of the decision lacks the first, and only one rule has the second.
+const REQUIRED_OUTPUTS = [
+  'extra_dikte_mm',
+  'totale_kosten',
+  'subsidie',
+  'netto_kosten',
+  'besparing_jaar',
+  'terugverdientijd',
+];
+
 const VARIABLE_TYPES = {
   huidige_r_waarde: 'Double',
   dak_oppervlakte_m2: 'Double',
@@ -37,5 +48,12 @@ export async function evaluateIsolatie(params, { baseUrl, user, password, fetch 
     throw new Error(`DMN evaluation failed (${response.status})`);
   }
   const results = await response.json();
-  return results[0];
+  const result = Array.isArray(results) ? results[0] : undefined;
+  // No matching rule, or a result without the amounts, is not an advice. Throwing lets the
+  // caller report the advice as unavailable instead of inventing zero amounts.
+  const missing = REQUIRED_OUTPUTS.filter((name) => typeof result?.[name]?.value !== 'number');
+  if (missing.length > 0) {
+    throw new Error(`DMN evaluation gave no usable result (missing ${missing.join(', ')})`);
+  }
+  return result;
 }

@@ -160,6 +160,24 @@ describe('GET /woningen/{id}/dakisolatie', () => {
     expect(response.body.acties.map((a) => a.type)).toEqual(['meer-over-subsidie']);
   });
 
+  it.each([
+    ['no result', () => []],
+    ['a result without cost outputs', () => [{ aanbeveling: { value: '' } }]],
+  ])('reports the advice as unavailable when the DMN gives %s', async (_, body) => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({ ok: true, status: 200, json: async () => body() }))
+    );
+
+    const response = await get();
+
+    expectValidResponse('getDakisolatie', response);
+    expect(response.body.advies.status).toBe('niet-beschikbaar');
+    expect(response.body.advies.opties).toBeUndefined();
+    expect(response.body.acties.map((a) => a.type)).toEqual(['meer-over-subsidie']);
+  });
+
   it('answers 404 for a property without building data', async () => {
     const response = await get('/api/v1/woningen/w-2c91/dakisolatie');
 
