@@ -22,7 +22,7 @@ describe('listWoningen', () => {
   it('lists only the Rotterdam property in een-woning', async () => {
     const woningen = await listWoningen('een-woning');
     expect(woningen).toHaveLength(1);
-    expect(woningen[0]).toMatchObject({ id: ROTTERDAM, straat: 'Lange Hilleweg' });
+    expect(woningen[0]).toMatchObject({ id: ROTTERDAM, straat: 'Voorbeeldlaan' });
   });
 
   it('lists none in geen-woning', async () => {
@@ -64,14 +64,14 @@ describe('register lookups', () => {
 
   it('returns the registers for the Rotterdam property', async () => {
     expect(await getWoning('drie-woningen', ROTTERDAM)).toMatchObject({
-      straat: 'Lange Hilleweg',
+      straat: 'Voorbeeldlaan',
       huisnummer: '73 B',
-      postcode: '3073 BJ',
+      postcode: '3000 SS',
       woonplaats: 'Rotterdam',
       bouwjaar: 1990,
     });
     expect(await getKadaster('drie-woningen', ROTTERDAM)).toMatchObject({
-      aanduiding: 'Rotterdam G 3916',
+      aanduiding: 'Rotterdam Z 99999',
       grootteM2: 158,
     });
     expect(await getWoz('drie-woningen', ROTTERDAM)).toMatchObject({
@@ -113,6 +113,6 @@ describe('register lookups', () => {
     (await getWoz('drie-woningen', ROTTERDAM)).waardeEur = 1;
     (await listWoningen('drie-woningen'))[0].straat = 'x';
     expect((await getWoz('drie-woningen', ROTTERDAM)).waardeEur).toBe(317000);
-    expect((await listWoningen('drie-woningen'))[0].straat).toBe('Lange Hilleweg');
+    expect((await listWoningen('drie-woningen'))[0].straat).toBe('Voorbeeldlaan');
   });
 });

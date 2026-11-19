@@ -25,7 +25,7 @@ describe('GET /woningen/{id}/energielabel', () => {
       geldigTot: '2030-12-06',
       geldigheid: 'geldig',
     });
-    expect(body.labelDocument.tekst).toBe('Energielabel C 3073BJ 73 B (pdf)');
+    expect(body.labelDocument.tekst).toBe('Energielabel C 3000SS 73 B (pdf)');
     expect(body.opnamegegevens.tekst).toBe('Opnamegegevens (pdf)');
     expect(body.isde.link).toMatchObject({ extern: true });
     expect(body.contact.organisatie).toBe('Rijksdienst voor Ondernemend Nederland (RVO)');

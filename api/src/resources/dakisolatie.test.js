@@ -145,7 +145,7 @@ describe('GET /woningen/{id}/dakisolatie', () => {
     vi.stubGlobal(
       'fetch',
       vi.fn(async () => {
-        throw new TypeError('fetch failed for https://bron.example/woningen/Lange%20Hilleweg%2073');
+        throw new TypeError('fetch failed for https://bron.example/woningen/Voorbeeldlaan%2073');
       })
     );
 

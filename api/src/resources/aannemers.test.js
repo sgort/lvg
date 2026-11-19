@@ -20,7 +20,7 @@ describe('GET /woningen/{id}/aannemers', () => {
     expect(response.status).toBe(200);
     expectValidResponse('listAannemers', response);
     expect(response.body.doel).toBe('Offerte voor dakisolatie maken');
-    expect(response.body.woning.adresKort).toBe('Lange Hilleweg 73 B');
+    expect(response.body.woning.adresKort).toBe('Voorbeeldlaan 73 B');
 
     const [eerste] = response.body.aannemers;
     expect(eerste).toMatchObject({

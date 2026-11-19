@@ -163,8 +163,8 @@ paths:
                     weergave: lijst
                     woningen:
                       - id: w-7f3a
-                        adresKort: Lange Hilleweg 73 B
-                        adresMetPlaats: Lange Hilleweg 73 B, Rotterdam
+                        adresKort: Voorbeeldlaan 73 B
+                        adresMetPlaats: Voorbeeldlaan 73 B, Rotterdam
                         soort: Koopwoning
                         bouwjaar: 1990
                         energielabel:
@@ -193,8 +193,8 @@ paths:
                     weergave: direct
                     woningen:
                       - id: w-7f3a
-                        adresKort: Lange Hilleweg 73 B
-                        adresMetPlaats: Lange Hilleweg 73 B, Rotterdam
+                        adresKort: Voorbeeldlaan 73 B
+                        adresMetPlaats: Voorbeeldlaan 73 B, Rotterdam
                         soort: Koopwoning
                         bouwjaar: 1990
                         energielabel:
@@ -247,18 +247,18 @@ paths:
                   value:
                     woning:
                       id: w-7f3a
-                      adresKort: Lange Hilleweg 73 B
-                      adres: Lange Hilleweg 73 B, 3073 BJ Rotterdam
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
                     bag:
                       status: beschikbaar
-                      adres: Lange Hilleweg 73 B, Rotterdam
+                      adres: Voorbeeldlaan 73 B, Rotterdam
                       bouwjaar: 1990
                       gebruiksdoel: Woonfunctie
                       oppervlakteM2: 120
-                      verblijfsobject: '0599010000183946'
+                      verblijfsobject: '0599019999999999'
                     kadaster:
                       status: beschikbaar
-                      aanduiding: Rotterdam G 3916
+                      aanduiding: Rotterdam Z 99999
                       grootteM2: 158
                       actie:
                         type: bekijk-kadaster
@@ -269,7 +269,7 @@ paths:
                         bedragEur: 317000
                         uitleg: '{uitleg WOZ-waarde}'
                       waardepeildatum:
-                        datum: 2025-01-01
+                        datum: '2025-01-01'
                         uitleg: '{uitleg waardepeildatum}'
                       actie:
                         type: bekijk-woz
@@ -279,7 +279,7 @@ paths:
                       label:
                         klasse: C
                         naam: C
-                      opnamedatum: 2020-12-06
+                      opnamedatum: '2020-12-06'
                       actie:
                         type: bekijk-energielabel
                         href: /api/v1/woningen/w-7f3a/energielabel
@@ -322,18 +322,18 @@ paths:
                   value:
                     woning:
                       id: w-7f3a
-                      adresKort: Lange Hilleweg 73 B
-                      adres: Lange Hilleweg 73 B, 3073 BJ Rotterdam
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
                     kaart:
                       afbeelding:
                         src: /perceel-1560.png
-                        alt: Kadastrale kaart met perceel Rotterdam G 3916
+                        alt: Kadastrale kaart met perceel Rotterdam Z 99999
                       download:
                         tekst: '{Download link}'
                         href: '#nog-niet-beschikbaar'
                         extern: false
                     gegevens:
-                      aanduiding: Rotterdam G 3916
+                      aanduiding: Rotterdam Z 99999
                       grootteM2: 158
                       koopsomEur: 245000
                       publiekrechtelijkeBeperkingen: Geen
@@ -438,20 +438,20 @@ paths:
                   value:
                     woning:
                       id: w-7f3a
-                      adresKort: Lange Hilleweg 73 B
-                      adres: Lange Hilleweg 73 B, 3073 BJ Rotterdam
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
                     gegevens:
                       waarde:
                         bedragEur: 317000
                         uitleg: '{uitleg WOZ-waarde}'
                       waardepeildatum:
-                        datum: 2025-01-01
+                        datum: '2025-01-01'
                         uitleg: '{uitleg waardepeildatum}'
                       grondoppervlakteM2:
                         waarde: 160
                         uitleg: '{uitleg grondoppervlakte}'
                       objectnummer:
-                        tekst: '007986234657'
+                        tekst: '059999999999'
                         uitleg: '{uitleg WOZ-objectnummer}'
                       objecttype:
                         tekst: hoekwoning
@@ -521,18 +521,18 @@ paths:
                   value:
                     woning:
                       id: w-7f3a
-                      adresKort: Lange Hilleweg 73 B
-                      adres: Lange Hilleweg 73 B, 3073 BJ Rotterdam
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
                     label:
                       klasse: C
                       naam: C
                     objectAanduiding: woning
-                    registratiedatum: 2021-02-04
-                    opnamedatum: 2020-12-06
-                    geldigTot: 2030-12-06
+                    registratiedatum: '2021-02-04'
+                    opnamedatum: '2020-12-06'
+                    geldigTot: '2030-12-06'
                     geldigheid: geldig
                     labelDocument:
-                      tekst: Energielabel C 3073BJ 73 B (pdf)
+                      tekst: Energielabel C 3000SS 73 B (pdf)
                       href: '#nog-niet-beschikbaar'
                       extern: false
                     opnamegegevens:
@@ -607,8 +607,8 @@ paths:
                   value:
                     woning:
                       id: w-7f3a
-                      adresKort: Lange Hilleweg 73 B
-                      adres: Lange Hilleweg 73 B, 3073 BJ Rotterdam
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
                     huidigDak:
                       isolatie:
                         soort: Glaswol
@@ -626,7 +626,7 @@ paths:
                         extern: false
                     advies:
                       status: berekend
-                      berekendOp: 2026-11-19
+                      berekendOp: '2026-11-19'
                       opties:
                         - doelRWaarde: 3
                           aanbevolen: false
@@ -702,8 +702,8 @@ paths:
                   value:
                     woning:
                       id: w-7f3a
-                      adresKort: Lange Hilleweg 73 B
-                      adres: Lange Hilleweg 73 B, 3073 BJ Rotterdam
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
                     huidigDak:
                       isolatie:
                         soort: Glaswol
@@ -787,8 +787,8 @@ paths:
                   value:
                     woning:
                       id: w-7f3a
-                      adresKort: Lange Hilleweg 73 B
-                      adres: Lange Hilleweg 73 B, 3073 BJ Rotterdam
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
                     doel: Offerte voor dakisolatie maken
                     aannemers:
                       - id: a-91d2
@@ -831,13 +831,13 @@ paths:
                             standaardAan: false
                         termijnen:
                           - dagen: 7
-                            verlooptOp: 2026-11-26
+                            verlooptOp: '2026-11-26'
                             standaard: false
                           - dagen: 14
-                            verlooptOp: 2026-12-03
+                            verlooptOp: '2026-12-03'
                             standaard: true
                           - dagen: 30
-                            verlooptOp: 2026-12-19
+                            verlooptOp: '2026-12-19'
                             standaard: false
                       - id: a-4e07
                         naam: EcoTherm Isolatie
@@ -879,13 +879,13 @@ paths:
                             standaardAan: false
                         termijnen:
                           - dagen: 7
-                            verlooptOp: 2026-11-26
+                            verlooptOp: '2026-11-26'
                             standaard: false
                           - dagen: 14
-                            verlooptOp: 2026-12-03
+                            verlooptOp: '2026-12-03'
                             standaard: true
                           - dagen: 30
-                            verlooptOp: 2026-12-19
+                            verlooptOp: '2026-12-19'
                             standaard: false
                       - id: a-c3b8
                         naam: DakTotaal B.V.
@@ -927,13 +927,13 @@ paths:
                             standaardAan: false
                         termijnen:
                           - dagen: 7
-                            verlooptOp: 2026-11-26
+                            verlooptOp: '2026-11-26'
                             standaard: false
                           - dagen: 14
-                            verlooptOp: 2026-12-03
+                            verlooptOp: '2026-12-03'
                             standaard: true
                           - dagen: 30
-                            verlooptOp: 2026-12-19
+                            verlooptOp: '2026-12-19'
                             standaard: false
                       - id: a-17fa
                         naam: WarmteWerken
@@ -975,13 +975,13 @@ paths:
                             standaardAan: false
                         termijnen:
                           - dagen: 7
-                            verlooptOp: 2026-11-26
+                            verlooptOp: '2026-11-26'
                             standaard: false
                           - dagen: 14
-                            verlooptOp: 2026-12-03
+                            verlooptOp: '2026-12-03'
                             standaard: true
                           - dagen: 30
-                            verlooptOp: 2026-12-19
+                            verlooptOp: '2026-12-19'
                             standaard: false
                       - id: a-6d53
                         naam: IsolatieXpert
@@ -1023,13 +1023,13 @@ paths:
                             standaardAan: false
                         termijnen:
                           - dagen: 7
-                            verlooptOp: 2026-11-26
+                            verlooptOp: '2026-11-26'
                             standaard: false
                           - dagen: 14
-                            verlooptOp: 2026-12-03
+                            verlooptOp: '2026-12-03'
                             standaard: true
                           - dagen: 30
-                            verlooptOp: 2026-12-19
+                            verlooptOp: '2026-12-19'
                             standaard: false
                       - id: a-a820
                         naam: GreenRoof Solutions
@@ -1071,13 +1071,13 @@ paths:
                             standaardAan: false
                         termijnen:
                           - dagen: 7
-                            verlooptOp: 2026-11-26
+                            verlooptOp: '2026-11-26'
                             standaard: false
                           - dagen: 14
-                            verlooptOp: 2026-12-03
+                            verlooptOp: '2026-12-03'
                             standaard: true
                           - dagen: 30
-                            verlooptOp: 2026-12-19
+                            verlooptOp: '2026-12-19'
                             standaard: false
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -1142,15 +1142,15 @@ paths:
                     kenmerk: TS-2026-1119-0001
                     woning:
                       id: w-7f3a
-                      adresKort: Lange Hilleweg 73 B
-                      adres: Lange Hilleweg 73 B, 3073 BJ Rotterdam
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
                     gedeeldMet: IsolatieGroep Rotterdam
                     doel: Offerte voor dakisolatie maken
                     gegevenssets:
                       - Woning en dak
                       - Huidige isolatie
                       - Energiegegevens
-                    geldigTot: 2026-12-03
+                    geldigTot: '2026-12-03'
                     termijnDagen: 14
                     acties:
                       - type: terug-naar-woning
@@ -1205,15 +1205,15 @@ paths:
                     kenmerk: TS-2026-1119-0001
                     woning:
                       id: w-7f3a
-                      adresKort: Lange Hilleweg 73 B
-                      adres: Lange Hilleweg 73 B, 3073 BJ Rotterdam
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
                     gedeeldMet: IsolatieGroep Rotterdam
                     doel: Offerte voor dakisolatie maken
                     gegevenssets:
                       - Woning en dak
                       - Huidige isolatie
                       - Energiegegevens
-                    geldigTot: 2026-12-03
+                    geldigTot: '2026-12-03'
                     termijnDagen: 14
                     acties:
                       - type: terug-naar-woning
@@ -1239,11 +1239,12 @@ components:
       in: header
       required: false
       description: >-
-        Alleen Nederlands wordt ondersteund. De API onderhandelt zoals HTTP voorschrijft: de
-        aanvraag wordt geaccepteerd als Nederlands ergens in de lijst acceptabel is (`nl`,
-        `nl-NL` of `*`, met een q-waarde boven 0), zodat ook de eigen header van een browser
-        werkt. Is Nederlands niet acceptabel, dan antwoordt de API met 406. Antwoorden zijn
-        altijd in het Nederlands.
+        Alleen Nederlands wordt ondersteund. De API onderhandelt volgens RFC 9110: Nederlands
+        is acceptabel als `nl`, een `nl-`-variant of `*` een q-waarde boven 0 heeft, zodat ook
+        de eigen header van een browser werkt. Weigert de header `nl` of een `nl-`-variant
+        uitdrukkelijk (q=0), dan is Nederlands niet acceptabel, ook als `*` wel acceptabel is.
+        Is Nederlands niet acceptabel, dan antwoordt de API met 406. Antwoorden zijn altijd in
+        het Nederlands. Het contract zelf (`/openapi.json`) is in elke taal te lezen.
       schema:
         type: string
         default: nl
@@ -1304,6 +1305,13 @@ components:
                 title: Verplichte gegevens ontbreken
                 status: 400
                 burgerActie: De verplichte gegevens worden altijd gedeeld. Ga terug en probeer het opnieuw.
+            aanvraag-niet-leesbaar:
+              summary: De aanvraag is geen JSON-object
+              value:
+                type: about:blank
+                title: Aanvraag niet leesbaar
+                status: 400
+                burgerActie: Ga terug en probeer het opnieuw.
     NotFound:
       description: Dit bestaat niet, of hoort niet bij deze burger.
       headers:
@@ -1496,11 +1504,11 @@ components:
         adresKort:
           type: string
           description: Straat en huisnummer, voor titel en kruimelpad.
-          example: Lange Hilleweg 73 B
+          example: Voorbeeldlaan 73 B
         adres:
           type: string
           description: Het volledige adres.
-          example: Lange Hilleweg 73 B, 3073 BJ Rotterdam
+          example: Voorbeeldlaan 73 B, 3000 SS Rotterdam
     Energielabelklasse:
       type: object
       required: [klasse, naam]
@@ -1613,7 +1621,7 @@ components:
               $ref: '#/components/schemas/SectieStatus'
             aanduiding:
               type: string
-              example: Rotterdam G 3916
+              example: Rotterdam Z 99999
             grootteM2:
               type: number
             actie:

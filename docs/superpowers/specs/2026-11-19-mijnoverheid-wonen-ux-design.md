@@ -586,7 +586,7 @@ Example: `GET /api/v1/woningen/{id}/dakisolatie` (abridged)
 
 ```json
 {
-  "woning": { "id": "w-7f3a", "adres": "Lange Hilleweg 73 B, 3073 BJ Rotterdam" },
+  "woning": { "id": "w-7f3a", "adres": "Voorbeeldlaan 73 B, 3000 SS Rotterdam" },
   "huidigDak": {
     "isolatie": { "soort": "Glaswol", "dikteMm": 100, "rWaarde": 2.8 },
     "dakoppervlakteM2": 120,

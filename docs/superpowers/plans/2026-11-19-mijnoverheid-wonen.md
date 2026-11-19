@@ -339,8 +339,10 @@ Branch: `feat/api-iteration-2` from `acc`.
 
 ### Task 14: Ship Part 1b
 
-- [ ] **Step 1:** Run `npm run lint`, `npm test`, `npm run test:api`, `npm run lint:contract`, `npm run check-format`. Expected: all pass.
-- [ ] **Step 2:** Push and ask the owner to open a pull request into `acc` with `Closes #35` in the description. On the preview, the owner opens `/api/v1/openapi.json` (now `1.1.0`, with examples) and `/api/v1/woningen/w-7f3a/dakisolatie`. Expected: valid JSON; the `API-Version` header says `1.1.0`.
+- [x] **Step 1:** Run `npm run lint`, `npm test`, `npm run test:api`, `npm run lint:contract`, `npm run check-format`. Expected: all pass.
+- [x] **Step 2:** Push and ask the owner to open a pull request into `acc` with `Closes #35` in the description. On the preview, the owner opens `/api/v1/openapi.json` (now `1.1.0`, with examples) and `/api/v1/woningen/w-7f3a/dakisolatie`. Expected: valid JSON; the `API-Version` header says `1.1.0`.
+      Done on 19 November 2026 as #39; the build session opened it (the owner returned that to build sessions, see `CLAUDE.md`). A review of the branch found no critical issues; its minor fixes are on the branch, the rest is #40.
+      After #39 merged: the review fixes moved to `fix/api-review-and-mock`, with one addition. The Rotterdam property was a real one, so the mock (API and old page), its tests, the contract examples, the spec and the runbook now use Voorbeeldlaan 73 B, 3000 SS Rotterdam, BAG id `0599019999999999`, parcel `Rotterdam Z 99999` and WOZ number `059999999999` (owner decision, #40). The G&B design PDFs for the WOZ page still show the real address.
 - [ ] **Step 3:** After the owner merges, promote `acc` to `main` by pull request when the owner says so.
 
 ---

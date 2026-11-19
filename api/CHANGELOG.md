@@ -13,6 +13,10 @@ Part 1b of the MijnOverheid Wonen plan, after Logius's code and authentication c
   `uitgangspunten`; an unavailable advice always has a `melding`.
 - The contract is readable in any language: `/openapi.json` no longer answers 406.
 - The version policy is recorded in the contract and in `README.md`.
+- Dates in the examples are quoted, so YAML 1.1 tools read them as strings, not timestamps.
+- An `Accept-Language` header of only empty items means any language, as RFC 9110 says.
+- The Rotterdam mock property has a fictional street, postcode, BAG id, parcel and WOZ number
+  (#40). It was a real property.
 - Fixes from #35: unreadable consent requests and paths, language negotiation per RFC 9110,
   a bounded consent store, a required Operaton setting on Azure, and error logs without
   request data.
