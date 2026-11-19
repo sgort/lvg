@@ -163,8 +163,8 @@ paths:
                     weergave: lijst
                     woningen:
                       - id: w-7f3a
-                        adresKort: Lange Hilleweg 73 B
-                        adresMetPlaats: Lange Hilleweg 73 B, Rotterdam
+                        adresKort: Voorbeeldlaan 73 B
+                        adresMetPlaats: Voorbeeldlaan 73 B, Rotterdam
                         soort: Koopwoning
                         bouwjaar: 1990
                         energielabel:
@@ -193,8 +193,8 @@ paths:
                     weergave: direct
                     woningen:
                       - id: w-7f3a
-                        adresKort: Lange Hilleweg 73 B
-                        adresMetPlaats: Lange Hilleweg 73 B, Rotterdam
+                        adresKort: Voorbeeldlaan 73 B
+                        adresMetPlaats: Voorbeeldlaan 73 B, Rotterdam
                         soort: Koopwoning
                         bouwjaar: 1990
                         energielabel:
@@ -247,18 +247,18 @@ paths:
                   value:
                     woning:
                       id: w-7f3a
-                      adresKort: Lange Hilleweg 73 B
-                      adres: Lange Hilleweg 73 B, 3073 BJ Rotterdam
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
                     bag:
                       status: beschikbaar
-                      adres: Lange Hilleweg 73 B, Rotterdam
+                      adres: Voorbeeldlaan 73 B, Rotterdam
                       bouwjaar: 1990
                       gebruiksdoel: Woonfunctie
                       oppervlakteM2: 120
-                      verblijfsobject: '0599010000183946'
+                      verblijfsobject: '0599019999999999'
                     kadaster:
                       status: beschikbaar
-                      aanduiding: Rotterdam G 3916
+                      aanduiding: Rotterdam Z 99999
                       grootteM2: 158
                       actie:
                         type: bekijk-kadaster
@@ -322,18 +322,18 @@ paths:
                   value:
                     woning:
                       id: w-7f3a
-                      adresKort: Lange Hilleweg 73 B
-                      adres: Lange Hilleweg 73 B, 3073 BJ Rotterdam
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
                     kaart:
                       afbeelding:
                         src: /perceel-1560.png
-                        alt: Kadastrale kaart met perceel Rotterdam G 3916
+                        alt: Kadastrale kaart met perceel Rotterdam Z 99999
                       download:
                         tekst: '{Download link}'
                         href: '#nog-niet-beschikbaar'
                         extern: false
                     gegevens:
-                      aanduiding: Rotterdam G 3916
+                      aanduiding: Rotterdam Z 99999
                       grootteM2: 158
                       koopsomEur: 245000
                       publiekrechtelijkeBeperkingen: Geen
@@ -438,8 +438,8 @@ paths:
                   value:
                     woning:
                       id: w-7f3a
-                      adresKort: Lange Hilleweg 73 B
-                      adres: Lange Hilleweg 73 B, 3073 BJ Rotterdam
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
                     gegevens:
                       waarde:
                         bedragEur: 317000
@@ -451,7 +451,7 @@ paths:
                         waarde: 160
                         uitleg: '{uitleg grondoppervlakte}'
                       objectnummer:
-                        tekst: '007986234657'
+                        tekst: '059999999999'
                         uitleg: '{uitleg WOZ-objectnummer}'
                       objecttype:
                         tekst: hoekwoning
@@ -521,8 +521,8 @@ paths:
                   value:
                     woning:
                       id: w-7f3a
-                      adresKort: Lange Hilleweg 73 B
-                      adres: Lange Hilleweg 73 B, 3073 BJ Rotterdam
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
                     label:
                       klasse: C
                       naam: C
@@ -532,7 +532,7 @@ paths:
                     geldigTot: '2030-12-06'
                     geldigheid: geldig
                     labelDocument:
-                      tekst: Energielabel C 3073BJ 73 B (pdf)
+                      tekst: Energielabel C 3000SS 73 B (pdf)
                       href: '#nog-niet-beschikbaar'
                       extern: false
                     opnamegegevens:
@@ -607,8 +607,8 @@ paths:
                   value:
                     woning:
                       id: w-7f3a
-                      adresKort: Lange Hilleweg 73 B
-                      adres: Lange Hilleweg 73 B, 3073 BJ Rotterdam
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
                     huidigDak:
                       isolatie:
                         soort: Glaswol
@@ -702,8 +702,8 @@ paths:
                   value:
                     woning:
                       id: w-7f3a
-                      adresKort: Lange Hilleweg 73 B
-                      adres: Lange Hilleweg 73 B, 3073 BJ Rotterdam
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
                     huidigDak:
                       isolatie:
                         soort: Glaswol
@@ -787,8 +787,8 @@ paths:
                   value:
                     woning:
                       id: w-7f3a
-                      adresKort: Lange Hilleweg 73 B
-                      adres: Lange Hilleweg 73 B, 3073 BJ Rotterdam
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
                     doel: Offerte voor dakisolatie maken
                     aannemers:
                       - id: a-91d2
@@ -1142,8 +1142,8 @@ paths:
                     kenmerk: TS-2026-1119-0001
                     woning:
                       id: w-7f3a
-                      adresKort: Lange Hilleweg 73 B
-                      adres: Lange Hilleweg 73 B, 3073 BJ Rotterdam
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
                     gedeeldMet: IsolatieGroep Rotterdam
                     doel: Offerte voor dakisolatie maken
                     gegevenssets:
@@ -1205,8 +1205,8 @@ paths:
                     kenmerk: TS-2026-1119-0001
                     woning:
                       id: w-7f3a
-                      adresKort: Lange Hilleweg 73 B
-                      adres: Lange Hilleweg 73 B, 3073 BJ Rotterdam
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
                     gedeeldMet: IsolatieGroep Rotterdam
                     doel: Offerte voor dakisolatie maken
                     gegevenssets:
@@ -1504,11 +1504,11 @@ components:
         adresKort:
           type: string
           description: Straat en huisnummer, voor titel en kruimelpad.
-          example: Lange Hilleweg 73 B
+          example: Voorbeeldlaan 73 B
         adres:
           type: string
           description: Het volledige adres.
-          example: Lange Hilleweg 73 B, 3073 BJ Rotterdam
+          example: Voorbeeldlaan 73 B, 3000 SS Rotterdam
     Energielabelklasse:
       type: object
       required: [klasse, naam]
@@ -1621,7 +1621,7 @@ components:
               $ref: '#/components/schemas/SectieStatus'
             aanduiding:
               type: string
-              example: Rotterdam G 3916
+              example: Rotterdam Z 99999
             grootteM2:
               type: number
             actie:

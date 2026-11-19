@@ -79,7 +79,7 @@ describe('createApiMiddleware', () => {
   it('logs only the name of an error', async () => {
     const log = vi.spyOn(console, 'error').mockImplementation(() => {});
     const handle = vi.fn(async () => {
-      throw new TypeError('fetch failed for https://bron.example/Lange%20Hilleweg');
+      throw new TypeError('fetch failed for https://bron.example/Voorbeeldlaan');
     });
     const res = fakeResponse();
 

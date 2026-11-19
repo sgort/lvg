@@ -1,7 +1,8 @@
 // Mock register data and the three development scenarios. Only api/src/sources imports
 // this file, so a real source can replace one module at a time.
 //
-// The Rotterdam property and its building data come from the previous front-end mock.
+// The Rotterdam property and its building data come from the previous front-end mock, with a
+// fictional street, postcode, BAG id, parcel and WOZ number since 19 November 2026 (#40).
 // The other two addresses, and the WOZ and energy label values the Rotterdam property
 // lacked, come from the G&B designs of 19 November 2026. Rental properties are out of
 // scope and not mocked. Ids are opaque: they never contain an address or BAG id.
@@ -9,19 +10,19 @@
 const woningen = {
   'w-7f3a': {
     bag: {
-      straat: 'Lange Hilleweg',
+      straat: 'Voorbeeldlaan',
       huisnummer: '73 B',
-      postcode: '3073 BJ',
+      postcode: '3000 SS',
       woonplaats: 'Rotterdam',
       soort: 'Koopwoning',
       bouwjaar: 1990,
       gebruiksdoel: 'Woonfunctie',
       oppervlakteM2: 120,
-      verblijfsobject: '0599010000183946',
+      verblijfsobject: '0599019999999999',
       energielabelklasse: 'C',
     },
     kadaster: {
-      aanduiding: 'Rotterdam G 3916',
+      aanduiding: 'Rotterdam Z 99999',
       grootteM2: 158,
       koopsomEur: 245000,
       publiekrechtelijkeBeperkingen: 'Geen',
@@ -34,7 +35,7 @@ const woningen = {
       waardeEur: 317000,
       waardepeildatum: '2025-01-01',
       grondoppervlakteM2: 160,
-      objectnummer: '007986234657',
+      objectnummer: '059999999999',
       objecttype: 'hoekwoning',
     },
     energielabel: {

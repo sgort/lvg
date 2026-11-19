@@ -3,7 +3,7 @@
 // changing how screens ask for data.
 import { mockProperties } from './mockPropertyData';
 
-export const DEFAULT_PROPERTY_ID = 'lange-hilleweg-73b';
+export const DEFAULT_PROPERTY_ID = 'voorbeeldlaan-73b';
 
 const findProperty = (propertyId) => {
   const property = mockProperties[propertyId];

@@ -12,7 +12,7 @@ const session = { user: 'demo' };
 
 describe('propertyService', () => {
   it('loads public data without a session', async () => {
-    expect((await getPublicProperty(DEFAULT_PROPERTY_ID)).address).toBe('Lange Hilleweg 73 B');
+    expect((await getPublicProperty(DEFAULT_PROPERTY_ID)).address).toBe('Voorbeeldlaan 73 B');
   });
 
   it('refuses personal and building data without a session', async () => {

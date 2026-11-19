@@ -61,7 +61,7 @@ describe('POST /woningen/{id}/toestemmingen', () => {
       gegevenssets: ['Woning en dak', 'Huidige isolatie', 'Energiegegevens'],
       geldigTot: '2026-12-03',
       termijnDagen: 14,
-      woning: { id: 'w-7f3a', adresKort: 'Lange Hilleweg 73 B' },
+      woning: { id: 'w-7f3a', adresKort: 'Voorbeeldlaan 73 B' },
     });
     expect(response.body.acties.map((a) => a.type)).toEqual([
       'terug-naar-woning',

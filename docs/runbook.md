@@ -101,11 +101,11 @@ local engine), or the advice shows as unavailable.
 The band of the stand-in frame has a scenario switch. It sends `X-LVG-Scenario` to the API,
 which honours it only when `LVG_SCENARIOS=on`.
 
-| Scenario        | What you see                                                               | Use it to check                         |
-| --------------- | -------------------------------------------------------------------------- | --------------------------------------- |
-| `drie-woningen` | The list with three properties; Lange Hilleweg 73 B has the Operaton story | The list, all detail pages, Dakisolatie |
-| `een-woning`    | Koopwoningen goes straight to Lange Hilleweg 73 B                          | The direct redirect and Back behaviour  |
-| `geen-woning`   | The empty list message                                                     | The empty state                         |
+| Scenario        | What you see                                                              | Use it to check                         |
+| --------------- | ------------------------------------------------------------------------- | --------------------------------------- |
+| `drie-woningen` | The list with three properties; Voorbeeldlaan 73 B has the Operaton story | The list, all detail pages, Dakisolatie |
+| `een-woning`    | Koopwoningen goes straight to Voorbeeldlaan 73 B                          | The direct redirect and Back behaviour  |
+| `geen-woning`   | The empty list message                                                    | The empty state                         |
 
 `?kader=uit` in any URL shows the content without the stand-in frame: what Logius receives.
 

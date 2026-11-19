@@ -62,7 +62,7 @@ describe('createHandler', () => {
         pattern: '/woningen/{woningId}/toestemmingen',
         operationId: 'createToestemming',
         handler: async () => {
-          throw new Error('fetch failed for https://bron.example/woningen/Lange%20Hilleweg%2073');
+          throw new Error('fetch failed for https://bron.example/woningen/Voorbeeldlaan%2073');
         },
       },
     ]);
