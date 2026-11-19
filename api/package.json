@@ -6,7 +6,7 @@
   "engines": {
     "node": ">=22"
   },
-  "main": "src/functions/*.js",
+  "main": "src/functions/lvg.js",
   "scripts": {
     "test": "vitest run",
     "lint:contract": "spectral lint openapi.yaml",

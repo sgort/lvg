@@ -251,6 +251,8 @@ Branch: `feat/lvg-api` from `acc`.
 ### Task 10: Ship Part 1
 
 - [ ] **Step 1:** Push and open a pull request into `acc`. On the preview, the owner opens `/api/v1/openapi.json`, `/api/v1/woningen` and `/api/v1/woningen/w-7f3a/dakisolatie`. Expected: valid JSON, the dakisolatie options calculated by `operaton.open-regels.nl`. The existing page still works.
+      Found on the first preview, 19 November 2026: every `/api` address answered 404. `main` in `api/package.json` was the glob `src/functions/*.js`, which also matches `lvg.test.js`; after `npm prune --omit=dev` that file cannot load (`vitest` is gone), and a function app whose entry point fails to load registers no functions. `main` now names `src/functions/lvg.js` only.
+      The Part 1 review found two more, fixed on the same branch: the Vite plugin no longer sets the demo login itself, so `operatonConfig` alone decides and a remote `OPERATON_BASE_URL` gets no login; and the Operaton client rejects an empty decision result or one without the amounts, so the advice is reported as unavailable instead of as zero amounts.
 - [ ] **Step 2:** After the owner merges, promote `acc` to `main` by pull request when the owner says so.
 
 ---
