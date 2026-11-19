@@ -1,0 +1,5 @@
+// The one global stylesheet: the LUX font and the MijnOverheid design tokens (light), as
+// CSS custom properties (--lux-*). Everything else is styled in SCSS modules per component.
+// The designs are light only; the package's index.css would switch to dark on dark systems.
+@use '@lux-design-system/font/dist/index.css';
+@use '@lux-design-system/design-tokens/dist/mijnoverheid/light/lg.css';

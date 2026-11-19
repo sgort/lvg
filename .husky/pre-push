@@ -3,6 +3,7 @@
 # here with the fix named, instead of lint failing on the wrong tool versions.
 npm run deps:check
 npm run lint
+npm run typecheck
 npm test
 npm run test:api
 npm run lint:contract
