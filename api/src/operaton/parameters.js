@@ -22,8 +22,12 @@ export const buildIsolatieParams = (gebouwgegevens) => ({
  * Where Operaton is, from the app settings. The local engine needs a login, which
  * defaults to demo/demo. Elsewhere there is no default, and an empty OPERATON_USER means
  * no login: the public engine evaluates decisions without one.
+ *
+ * The local engine is a default for development hosts only. With `lokaalStandaard: false`
+ * (Azure, where settings come from the process) a missing OPERATON_BASE_URL gives null.
  */
-export function operatonConfig(env) {
+export function operatonConfig(env, { lokaalStandaard = true } = {}) {
+  if (!env.OPERATON_BASE_URL && !lokaalStandaard) return null;
   const baseUrl = (env.OPERATON_BASE_URL || LOCAL_BASE_URL).replace(/\/+$/, '');
   const isLocal = baseUrl === LOCAL_BASE_URL;
   const user = env.OPERATON_USER ?? (isLocal ? 'demo' : undefined);

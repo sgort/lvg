@@ -35,6 +35,19 @@ afterEach(() => {
 });
 
 describe('POST /woningen/{id}/toestemmingen', () => {
+  it.each([
+    ['the text null', 'null'],
+    ['the value null', null],
+    ['a JSON array', '[]'],
+    ['a JSON string', '"aanvraag"'],
+  ])('answers 400 for %s as body', async (_, body) => {
+    const response = await geef(body);
+
+    expect(response.status).toBe(400);
+    expect(response.body.title).toBe('Aanvraag niet leesbaar');
+    expectValidResponse('createToestemming', response);
+  });
+
   it('creates a consent with a kenmerk, validity and Location', async () => {
     const response = await geef(aanvraag());
 
@@ -48,7 +61,7 @@ describe('POST /woningen/{id}/toestemmingen', () => {
       gegevenssets: ['Woning en dak', 'Huidige isolatie', 'Energiegegevens'],
       geldigTot: '2026-12-03',
       termijnDagen: 14,
-      woning: { id: 'w-7f3a', adresKort: 'Lange Hilleweg 73 B' },
+      woning: { id: 'w-7f3a', adresKort: 'Voorbeeldlaan 73 B' },
     });
     expect(response.body.acties.map((a) => a.type)).toEqual([
       'terug-naar-woning',
@@ -122,6 +135,19 @@ describe('GET /toestemmingen/{kenmerk}', () => {
   it('answers 404 for an unknown kenmerk', async () => {
     const response = await bekijk('TS-2026-1119-9999');
 
+    expect(response.status).toBe(404);
+    expectValidResponse('getToestemming', response);
+  });
+
+  it('keeps consents of today and the previous day only', async () => {
+    vi.setSystemTime(new Date('2026-11-17T12:00:00Z'));
+    const eergisteren = (await geef(aanvraag())).body.kenmerk;
+    vi.setSystemTime(new Date('2026-11-18T12:00:00Z'));
+    const gisteren = (await geef(aanvraag())).body.kenmerk;
+    vi.setSystemTime(new Date('2026-11-19T12:00:00Z'));
+
+    expect((await bekijk(gisteren)).status).toBe(200);
+    const response = await bekijk(eergisteren);
     expect(response.status).toBe(404);
     expectValidResponse('getToestemming', response);
   });

@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { expectValidResponse } from '../../test/contract.js';
 import { handle } from '../core/router.js';
+import { resetOperatonWarningForTests } from './dakisolatie.js';
 
 const PATH = '/api/v1/woningen/w-7f3a/dakisolatie';
 const get = (path = PATH) => handle({ method: 'GET', path, headers: {} });
@@ -29,6 +30,7 @@ const operaton = (options) =>
   });
 
 beforeEach(() => {
+  resetOperatonWarningForTests();
   vi.stubEnv('OPERATON_BASE_URL', 'https://operaton.example/engine-rest');
   vi.stubEnv('OPERATON_USER', '');
   vi.useFakeTimers({ now: new Date('2026-11-19T12:00:00Z'), toFake: ['Date'] });
@@ -136,6 +138,49 @@ describe('GET /woningen/{id}/dakisolatie', () => {
 
     expect(acties.map((a) => a.type)).toEqual(['deel-met-aannemer', 'meer-over-subsidie']);
     expect(acties[0].href).toBe('/api/v1/woningen/w-7f3a/aannemers');
+  });
+
+  it('logs only the name of an Operaton error', async () => {
+    const log = vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        throw new TypeError('fetch failed for https://bron.example/woningen/Voorbeeldlaan%2073');
+      })
+    );
+
+    await get();
+
+    const logged = JSON.stringify(log.mock.calls);
+    expect(logged).toContain('TypeError');
+    expect(logged).not.toContain('https://');
+  });
+
+  it('reports the advice as unavailable on Azure when OPERATON_BASE_URL is not set', async () => {
+    vi.stubEnv('OPERATON_BASE_URL', '');
+    const log = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const fetch = vi.fn();
+    vi.stubGlobal('fetch', fetch);
+
+    const first = await get();
+    const second = await get();
+
+    expectValidResponse('getDakisolatie', first);
+    expect(first.body.advies.status).toBe('niet-beschikbaar');
+    expect(second.body.advies.status).toBe('niet-beschikbaar');
+    expect(fetch).not.toHaveBeenCalled();
+    expect(log.mock.calls).toEqual([['[lvg-api] OPERATON_BASE_URL is not set']]);
+  });
+
+  it('still uses the local Operaton on a development host', async () => {
+    vi.stubEnv('OPERATON_BASE_URL', '');
+    const fetch = operaton({ aanbevolen: 6 });
+    vi.stubGlobal('fetch', fetch);
+
+    const response = await handle({ method: 'GET', path: PATH, headers: {}, env: {} });
+
+    expect(response.body.advies.status).toBe('berekend');
+    expect(fetch.mock.calls[0][0]).toMatch(/^http:\/\/localhost:8081\/engine-rest\//);
   });
 
   it('keeps the roof and explains what to do when Operaton fails', async () => {

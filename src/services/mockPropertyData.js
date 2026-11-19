@@ -1,10 +1,10 @@
 // Mock data for the one demonstration property. Only propertyService.js imports
 // this file, so real sources can replace it without touching the screens.
 const publicInfo = {
-  address: 'Lange Hilleweg 73 B',
-  postalCode: '3073 BJ',
+  address: 'Voorbeeldlaan 73 B',
+  postalCode: '3000 SS',
   city: 'Rotterdam',
-  cadastralId: 'G 3916',
+  cadastralId: 'Z 99999',
   size: '158 m²',
   buildYear: 1990,
   energyLabel: 'C',
@@ -125,5 +125,5 @@ const contractors = [
 ];
 
 export const mockProperties = {
-  'lange-hilleweg-73b': { publicInfo, personalizedInfo, buildingData, contractors },
+  'voorbeeldlaan-73b': { publicInfo, personalizedInfo, buildingData, contractors },
 };

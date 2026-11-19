@@ -15,7 +15,7 @@ describe('GET /woningen/{id}/woz', () => {
     expect(gegevens.waarde.bedragEur).toBe(317000);
     expect(gegevens.waardepeildatum.datum).toBe('2025-01-01');
     expect(gegevens.grondoppervlakteM2.waarde).toBe(160);
-    expect(gegevens.objectnummer.tekst).toBe('007986234657');
+    expect(gegevens.objectnummer.tekst).toBe('059999999999');
     expect(gegevens.objecttype.tekst).toBe('hoekwoning');
     expect(gegevens.taxatieverslag.link.tekst).toBe('Taxatieverslag (pdf)');
     for (const veld of Object.values(gegevens)) {

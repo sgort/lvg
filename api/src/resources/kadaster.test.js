@@ -12,13 +12,13 @@ describe('GET /woningen/{id}/kadaster', () => {
     expect(response.status).toBe(200);
     expectValidResponse('getKadaster', response);
     const body = response.body;
-    expect(body.woning.adres).toBe('Lange Hilleweg 73 B, 3073 BJ Rotterdam');
+    expect(body.woning.adres).toBe('Voorbeeldlaan 73 B, 3000 SS Rotterdam');
     expect(body.kaart.afbeelding).toEqual({
       src: '/perceel-1560.png',
-      alt: 'Kadastrale kaart met perceel Rotterdam G 3916',
+      alt: 'Kadastrale kaart met perceel Rotterdam Z 99999',
     });
     expect(body.gegevens).toEqual({
-      aanduiding: 'Rotterdam G 3916',
+      aanduiding: 'Rotterdam Z 99999',
       grootteM2: 158,
       koopsomEur: 245000,
       publiekrechtelijkeBeperkingen: 'Geen',

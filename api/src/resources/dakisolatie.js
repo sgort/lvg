@@ -1,6 +1,6 @@
 // GET /woningen/{id}/dakisolatie: the current roof and the advice, calculated by Operaton on
 // every request. The API rounds the amounts and decides which actions the page may offer.
-import { json } from '../core/http.js';
+import { errorName, json } from '../core/http.js';
 import { evaluateIsolatie } from '../operaton/client.js';
 import {
   buildIsolatieParams,
@@ -54,9 +54,33 @@ function optie(doelRWaarde, result, dakoppervlakteM2) {
   };
 }
 
-async function berekenAdvies(gebouwgegevens, env) {
+const NIET_BESCHIKBAAR = {
+  status: 'niet-beschikbaar',
+  melding: {
+    type: 'about:blank',
+    title: 'Advies niet beschikbaar',
+    status: 503,
+    burgerActie: 'Wij kunnen het advies nu niet berekenen. Probeer het later opnieuw.',
+  },
+};
+
+// A missing OPERATON_BASE_URL on Azure is a configuration error: said once, not per request.
+let operatonWarned = false;
+
+export function resetOperatonWarningForTests() {
+  operatonWarned = false;
+}
+
+async function berekenAdvies(gebouwgegevens, request) {
+  // Only a development host passes request.env; there the local engine is the default.
+  const operaton = operatonConfig(envOf(request), { lokaalStandaard: request.env !== undefined });
+  if (!operaton) {
+    if (!operatonWarned) console.error('[lvg-api] OPERATON_BASE_URL is not set');
+    operatonWarned = true;
+    return structuredClone(NIET_BESCHIKBAAR);
+  }
   const params = buildIsolatieParams(gebouwgegevens);
-  const config = { ...operatonConfig(env), fetch: globalThis.fetch };
+  const config = { ...operaton, fetch: globalThis.fetch };
   try {
     const results = await Promise.all(
       TARGET_R_VALUES.map((doel_r_waarde) => evaluateIsolatie({ ...params, doel_r_waarde }, config))
@@ -81,16 +105,8 @@ async function berekenAdvies(gebouwgegevens, env) {
       toelichting: 'Dit is een indicatie. De echte kosten hoort u van een aannemer.',
     };
   } catch (error) {
-    console.error('[lvg-api] Operaton unavailable:', error?.message ?? String(error));
-    return {
-      status: 'niet-beschikbaar',
-      melding: {
-        type: 'about:blank',
-        title: 'Advies niet beschikbaar',
-        status: 503,
-        burgerActie: 'Wij kunnen het advies nu niet berekenen. Probeer het later opnieuw.',
-      },
-    };
+    console.error('[lvg-api] Operaton unavailable:', errorName(error));
+    return structuredClone(NIET_BESCHIKBAAR);
   }
 }
 
@@ -99,7 +115,7 @@ export async function getDakisolatie(request) {
   const { woningId } = request.params;
   const { bag, gebouwgegevens } = await woningMetDak(scenario, woningId);
 
-  const advies = await berekenAdvies(gebouwgegevens, envOf(request));
+  const advies = await berekenAdvies(gebouwgegevens, request);
   const isolatie = gebouwgegevens.bestaande_isolatie;
   const acties = [
     ...(advies.status === 'berekend'

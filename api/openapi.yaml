@@ -1,12 +1,25 @@
 openapi: 3.0.3
 info:
   title: LVG Wonen API
-  version: 1.0.0
-  description: >-
+  version: 1.1.0
+  description: |-
     The API behind the MijnOverheid Wonen pages built by LVG. It returns what each page needs,
     already decided: statuses, final amounts, allowed actions (`acties`) and the texts a
     citizen must see. The front-end only presents them. Data and consent are mocked in this
     iteration.
+
+    ## Versiebeleid
+
+    - The major version is in the path (`/api/v1`). `info.version` and the `API-Version`
+      header carry the full semantic version.
+    - Additions that existing clients can ignore (new fields, new operations, new action
+      types) raise the minor version. Fixes raise the patch version.
+    - A breaking change is only made in a new major version (`/api/v2`). The previous major
+      version is served alongside for at least six months. Its responses then carry the
+      `Deprecation` and `Sunset` headers, and the change is announced in `api/CHANGELOG.md`
+      and to MijnOverheid before release.
+    - Every response in this contract has an example, which the API tests validate against
+      its schema.
   contact:
     name: LVG, Open Regels
     url: https://lvg.open-regels.nl
@@ -30,9 +43,8 @@ paths:
       operationId: getOpenapi
       summary: Het contract van deze API
       description: >-
-        Geeft dit contract als JSON, zoals de API Design Rules vragen.
-      parameters:
-        - $ref: '#/components/parameters/AcceptLanguage'
+        Geeft dit contract als JSON, zoals de API Design Rules vragen. Het contract is in elke
+        taal te lezen: deze operatie kijkt niet naar `Accept-Language`.
       responses:
         '200':
           description: Dit contract als JSON.
@@ -50,8 +62,15 @@ paths:
             application/json:
               schema:
                 type: object
-        '406':
-          $ref: '#/components/responses/NotAcceptable'
+              examples:
+                contract:
+                  summary: Het begin van dit contract (ingekort)
+                  value:
+                    openapi: 3.0.3
+                    info:
+                      title: LVG Wonen API
+                      version: 1.1.0
+                    paths: {}
         '500':
           $ref: '#/components/responses/InternalServerError'
   /wonen:
@@ -76,6 +95,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Wonen'
+              examples:
+                wonen:
+                  summary: De kaarten van de landingspagina Wonen
+                  value:
+                    kaarten:
+                      - id: berichten-over-uw-buurt
+                        titel: Berichten over uw Buurt
+                        bron: Officiële Bekendmakingen
+                        tekst: U vindt hier berichten over vergunningen in uw buurt, zoals evenementen en bouwplannen. Ook vindt u de bekendmakingen van nieuwe regelgeving.
+                        actie:
+                          type: berichten-over-uw-buurt
+                          href: https://www.officielebekendmakingen.nl/
+                          tekst: Berichten over uw Buurt
+                      - id: woningeigenaar
+                        titel: Ik ben woningeigenaar
+                        bron: LVG
+                        tekst: '{Ingang LVG}'
+                        actie:
+                          type: bekijk-koopwoningen
+                          href: /api/v1/woningen
+                          tekst: Bekijk koopwoningen
+                      - id: huurder
+                        titel: Ik ben huurder
+                        bron: LVG
+                        tekst: '{intro}'
+                        actie:
+                          type: bekijk-huurwoningen
+                          href: '#nog-niet-beschikbaar'
+                          tekst: Bekijk huurwoningen
         '400':
           $ref: '#/components/responses/BadRequest'
         '406':
@@ -108,6 +156,60 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/WoningenOverzicht'
+              examples:
+                lijst:
+                  summary: 'Drie koopwoningen: de pagina toont een lijst'
+                  value:
+                    weergave: lijst
+                    woningen:
+                      - id: w-7f3a
+                        adresKort: Voorbeeldlaan 73 B
+                        adresMetPlaats: Voorbeeldlaan 73 B, Rotterdam
+                        soort: Koopwoning
+                        bouwjaar: 1990
+                        energielabel:
+                          klasse: C
+                          naam: C
+                      - id: w-2c91
+                        adresKort: Straatnaam 23
+                        adresMetPlaats: Straatnaam 23, Drechtstad
+                        soort: Koopwoning
+                        bouwjaar: 1994
+                        energielabel:
+                          klasse: A
+                          naam: A
+                      - id: w-b04e
+                        adresKort: Regenboogweg 9
+                        adresMetPlaats: Regenboogweg 9, Nintendorp
+                        soort: Koopwoning
+                        bouwjaar: 1967
+                        energielabel:
+                          klasse: C
+                          naam: C
+                    acties: []
+                direct:
+                  summary: 'Eén koopwoning: de pagina gaat meteen naar de woning'
+                  value:
+                    weergave: direct
+                    woningen:
+                      - id: w-7f3a
+                        adresKort: Voorbeeldlaan 73 B
+                        adresMetPlaats: Voorbeeldlaan 73 B, Rotterdam
+                        soort: Koopwoning
+                        bouwjaar: 1990
+                        energielabel:
+                          klasse: C
+                          naam: C
+                    acties: []
+                leeg:
+                  summary: Geen koopwoning
+                  value:
+                    weergave: leeg
+                    woningen: []
+                    acties:
+                      - type: contact-kadaster
+                        href: https://www.kadaster.nl/contact
+                        tekst: Klopt dit niet? Neem contact op met het Kadaster
         '400':
           $ref: '#/components/responses/BadRequest'
         '406':
@@ -139,6 +241,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Woning'
+              examples:
+                woning:
+                  summary: Een woning met alle onderdelen beschikbaar
+                  value:
+                    woning:
+                      id: w-7f3a
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                    bag:
+                      status: beschikbaar
+                      adres: Voorbeeldlaan 73 B, Rotterdam
+                      bouwjaar: 1990
+                      gebruiksdoel: Woonfunctie
+                      oppervlakteM2: 120
+                      verblijfsobject: '0599019999999999'
+                    kadaster:
+                      status: beschikbaar
+                      aanduiding: Rotterdam Z 99999
+                      grootteM2: 158
+                      actie:
+                        type: bekijk-kadaster
+                        href: /api/v1/woningen/w-7f3a/kadaster
+                    woz:
+                      status: beschikbaar
+                      waarde:
+                        bedragEur: 317000
+                        uitleg: '{uitleg WOZ-waarde}'
+                      waardepeildatum:
+                        datum: '2025-01-01'
+                        uitleg: '{uitleg waardepeildatum}'
+                      actie:
+                        type: bekijk-woz
+                        href: /api/v1/woningen/w-7f3a/woz
+                    energielabel:
+                      status: beschikbaar
+                      label:
+                        klasse: C
+                        naam: C
+                      opnamedatum: '2020-12-06'
+                      actie:
+                        type: bekijk-energielabel
+                        href: /api/v1/woningen/w-7f3a/energielabel
         '400':
           $ref: '#/components/responses/BadRequest'
         '404':
@@ -172,6 +316,89 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Kadaster'
+              examples:
+                kadaster:
+                  summary: De Kadastergegevens van een woning
+                  value:
+                    woning:
+                      id: w-7f3a
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                    kaart:
+                      afbeelding:
+                        src: /perceel-1560.png
+                        alt: Kadastrale kaart met perceel Rotterdam Z 99999
+                      download:
+                        tekst: '{Download link}'
+                        href: '#nog-niet-beschikbaar'
+                        extern: false
+                    gegevens:
+                      aanduiding: Rotterdam Z 99999
+                      grootteM2: 158
+                      koopsomEur: 245000
+                      publiekrechtelijkeBeperkingen: Geen
+                      bebouwing: Woonhuis
+                    producten:
+                      - label: Beperkte rechten
+                        link:
+                          tekst: '{Link beperkte rechten}'
+                          href: '#nog-niet-beschikbaar'
+                          extern: true
+                      - label: Hypotheekbedrag
+                        link:
+                          tekst: '{Link hypotheekbedrag}'
+                          href: '#nog-niet-beschikbaar'
+                          extern: true
+                      - label: Hypotheekgever
+                        link:
+                          tekst: '{Link hypotheekgever}'
+                          href: '#nog-niet-beschikbaar'
+                          extern: true
+                      - label: Hypotheeknemer
+                        link:
+                          tekst: '{Link hypotheeknemer}'
+                          href: '#nog-niet-beschikbaar'
+                          extern: true
+                      - label: Zakelijke rechten
+                        link:
+                          tekst: '{Link zakelijke rechten}'
+                          href: '#nog-niet-beschikbaar'
+                          extern: true
+                    eigenaarsinformatie:
+                      tekst: In Eigenaarsinformatie vindt u informatie over geregistreerde objecten die op uw naam staan in de Basisregistratie Kadaster. U bent van deze objecten de gerechtigde. Een uitgebreide toelichting op deze informatie vindt u op de webpagina van het Kadaster.
+                      meerInformatie:
+                        tekst: Kadaster
+                        href: https://www.kadaster.nl/
+                        extern: true
+                      download:
+                        tekst: Download eigenaarsinformatie (pdf)
+                        href: '#nog-niet-beschikbaar'
+                        extern: false
+                    fotos:
+                      luchtfotos:
+                        - src: /foto-placeholder.svg
+                          alt: Luchtfoto van de omgeving van uw woning
+                      panoramafotos:
+                        - src: /foto-placeholder.svg
+                          alt: Panoramafoto van de straat
+                    contact:
+                      organisatie: Kadaster
+                      website:
+                        tekst: www.kadaster.nl
+                        href: https://www.kadaster.nl/
+                        extern: true
+                    veelgesteldeVragen:
+                      vragen:
+                        - vraag: '{Label}'
+                          antwoord: '{antwoord}'
+                        - vraag: '{Label}'
+                          antwoord: '{antwoord}'
+                        - vraag: '{Label}'
+                          antwoord: '{antwoord}'
+                      meer:
+                        tekst: Bekijk alle veelgestelde vragen
+                        href: '#nog-niet-beschikbaar'
+                        extern: false
         '400':
           $ref: '#/components/responses/BadRequest'
         '404':
@@ -205,6 +432,54 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Woz'
+              examples:
+                woz:
+                  summary: De WOZ-waarde van een woning
+                  value:
+                    woning:
+                      id: w-7f3a
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                    gegevens:
+                      waarde:
+                        bedragEur: 317000
+                        uitleg: '{uitleg WOZ-waarde}'
+                      waardepeildatum:
+                        datum: '2025-01-01'
+                        uitleg: '{uitleg waardepeildatum}'
+                      grondoppervlakteM2:
+                        waarde: 160
+                        uitleg: '{uitleg grondoppervlakte}'
+                      objectnummer:
+                        tekst: '059999999999'
+                        uitleg: '{uitleg WOZ-objectnummer}'
+                      objecttype:
+                        tekst: hoekwoning
+                        uitleg: '{uitleg WOZ-objecttype}'
+                      taxatieverslag:
+                        link:
+                          tekst: Taxatieverslag (pdf)
+                          href: '#nog-niet-beschikbaar'
+                          extern: false
+                        uitleg: '{uitleg taxatieverslag}'
+                    contact:
+                      organisatie: Gemeente Rotterdam
+                      website:
+                        tekst: '{url}'
+                        href: '#nog-niet-beschikbaar'
+                        extern: true
+                    veelgesteldeVragen:
+                      vragen:
+                        - vraag: '{Label}'
+                          antwoord: '{antwoord}'
+                        - vraag: '{Label}'
+                          antwoord: '{antwoord}'
+                        - vraag: '{Label}'
+                          antwoord: '{antwoord}'
+                      meer:
+                        tekst: Bekijk alle veelgestelde vragen
+                        href: '#nog-niet-beschikbaar'
+                        extern: false
         '400':
           $ref: '#/components/responses/BadRequest'
         '404':
@@ -240,6 +515,57 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Energielabel'
+              examples:
+                energielabel:
+                  summary: Het energielabel van een woning met gebouwgegevens
+                  value:
+                    woning:
+                      id: w-7f3a
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                    label:
+                      klasse: C
+                      naam: C
+                    objectAanduiding: woning
+                    registratiedatum: '2021-02-04'
+                    opnamedatum: '2020-12-06'
+                    geldigTot: '2030-12-06'
+                    geldigheid: geldig
+                    labelDocument:
+                      tekst: Energielabel C 3000SS 73 B (pdf)
+                      href: '#nog-niet-beschikbaar'
+                      extern: false
+                    opnamegegevens:
+                      tekst: Opnamegegevens (pdf)
+                      href: '#nog-niet-beschikbaar'
+                      extern: false
+                    isde:
+                      link:
+                        tekst: '{ISDE-gegevens}'
+                        href: https://www.rvo.nl/subsidies-financiering/isde
+                        extern: true
+                      uitleg: '{uitleg ISDE-gegevens}'
+                    contact:
+                      organisatie: Rijksdienst voor Ondernemend Nederland (RVO)
+                      website:
+                        tekst: www.rvo.nl
+                        href: https://www.rvo.nl/
+                        extern: true
+                    veelgesteldeVragen:
+                      vragen:
+                        - vraag: '{Label}'
+                          antwoord: '{antwoord}'
+                        - vraag: '{Label}'
+                          antwoord: '{antwoord}'
+                        - vraag: '{Label}'
+                          antwoord: '{antwoord}'
+                      meer:
+                        tekst: Bekijk alle veelgestelde vragen
+                        href: '#nog-niet-beschikbaar'
+                        extern: false
+                    acties:
+                      - type: bekijk-dakisolatie
+                        href: /api/v1/woningen/w-7f3a/dakisolatie
         '400':
           $ref: '#/components/responses/BadRequest'
         '404':
@@ -275,6 +601,153 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Dakisolatie'
+              examples:
+                berekend:
+                  summary: Het advies is berekend; R 6 is aanbevolen
+                  value:
+                    woning:
+                      id: w-7f3a
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                    huidigDak:
+                      isolatie:
+                        soort: Glaswol
+                        dikteMm: 100
+                        rWaarde: 2.8
+                      dakoppervlakteM2: 120
+                      daktype: Zadeldak
+                      bronnen:
+                        - Kadaster
+                        - BAG
+                        - LVG
+                      klopDitNiet:
+                        tekst: Klopt dit niet?
+                        href: '#nog-niet-beschikbaar'
+                        extern: false
+                    advies:
+                      status: berekend
+                      berekendOp: '2026-11-19'
+                      opties:
+                        - doelRWaarde: 3
+                          aanbevolen: false
+                          extraDikteMm: 7
+                          kostenEur: 277
+                          kostenPerM2Eur: 2
+                          subsidieEur: 249
+                          nettoKostenEur: 28
+                          besparingPerJaarEur: 80
+                          terugverdientijdJaar: 0.4
+                        - doelRWaarde: 4
+                          aanbevolen: false
+                          extraDikteMm: 42
+                          kostenEur: 1663
+                          kostenPerM2Eur: 14
+                          subsidieEur: 1552
+                          nettoKostenEur: 111
+                          besparingPerJaarEur: 320
+                          terugverdientijdJaar: 0.3
+                        - doelRWaarde: 6
+                          aanbevolen: true
+                          extraDikteMm: 112
+                          kostenEur: 4435
+                          kostenPerM2Eur: 37
+                          subsidieEur: 2185
+                          nettoKostenEur: 2250
+                          besparingPerJaarEur: 640
+                          terugverdientijdJaar: 3.5
+                          toelichting: 'Aanbevolen: R-waarde 6.0 m²K/W (gemarkeerd in groen) biedt de beste balans tussen investering, subsidie en terugverdientijd.'
+                        - doelRWaarde: 8
+                          aanbevolen: false
+                          extraDikteMm: 182
+                          kostenEur: 7207
+                          kostenPerM2Eur: 60
+                          subsidieEur: 3604
+                          nettoKostenEur: 3603
+                          besparingPerJaarEur: 780
+                          terugverdientijdJaar: 4.6
+                      uitgangspunten:
+                        - label: Warmtegeleiding isolatiemateriaal
+                          waarde: 0,035 W/m·K
+                        - label: Materiaalprijs
+                          waarde: € 80 per m³
+                        - label: Arbeidsprijs
+                          waarde: € 25 per m² per 100 mm
+                      toelichting: Dit is een indicatie. De echte kosten hoort u van een aannemer.
+                    contact:
+                      organisatie: LVG
+                      website:
+                        tekst: '{url}'
+                        href: '#nog-niet-beschikbaar'
+                        extern: true
+                    veelgesteldeVragen:
+                      vragen:
+                        - vraag: '{Label}'
+                          antwoord: '{antwoord}'
+                        - vraag: '{Label}'
+                          antwoord: '{antwoord}'
+                        - vraag: '{Label}'
+                          antwoord: '{antwoord}'
+                      meer:
+                        tekst: Bekijk alle veelgestelde vragen
+                        href: '#nog-niet-beschikbaar'
+                        extern: false
+                    acties:
+                      - type: deel-met-aannemer
+                        href: /api/v1/woningen/w-7f3a/aannemers
+                      - type: meer-over-subsidie
+                        href: https://www.rvo.nl/subsidies-financiering/isde
+                        tekst: Meer over subsidie voor isolatie (ISDE)
+                niet-beschikbaar:
+                  summary: 'Operaton is niet bereikbaar: geen advies en geen actie om gegevens te delen'
+                  value:
+                    woning:
+                      id: w-7f3a
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                    huidigDak:
+                      isolatie:
+                        soort: Glaswol
+                        dikteMm: 100
+                        rWaarde: 2.8
+                      dakoppervlakteM2: 120
+                      daktype: Zadeldak
+                      bronnen:
+                        - Kadaster
+                        - BAG
+                        - LVG
+                      klopDitNiet:
+                        tekst: Klopt dit niet?
+                        href: '#nog-niet-beschikbaar'
+                        extern: false
+                    advies:
+                      status: niet-beschikbaar
+                      melding:
+                        type: about:blank
+                        title: Advies niet beschikbaar
+                        status: 503
+                        burgerActie: Wij kunnen het advies nu niet berekenen. Probeer het later opnieuw.
+                    contact:
+                      organisatie: LVG
+                      website:
+                        tekst: '{url}'
+                        href: '#nog-niet-beschikbaar'
+                        extern: true
+                    veelgesteldeVragen:
+                      vragen:
+                        - vraag: '{Label}'
+                          antwoord: '{antwoord}'
+                        - vraag: '{Label}'
+                          antwoord: '{antwoord}'
+                        - vraag: '{Label}'
+                          antwoord: '{antwoord}'
+                      meer:
+                        tekst: Bekijk alle veelgestelde vragen
+                        href: '#nog-niet-beschikbaar'
+                        extern: false
+                    acties:
+                      - type: meer-over-subsidie
+                        href: https://www.rvo.nl/subsidies-financiering/isde
+                        tekst: Meer over subsidie voor isolatie (ISDE)
         '400':
           $ref: '#/components/responses/BadRequest'
         '404':
@@ -308,6 +781,304 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AannemersOverzicht'
+              examples:
+                aannemers:
+                  summary: De aannemers met hun gegevenssets en termijnen
+                  value:
+                    woning:
+                      id: w-7f3a
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                    doel: Offerte voor dakisolatie maken
+                    aannemers:
+                      - id: a-91d2
+                        naam: IsolatieGroep Rotterdam
+                        specialisme: Dakisolatie specialist
+                        gegevenssets:
+                          - id: woning-en-dak
+                            naam: Woning en dak
+                            bron: LVG (Kadaster, BAG)
+                            elementen:
+                              - adres
+                              - bouwjaar
+                              - dakoppervlakte
+                              - daktype
+                            verplicht: true
+                            standaardAan: true
+                          - id: huidige-isolatie
+                            naam: Huidige isolatie
+                            bron: LVG
+                            elementen:
+                              - soort
+                              - dikte
+                              - R-waarde
+                            verplicht: true
+                            standaardAan: true
+                          - id: energiegegevens
+                            naam: Energiegegevens
+                            bron: RVO (EP-online)
+                            elementen:
+                              - energielabel
+                              - eerder toegekende verduurzamingssubsidies
+                            verplicht: false
+                            standaardAan: true
+                          - id: advies-dakisolatie
+                            naam: Advies dakisolatie
+                            bron: LVG
+                            elementen:
+                              - het advies van de vorige pagina
+                            verplicht: false
+                            standaardAan: false
+                        termijnen:
+                          - dagen: 7
+                            verlooptOp: '2026-11-26'
+                            standaard: false
+                          - dagen: 14
+                            verlooptOp: '2026-12-03'
+                            standaard: true
+                          - dagen: 30
+                            verlooptOp: '2026-12-19'
+                            standaard: false
+                      - id: a-4e07
+                        naam: EcoTherm Isolatie
+                        specialisme: Duurzame isolatie
+                        gegevenssets:
+                          - id: woning-en-dak
+                            naam: Woning en dak
+                            bron: LVG (Kadaster, BAG)
+                            elementen:
+                              - adres
+                              - bouwjaar
+                              - dakoppervlakte
+                              - daktype
+                            verplicht: true
+                            standaardAan: true
+                          - id: huidige-isolatie
+                            naam: Huidige isolatie
+                            bron: LVG
+                            elementen:
+                              - soort
+                              - dikte
+                              - R-waarde
+                            verplicht: true
+                            standaardAan: true
+                          - id: energiegegevens
+                            naam: Energiegegevens
+                            bron: RVO (EP-online)
+                            elementen:
+                              - energielabel
+                              - eerder toegekende verduurzamingssubsidies
+                            verplicht: false
+                            standaardAan: true
+                          - id: advies-dakisolatie
+                            naam: Advies dakisolatie
+                            bron: LVG
+                            elementen:
+                              - het advies van de vorige pagina
+                            verplicht: false
+                            standaardAan: false
+                        termijnen:
+                          - dagen: 7
+                            verlooptOp: '2026-11-26'
+                            standaard: false
+                          - dagen: 14
+                            verlooptOp: '2026-12-03'
+                            standaard: true
+                          - dagen: 30
+                            verlooptOp: '2026-12-19'
+                            standaard: false
+                      - id: a-c3b8
+                        naam: DakTotaal B.V.
+                        specialisme: Complete dakoplossingen
+                        gegevenssets:
+                          - id: woning-en-dak
+                            naam: Woning en dak
+                            bron: LVG (Kadaster, BAG)
+                            elementen:
+                              - adres
+                              - bouwjaar
+                              - dakoppervlakte
+                              - daktype
+                            verplicht: true
+                            standaardAan: true
+                          - id: huidige-isolatie
+                            naam: Huidige isolatie
+                            bron: LVG
+                            elementen:
+                              - soort
+                              - dikte
+                              - R-waarde
+                            verplicht: true
+                            standaardAan: true
+                          - id: energiegegevens
+                            naam: Energiegegevens
+                            bron: RVO (EP-online)
+                            elementen:
+                              - energielabel
+                              - eerder toegekende verduurzamingssubsidies
+                            verplicht: false
+                            standaardAan: true
+                          - id: advies-dakisolatie
+                            naam: Advies dakisolatie
+                            bron: LVG
+                            elementen:
+                              - het advies van de vorige pagina
+                            verplicht: false
+                            standaardAan: false
+                        termijnen:
+                          - dagen: 7
+                            verlooptOp: '2026-11-26'
+                            standaard: false
+                          - dagen: 14
+                            verlooptOp: '2026-12-03'
+                            standaard: true
+                          - dagen: 30
+                            verlooptOp: '2026-12-19'
+                            standaard: false
+                      - id: a-17fa
+                        naam: WarmteWerken
+                        specialisme: Energiebesparing
+                        gegevenssets:
+                          - id: woning-en-dak
+                            naam: Woning en dak
+                            bron: LVG (Kadaster, BAG)
+                            elementen:
+                              - adres
+                              - bouwjaar
+                              - dakoppervlakte
+                              - daktype
+                            verplicht: true
+                            standaardAan: true
+                          - id: huidige-isolatie
+                            naam: Huidige isolatie
+                            bron: LVG
+                            elementen:
+                              - soort
+                              - dikte
+                              - R-waarde
+                            verplicht: true
+                            standaardAan: true
+                          - id: energiegegevens
+                            naam: Energiegegevens
+                            bron: RVO (EP-online)
+                            elementen:
+                              - energielabel
+                              - eerder toegekende verduurzamingssubsidies
+                            verplicht: false
+                            standaardAan: true
+                          - id: advies-dakisolatie
+                            naam: Advies dakisolatie
+                            bron: LVG
+                            elementen:
+                              - het advies van de vorige pagina
+                            verplicht: false
+                            standaardAan: false
+                        termijnen:
+                          - dagen: 7
+                            verlooptOp: '2026-11-26'
+                            standaard: false
+                          - dagen: 14
+                            verlooptOp: '2026-12-03'
+                            standaard: true
+                          - dagen: 30
+                            verlooptOp: '2026-12-19'
+                            standaard: false
+                      - id: a-6d53
+                        naam: IsolatieXpert
+                        specialisme: Snelle service
+                        gegevenssets:
+                          - id: woning-en-dak
+                            naam: Woning en dak
+                            bron: LVG (Kadaster, BAG)
+                            elementen:
+                              - adres
+                              - bouwjaar
+                              - dakoppervlakte
+                              - daktype
+                            verplicht: true
+                            standaardAan: true
+                          - id: huidige-isolatie
+                            naam: Huidige isolatie
+                            bron: LVG
+                            elementen:
+                              - soort
+                              - dikte
+                              - R-waarde
+                            verplicht: true
+                            standaardAan: true
+                          - id: energiegegevens
+                            naam: Energiegegevens
+                            bron: RVO (EP-online)
+                            elementen:
+                              - energielabel
+                              - eerder toegekende verduurzamingssubsidies
+                            verplicht: false
+                            standaardAan: true
+                          - id: advies-dakisolatie
+                            naam: Advies dakisolatie
+                            bron: LVG
+                            elementen:
+                              - het advies van de vorige pagina
+                            verplicht: false
+                            standaardAan: false
+                        termijnen:
+                          - dagen: 7
+                            verlooptOp: '2026-11-26'
+                            standaard: false
+                          - dagen: 14
+                            verlooptOp: '2026-12-03'
+                            standaard: true
+                          - dagen: 30
+                            verlooptOp: '2026-12-19'
+                            standaard: false
+                      - id: a-a820
+                        naam: GreenRoof Solutions
+                        specialisme: Groene daken & isolatie
+                        gegevenssets:
+                          - id: woning-en-dak
+                            naam: Woning en dak
+                            bron: LVG (Kadaster, BAG)
+                            elementen:
+                              - adres
+                              - bouwjaar
+                              - dakoppervlakte
+                              - daktype
+                            verplicht: true
+                            standaardAan: true
+                          - id: huidige-isolatie
+                            naam: Huidige isolatie
+                            bron: LVG
+                            elementen:
+                              - soort
+                              - dikte
+                              - R-waarde
+                            verplicht: true
+                            standaardAan: true
+                          - id: energiegegevens
+                            naam: Energiegegevens
+                            bron: RVO (EP-online)
+                            elementen:
+                              - energielabel
+                              - eerder toegekende verduurzamingssubsidies
+                            verplicht: false
+                            standaardAan: true
+                          - id: advies-dakisolatie
+                            naam: Advies dakisolatie
+                            bron: LVG
+                            elementen:
+                              - het advies van de vorige pagina
+                            verplicht: false
+                            standaardAan: false
+                        termijnen:
+                          - dagen: 7
+                            verlooptOp: '2026-11-26'
+                            standaard: false
+                          - dagen: 14
+                            verlooptOp: '2026-12-03'
+                            standaard: true
+                          - dagen: 30
+                            verlooptOp: '2026-12-19'
+                            standaard: false
         '400':
           $ref: '#/components/responses/BadRequest'
         '404':
@@ -337,6 +1108,16 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ToestemmingAanvraag'
+            examples:
+              aanvraag:
+                summary: Toestemming voor de standaard gekozen gegevenssets, 14 dagen
+                value:
+                  aannemerId: a-91d2
+                  gegevenssets:
+                    - woning-en-dak
+                    - huidige-isolatie
+                    - energiegegevens
+                  termijnDagen: 14
       responses:
         '201':
           description: De toestemming is gegeven.
@@ -354,6 +1135,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Toestemming'
+              examples:
+                toestemming:
+                  summary: De gegeven toestemming
+                  value:
+                    kenmerk: TS-2026-1119-0001
+                    woning:
+                      id: w-7f3a
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                    gedeeldMet: IsolatieGroep Rotterdam
+                    doel: Offerte voor dakisolatie maken
+                    gegevenssets:
+                      - Woning en dak
+                      - Huidige isolatie
+                      - Energiegegevens
+                    geldigTot: '2026-12-03'
+                    termijnDagen: 14
+                    acties:
+                      - type: terug-naar-woning
+                        href: /api/v1/woningen/w-7f3a
+                        tekst: Terug naar uw woning
+                      - type: beheer-gegevens
+                        href: '#nog-niet-beschikbaar'
+                        tekst: Beheer gegevens
         '400':
           $ref: '#/components/responses/BadRequest'
         '404':
@@ -393,6 +1198,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Toestemming'
+              examples:
+                toestemming:
+                  summary: Een eerder gegeven toestemming
+                  value:
+                    kenmerk: TS-2026-1119-0001
+                    woning:
+                      id: w-7f3a
+                      adresKort: Voorbeeldlaan 73 B
+                      adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                    gedeeldMet: IsolatieGroep Rotterdam
+                    doel: Offerte voor dakisolatie maken
+                    gegevenssets:
+                      - Woning en dak
+                      - Huidige isolatie
+                      - Energiegegevens
+                    geldigTot: '2026-12-03'
+                    termijnDagen: 14
+                    acties:
+                      - type: terug-naar-woning
+                        href: /api/v1/woningen/w-7f3a
+                        tekst: Terug naar uw woning
+                      - type: beheer-gegevens
+                        href: '#nog-niet-beschikbaar'
+                        tekst: Beheer gegevens
         '400':
           $ref: '#/components/responses/BadRequest'
         '404':
@@ -410,11 +1239,12 @@ components:
       in: header
       required: false
       description: >-
-        Alleen Nederlands wordt ondersteund. De API onderhandelt zoals HTTP voorschrijft: de
-        aanvraag wordt geaccepteerd als Nederlands ergens in de lijst acceptabel is (`nl`,
-        `nl-NL` of `*`, met een q-waarde boven 0), zodat ook de eigen header van een browser
-        werkt. Is Nederlands niet acceptabel, dan antwoordt de API met 406. Antwoorden zijn
-        altijd in het Nederlands.
+        Alleen Nederlands wordt ondersteund. De API onderhandelt volgens RFC 9110: Nederlands
+        is acceptabel als `nl`, een `nl-`-variant of `*` een q-waarde boven 0 heeft, zodat ook
+        de eigen header van een browser werkt. Weigert de header `nl` of een `nl-`-variant
+        uitdrukkelijk (q=0), dan is Nederlands niet acceptabel, ook als `*` wel acceptabel is.
+        Is Nederlands niet acceptabel, dan antwoordt de API met 406. Antwoorden zijn altijd in
+        het Nederlands. Het contract zelf (`/openapi.json`) is in elke taal te lezen.
       schema:
         type: string
         default: nl
@@ -442,7 +1272,7 @@ components:
       description: De volledige versie van deze API.
       schema:
         type: string
-        example: 1.0.0
+        example: 1.1.0
     ContentLanguage:
       description: De taal van de teksten in het antwoord.
       schema:
@@ -460,6 +1290,28 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Probleem'
+          examples:
+            geen-aannemer:
+              summary: Geen aannemer gekozen
+              value:
+                type: about:blank
+                title: Geen aannemer gekozen
+                status: 400
+                burgerActie: Kies een aannemer.
+            verplichte-gegevens:
+              summary: Verplichte gegevens ontbreken
+              value:
+                type: about:blank
+                title: Verplichte gegevens ontbreken
+                status: 400
+                burgerActie: De verplichte gegevens worden altijd gedeeld. Ga terug en probeer het opnieuw.
+            aanvraag-niet-leesbaar:
+              summary: De aanvraag is geen JSON-object
+              value:
+                type: about:blank
+                title: Aanvraag niet leesbaar
+                status: 400
+                burgerActie: Ga terug en probeer het opnieuw.
     NotFound:
       description: Dit bestaat niet, of hoort niet bij deze burger.
       headers:
@@ -471,6 +1323,23 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Probleem'
+          examples:
+            woning:
+              summary: Deze woning bestaat niet of hoort niet bij deze burger
+              value:
+                type: about:blank
+                title: Woning niet gevonden
+                status: 404
+                burgerActie: Ga terug naar uw koopwoningen.
+                detail: Deze woning staat niet op uw naam, of bestaat niet.
+            pad:
+              summary: Dit adres bestaat niet in de API
+              value:
+                type: about:blank
+                title: Niet gevonden
+                status: 404
+                burgerActie: Ga naar de pagina Wonen in MijnOverheid.
+                detail: Deze pagina bestaat niet (meer).
     NotAcceptable:
       description: De gevraagde taal wordt niet ondersteund.
       headers:
@@ -482,6 +1351,15 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Probleem'
+          examples:
+            taal:
+              summary: Nederlands is niet acceptabel volgens Accept-Language
+              value:
+                type: about:blank
+                title: Taal niet beschikbaar
+                status: 406
+                burgerActie: Bekijk deze pagina in het Nederlands.
+                detail: Deze gegevens zijn alleen in het Nederlands beschikbaar.
     InternalServerError:
       description: Er ging iets mis in de API.
       headers:
@@ -493,6 +1371,14 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Probleem'
+          examples:
+            fout:
+              summary: Een onverwachte fout in de API
+              value:
+                type: about:blank
+                title: Er ging iets mis
+                status: 500
+                burgerActie: Probeer het later opnieuw.
     ServiceUnavailable:
       description: Een bron is nu niet bereikbaar.
       headers:
@@ -504,6 +1390,14 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Probleem'
+          examples:
+            bron:
+              summary: Een bron is nu niet bereikbaar
+              value:
+                type: about:blank
+                title: Gegevens niet beschikbaar
+                status: 503
+                burgerActie: Probeer het later opnieuw.
   schemas:
     Probleem:
       type: object
@@ -610,11 +1504,11 @@ components:
         adresKort:
           type: string
           description: Straat en huisnummer, voor titel en kruimelpad.
-          example: Lange Hilleweg 73 B
+          example: Voorbeeldlaan 73 B
         adres:
           type: string
           description: Het volledige adres.
-          example: Lange Hilleweg 73 B, 3073 BJ Rotterdam
+          example: Voorbeeldlaan 73 B, 3000 SS Rotterdam
     Energielabelklasse:
       type: object
       required: [klasse, naam]
@@ -727,7 +1621,7 @@ components:
               $ref: '#/components/schemas/SectieStatus'
             aanduiding:
               type: string
-              example: Rotterdam G 3916
+              example: Rotterdam Z 99999
             grootteM2:
               type: number
             actie:
@@ -995,12 +1889,33 @@ components:
           items:
             $ref: '#/components/schemas/Actie'
     Advies:
+      description: >-
+        Het advies, berekend of niet beschikbaar. `status` bepaalt welke velden er zijn: een
+        berekend advies heeft opties, een advies dat niet beschikbaar is heeft een melding.
+      oneOf:
+        - $ref: '#/components/schemas/AdviesBerekend'
+        - $ref: '#/components/schemas/AdviesNietBeschikbaar'
+      discriminator:
+        propertyName: status
+        mapping:
+          berekend: '#/components/schemas/AdviesBerekend'
+          niet-beschikbaar: '#/components/schemas/AdviesNietBeschikbaar'
+    AdviesNietBeschikbaar:
       type: object
-      required: [status]
+      required: [status, melding]
       properties:
         status:
           type: string
-          enum: [berekend, niet-beschikbaar]
+          enum: [niet-beschikbaar]
+        melding:
+          $ref: '#/components/schemas/Probleem'
+    AdviesBerekend:
+      type: object
+      required: [status, berekendOp, opties, uitgangspunten]
+      properties:
+        status:
+          type: string
+          enum: [berekend]
         berekendOp:
           type: string
           format: date
@@ -1027,8 +1942,6 @@ components:
         toelichting:
           type: string
           description: Tekst onder de uitgangspunten.
-        melding:
-          $ref: '#/components/schemas/Probleem'
     Isolatieoptie:
       type: object
       required:

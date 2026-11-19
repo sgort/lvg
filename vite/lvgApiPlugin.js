@@ -47,7 +47,8 @@ export function createApiMiddleware(handle, env) {
       }
       res.end(response.body === undefined ? undefined : JSON.stringify(response.body));
     } catch (error) {
-      console.error('[lvg-api dev]', error?.message ?? String(error));
+      // The name only: a message can carry request data, as in the API itself.
+      console.error('[lvg-api dev]', error instanceof Error ? error.name : typeof error);
       res.statusCode = 500;
       res.end();
     }

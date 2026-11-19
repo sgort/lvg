@@ -82,20 +82,20 @@ describe('GET /woningen/{id}', () => {
     const { woning, bag, kadaster, woz, energielabel } = response.body;
     expect(woning).toEqual({
       id: 'w-7f3a',
-      adresKort: 'Lange Hilleweg 73 B',
-      adres: 'Lange Hilleweg 73 B, 3073 BJ Rotterdam',
+      adresKort: 'Voorbeeldlaan 73 B',
+      adres: 'Voorbeeldlaan 73 B, 3000 SS Rotterdam',
     });
     expect(bag).toEqual({
       status: 'beschikbaar',
-      adres: 'Lange Hilleweg 73 B, Rotterdam',
+      adres: 'Voorbeeldlaan 73 B, Rotterdam',
       bouwjaar: 1990,
       gebruiksdoel: 'Woonfunctie',
       oppervlakteM2: 120,
-      verblijfsobject: '0599010000183946',
+      verblijfsobject: '0599019999999999',
     });
     expect(kadaster).toMatchObject({
       status: 'beschikbaar',
-      aanduiding: 'Rotterdam G 3916',
+      aanduiding: 'Rotterdam Z 99999',
       grootteM2: 158,
       actie: { type: 'bekijk-kadaster', href: '/api/v1/woningen/w-7f3a/kadaster' },
     });
@@ -124,6 +124,19 @@ describe('GET /woningen/{id}', () => {
     expect(response.body.woz).toEqual({ status: 'niet-beschikbaar' });
     expect(response.body.kadaster.status).toBe('beschikbaar');
     expect(response.body.energielabel.status).toBe('beschikbaar');
+  });
+
+  it('logs only the name of a source error', async () => {
+    const log = vi.spyOn(console, 'error').mockImplementation(() => {});
+    registers.getWoz.mockRejectedValueOnce(
+      new TypeError('fetch failed for https://bron.example/woningen/Voorbeeldlaan%2073')
+    );
+
+    await get('/api/v1/woningen/w-7f3a');
+
+    const logged = JSON.stringify(log.mock.calls);
+    expect(logged).toContain('TypeError');
+    expect(logged).not.toContain('https://');
   });
 
   it('answers 404 for a property that is not the citizen’s', async () => {
