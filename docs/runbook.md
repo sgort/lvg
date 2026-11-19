@@ -28,9 +28,10 @@ with an entry in the log at the bottom.
    in place: change the page sections, move answered items out of "Open questions", and raise
    the iteration number in the status line. A new spec file is only made for a change of
    direction (for example after Logius's code conditions arrive).
-4. **Plan.** Write a new plan, `docs/superpowers/plans/<date>-mijnoverheid-wonen-iteration-<n>.md`,
-   with only the tasks for this iteration, in the format of the first plan. Contract changes
-   come first, then API, then pages.
+4. **Plan.** Update the plan for the iteration. Done parts stay as history, ticked; new work
+   is added as new parts or tasks, numbered on, in the format of the existing parts. A new plan
+   file is only made together with a new spec file. Contract changes come first, then API, then
+   pages.
 5. **Build.** Start a Claude Code session in the repository. It reads `CLAUDE.md`, which
    points it to the current plan. Branch from `acc`, one pull request per part.
 6. **Review on the preview.** Each pull request gets a preview site. Walk through the review
@@ -53,6 +54,15 @@ Deploy the decision to local Operaton once, and again after every change in `dmn
 
 ```bash
 bash scripts/deploy-dmn-local.sh
+```
+
+To run the Playwright walkthroughs (from Part 2), install the browser once and run them
+against a production build served by `vite preview` on port 4173, which also serves the API and
+sends the same CSP as Azure:
+
+```bash
+npx playwright install chromium
+npm run test:e2e
 ```
 
 The app runs on http://localhost:5173 and opens at `/nl/wonen`. The dev server also serves
@@ -101,17 +111,20 @@ row here.
 
 ## Checks
 
-| Command                 | What it checks                                                |
-| ----------------------- | ------------------------------------------------------------- |
-| `npm test`              | Front-end tests, including axe on every page                  |
-| `npm run test:api`      | API tests, including every response against the contract      |
-| `npm run lint:contract` | `api/openapi.yaml` against the API Design Rules               |
-| `npm run lint`          | ESLint, including the rule that pages do not import the frame |
-| `npm run check-format`  | Prettier                                                      |
-| `npm run build`         | Production build                                              |
-| `npm run check-bundle`  | No Operaton URL, `localhost:8081` or `demo:demo` in `dist/`   |
+| Command                 | What it checks                                                                  |
+| ----------------------- | ------------------------------------------------------------------------------- |
+| `npm test`              | Front-end tests, including axe on every component and page                      |
+| `npm run typecheck`     | TypeScript, strict (from Part 2)                                                |
+| `npm run test:e2e`      | Playwright walkthroughs with axe and CSP checks (from Part 2)                   |
+| `npm run test:api`      | API tests, including every response against the contract                        |
+| `npm run lint:contract` | `api/openapi.yaml` against the API Design Rules                                 |
+| `npm run lint`          | ESLint without warnings; pages do not import the frame; only `src/api/` fetches |
+| `npm run check-format`  | Prettier                                                                        |
+| `npm run build`         | Production build                                                                |
+| `npm run check-bundle`  | No Operaton URL, `localhost:8081` or `demo:demo` in `dist/`                     |
 
-The pre-push hook and both deploy workflows run them. The ADR ruleset is vendored in
+The pre-push hook and both deploy workflows run them, except `test:e2e`: the workflows run it,
+the pre-push hook does not, and the owner runs it locally before a pull request. The ADR ruleset is vendored in
 `api/.spectral.yaml`; refresh it from `https://static.developer.overheid.nl/adr/ruleset.yaml`
 at the start of each iteration and note the date in its first line. developer.overheid.nl is
 moving its tooling; if it publishes a successor to the Spectral ruleset, record the switch in
@@ -123,6 +136,7 @@ Walk through each changed page:
 
 - [ ] Compare desktop (1440 px) and mobile (375 px) with the Figma export.
 - [ ] Repeat with `?kader=uit`: the content must look the same.
+- [ ] Keep the browser console open: no Content Security Policy errors.
 - [ ] Run the three scenarios.
 - [ ] Use the keyboard only: every link and button can be reached, focus is visible, the H1
       gets focus after navigation.
@@ -137,24 +151,50 @@ Walk through each changed page:
 - The front-end holds no business rules. If a page needs a decision, the API delivers it.
   If the API cannot, that is a design question to solve before building (Logius conditions,
   section 7.4.1).
-- Contract first: a field a page needs is added to `api/openapi.yaml` before it is used.
+- Contract first: a field a page needs is added to `api/openapi.yaml`, with an example, before
+  it is used. The zod schema in `src/api/schemas.ts` follows in the same pull request.
+- Only `src/api/` fetches. Pages get data from loaders; UI components get data and text as
+  props.
+- The strict CSP is not relaxed. A page that needs `unsafe-inline` or `unsafe-eval` is changed,
+  not the policy (Logius code conditions, 12.1).
 - No personal data in URLs, logs or browser storage.
 - Copy in the interface is Dutch, B1. Everything else is English.
-- Ask before every commit. No Claude attribution. No bypassed hooks.
+- Ask before every commit. No Claude attribution in commits, pull requests, issues, comments
+  or files. No bypassed hooks.
 
 ## Waiting on others
 
-| Item                                                    | From        | Blocks                              |
-| ------------------------------------------------------- | ----------- | ----------------------------------- |
-| Aansluitvoorwaarden MijnOverheid (code)                 | Logius      | Final choice of stack and packaging |
-| Editor access to the Figma file for steven.gort@ictu.nl | Jan (G&B)   | Reading frames directly             |
-| Copy for placeholders, FAQ and info buttons             | G&B         | Final copy                          |
-| Answers to the spec's open questions                    | G&B, Logius | See the spec                        |
+| Item                                                                  | From        | Blocks                                                      |
+| --------------------------------------------------------------------- | ----------- | ----------------------------------------------------------- |
+| Logius intake: citizen identity, authentication, namespace, AI policy | Logius      | The connection and the port (#37); spec open questions 8–10 |
+| Editor access to the Figma file for steven.gort@ictu.nl               | Jan (G&B)   | Reading frames directly                                     |
+| Copy for placeholders, FAQ and info buttons                           | G&B         | Final copy                                                  |
+| Answers to the spec's open questions                                  | G&B, Logius | See the spec                                                |
 
 ## Iteration log
 
 Newest first. One entry per iteration: date, input, what was built, differences found,
 decisions.
+
+### Iteration 2 — started 19 November 2026
+
+- **Input:** Logius "Aansluitvoorwaarden MijnOverheid (code)" v34 and "Authenticatie tussen de
+  MijnOverheid frontend en backend" v2, both of 11 November 2026 and status CONCEPT; the
+  databron conditions v15 of the same date (text unchanged). Stored as text in the LVG
+  claude.ai project under `logius/`. The build team's hand-over of Part 1.
+- **What the new conditions change:** MijnOverheid extensions are Nx libraries in one Next.js
+  codebase (SSR, App Router), in strict TypeScript, on `@mijnoverheid/ui` and LUX tokens, with
+  SCSS modules, zod validation, Jest and Playwright, Storybook, feature toggles, no CSP
+  changes, and authentication through the platform's session. Logius does not yet allow AI use
+  for its code.
+- **Decisions:** iteration 2 finishes on the current stack; the port is issue #37. In scope now:
+  LUX, strict TypeScript, SCSS modules, zod, Next.js-style layering, Playwright with axe, a
+  strict CSP, a version policy and examples in the contract, and all of #35. Citizen identity
+  stays an open question for the Logius intake. See the spec, "Iteration 2".
+- **Plan:** Part 1b (Tasks 11–14), Part 2 (Tasks 15–23) and Part 3 (Tasks 24–27) of
+  `docs/superpowers/plans/2026-11-19-mijnoverheid-wonen.md`.
+- **Built:** (to be filled in when Part 3 merges)
+- **Differences from design:** (to be filled in after the preview review)
 
 ### Iteration 1 — started 19 November 2026
 
@@ -163,8 +203,18 @@ decisions.
 - **Decisions:** see the spec, "Decisions made on 19 November 2026". Also: `Koopwoningen` is
   the list name; rental is out of scope; the DMN gets an `aanbevolen` output, deployed to
   local Operaton only; implementation runs in a separate Claude Code session.
-- **Plan:** `docs/superpowers/plans/2026-11-19-mijnoverheid-wonen.md`.
+- **Plan:** Parts 0 and 1 of `docs/superpowers/plans/2026-11-19-mijnoverheid-wonen.md`.
 - **DMN:** the patched `bereken_isolatie_opties`, with `aanbevolen`, was deployed to
   `operaton.open-regels.nl` as version 22 on 19 November 2026, and locally as version 2.
-- **Built:** (to be filled in when Part 3 merges)
-- **Differences from design:** (to be filled in after the preview review)
+- **Built (Part 1, merged to `acc` and `main` on 19 November 2026, #34):** the LVG API in
+  `api/`: an OpenAPI 3.0.3 contract with 11 operations and no errors against the vendored ADR
+  ruleset; core handling; mock registers for three properties with opaque ids; three
+  scenarios; resources for Wonen, Koopwoningen, Woning, Kadaster, WOZ, Energielabel,
+  Dakisolatie, contractors and a mocked consent. Operaton is called only from the API. One
+  Azure Functions v4 function on Node 22 as SWA managed functions; a Vite plugin serves the
+  same handler in development. CI checks the contract, tests the API on Node 22.23.4, checks
+  the bundle, and audits both installs. Live at `acc.lvg.open-regels.nl/api/v1/...` and
+  `lvg.open-regels.nl/api/v1/...`. The old page is unchanged.
+- **Decisions while building:** recorded in the spec ("While building Part 1") and under the
+  plan's tasks. Eight minor review findings became #35.
+- **Pages:** not built in iteration 1; they moved to iteration 2.
