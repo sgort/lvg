@@ -1,7 +1,8 @@
-// The blue "i" next to a value: a button that shows a short explanation.
+// The blue "i" at the end of a row: a button that shows a short explanation. Button and
+// explanation are siblings, so inside a data list the explanation can span the whole value.
 import { useId, useState } from 'react';
 
-import { Info } from './icons';
+import { InfoVierkant } from './icons';
 import styles from './InfoToggle.module.scss';
 
 type Props = { label: string; tekst: string };
@@ -10,7 +11,7 @@ export function InfoToggle({ label, tekst }: Props) {
   const [open, setOpen] = useState(false);
   const paneelId = useId();
   return (
-    <span className={styles.toggle}>
+    <>
       <button
         type="button"
         className={styles.knop}
@@ -19,11 +20,12 @@ export function InfoToggle({ label, tekst }: Props) {
         aria-label={label}
         onClick={() => setOpen((huidig) => !huidig)}
       >
-        <Info />
+        <InfoVierkant />
       </button>
       <span id={paneelId} hidden={!open} className={styles.uitleg}>
-        {tekst}
+        <InfoVierkant className={styles.uitlegIcoon} />
+        <span>{tekst}</span>
       </span>
-    </span>
+    </>
   );
 }

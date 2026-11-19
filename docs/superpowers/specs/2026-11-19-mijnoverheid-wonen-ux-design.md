@@ -748,6 +748,10 @@ source is `dmn/bereken_isolatie_opties.dmn` (see `dmn/README.md`).
   dev server keeps the injection and sends no CSP; the build, `vite preview` and the deployed
   sites use the extracted stylesheet. The port (#37) meets the same question with
   `@mijnoverheid/ui`.
+- `LuxAlert`'s icon (`LuxIcon`) renders a `<style>` element (`svg { fill: currentColor }`),
+  which the same policy blocks; extracting it would fill every SVG on the page. The info box and
+  the error state therefore use a local `Melding` with LUX's alert classes and a local icon
+  (plan Task 22). Every component and page test now fails on a `<style>` element.
 - The mock consent stores nothing outside the API's memory, in a capped store (Part 1b).
 - The API logs no request data and no source error messages, only error names (Part 1b).
 

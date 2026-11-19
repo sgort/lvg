@@ -43,6 +43,16 @@ export const Info = (props: IconProps) => (
   </Svg>
 );
 
+/** The design's info button: an "i" in a square. */
+export const InfoVierkant = (props: IconProps) => (
+  <Svg {...props}>
+    <g>
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <path d="M12 11v6M12 7h.01" />
+    </g>
+  </Svg>
+);
+
 export const Download = (props: IconProps) => (
   <Svg {...props}>
     <path d="M12 3v12m-5-5 5 5 5-5M5 21h14" />

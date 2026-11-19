@@ -4,25 +4,36 @@
   display: inline-block;
 }
 
+// One continuous bar, A to G; the active class is larger and carries its name.
 .blokken {
   display: flex;
-  gap: var(--lux-space-25);
   align-items: center;
 }
 
 .blok {
   display: inline-grid;
   place-items: center;
-  inline-size: 1.25rem;
-  block-size: 1.25rem;
-  border-radius: var(--lux-border-radius-default);
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+}
+
+.blok:first-child {
+  border-start-start-radius: var(--lux-border-radius-default);
+  border-end-start-radius: var(--lux-border-radius-default);
+}
+
+.blok:last-child {
+  border-start-end-radius: var(--lux-border-radius-default);
+  border-end-end-radius: var(--lux-border-radius-default);
 }
 
 .actief {
-  inline-size: 2.5rem;
-  block-size: 2rem;
+  inline-size: 2.25rem;
+  block-size: 2.5rem;
   color: var(--lux-color-foreground-on-emphasis);
+  font-size: var(--lux-font-size-body-large);
   font-weight: var(--lux-font-weight-bold);
+  border-radius: var(--lux-border-radius-default);
 }
 
 // White text is too faint on C to F (below 4.5:1); they take the dark text colour.

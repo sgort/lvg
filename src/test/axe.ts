@@ -4,6 +4,10 @@ import axe from 'axe-core';
 import { expect } from 'vitest';
 
 export async function expectNoAxeViolations(container: Element): Promise<void> {
+  // The strict CSP blocks <style> elements in the page (LuxIcon renders one), so a component
+  // that brings one fails here already, not only in the walkthroughs.
+  expect(container.querySelectorAll('style'), 'a <style> element breaks the CSP').toHaveLength(0);
+
   const results = await axe.run(container, {
     rules: { 'color-contrast': { enabled: false } },
   });

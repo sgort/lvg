@@ -164,6 +164,19 @@ describe('Koppeling', () => {
     );
   });
 
+  it('puts the chevron of a "Bekijk … ›" link after the text, in bold', () => {
+    renderMetRouter(
+      <Koppeling doel={{ naar: '/nl/wonen' }} pijl>
+        Bekijk koopwoningen
+      </Koppeling>
+    );
+
+    // LuxLink keeps the icon first in the DOM and moves it after the text with this class.
+    const link = screen.getByRole('link', { name: 'Bekijk koopwoningen' });
+    expect(link.querySelector('svg')).toHaveClass('lux-link-icon--end');
+    expect(link.className).toMatch(/pijl/);
+  });
+
   it('links a route through the router', () => {
     renderMetRouter(<Koppeling doel={{ naar: '/nl/wonen' }}>Wonen</Koppeling>);
 

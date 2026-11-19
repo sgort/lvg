@@ -2,7 +2,6 @@
 import { LuxAccordionProvider } from '@lux-design-system/components-react';
 
 import { ContentCard } from './ContentCard';
-import { ChevronRechts } from './icons';
 import { type Doel, Koppeling } from './Koppeling';
 import styles from './FaqCard.module.scss';
 
@@ -21,7 +20,7 @@ export function FaqCard({ titel, vragen, meer }: Props) {
       />
       {meer && (
         <p className={styles.meer}>
-          <Koppeling doel={meer.doel} icon={<ChevronRechts />}>
+          <Koppeling doel={meer.doel} pijl>
             {meer.tekst}
           </Koppeling>
         </p>

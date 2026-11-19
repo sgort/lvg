@@ -13,3 +13,14 @@ export const WONEN: Kruimel = { tekst: 'Wonen', naar: WONEN_PAD };
 /** The page of one property; the id is opaque, from the API. */
 export const woningPad = (woningId: string) =>
   `${KOOPWONINGEN_PAD}/${encodeURIComponent(woningId)}`;
+
+/** The breadcrumb to a property's page, and on to one of its detail pages. */
+export function kruimelsWoning(
+  woning: { id: string; adresKort: string },
+  detailpagina?: string
+): Kruimel[] {
+  const pad = [HOME, WONEN, { tekst: 'Koopwoningen', naar: KOOPWONINGEN_PAD }];
+  return detailpagina
+    ? [...pad, { tekst: woning.adresKort, naar: woningPad(woning.id) }, { tekst: detailpagina }]
+    : [...pad, { tekst: woning.adresKort }];
+}

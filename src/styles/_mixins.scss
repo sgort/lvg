@@ -15,3 +15,8 @@
 
 // The desktop layout starts at 768 px (breadcrumb instead of back link).
 $breekpunt-desktop: 768px;
+
+// The label column of a data list on desktop. "Bekijk … ›" links under a list start at the
+// value column, as in the designs.
+$label-kolom: 14rem;
+$kolom-afstand: var(--lux-space-200);

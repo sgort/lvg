@@ -6,29 +6,27 @@
   margin-block-end: var(--lux-space-300);
 }
 
-.desktop {
+// Two classes, so these win over LUX's link display (.lux-link is inline-flex).
+.titel .desktop {
   display: none;
 }
 
-.mobiel {
+.titel .mobiel {
   display: inline-flex;
 }
 
 @media (min-width: $breekpunt-desktop) {
-  .desktop {
+  .titel .desktop {
     display: block;
   }
 
-  .mobiel {
+  .titel .mobiel {
     display: none;
   }
 }
 
+// Focus moves to the H1 after navigation, so a screen reader announces the page. The H1 is
+// not in the tab order, so it shows no focus outline, as in the designs.
 .kop:focus {
   outline: none;
-}
-
-.kop:focus-visible {
-  outline: var(--lux-focus-outline-width) var(--lux-focus-outline-style) currentColor;
-  outline-offset: var(--lux-focus-outline-offset);
 }

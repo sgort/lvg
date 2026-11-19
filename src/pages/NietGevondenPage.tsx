@@ -3,8 +3,7 @@
 import { LuxParagraph } from '@lux-design-system/components-react';
 
 import { ContentCard } from '../components/ContentCard';
-import { ChevronRechts } from '../components/icons';
-import { LinkNaar } from '../components/LinkNaar';
+import { Koppeling } from '../components/Koppeling';
 import { PageTitle } from '../components/PageTitle';
 import { HOME, KOOPWONINGEN_PAD, KRUIMELPAD_LABEL, WONEN, WONEN_PAD } from './paginaKader';
 
@@ -39,9 +38,9 @@ export function NietGevondenPage({ soort = 'pagina' }: { soort?: keyof typeof SO
       <ContentCard>
         <LuxParagraph>{pagina.tekst}</LuxParagraph>
         <LuxParagraph>
-          <LinkNaar naar={pagina.link.naar} icon={<ChevronRechts />} iconPosition="end">
+          <Koppeling doel={{ naar: pagina.link.naar }} pijl>
             {pagina.link.tekst}
-          </LinkNaar>
+          </Koppeling>
         </LuxParagraph>
       </ContentCard>
     </>

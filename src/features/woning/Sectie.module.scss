@@ -1,0 +1,17 @@
+// Sections inside a card are separated by space, not lines, as in the designs.
+.sectie {
+  display: grid;
+  gap: var(--lux-space-150);
+}
+
+.sectie + .sectie {
+  margin-block-start: var(--lux-space-300);
+}
+
+// Small bold subheadings, at body size, as in the designs.
+.kop {
+  margin: 0;
+  font-size: var(--lux-font-size-body-default);
+  font-weight: var(--lux-font-weight-bold);
+  line-height: var(--lux-line-height-body-default);
+}

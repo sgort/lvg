@@ -7,6 +7,10 @@
   box-shadow: 0 1px 4px rgb(0 0 0 / 12%);
 }
 
-.kop {
+// Card titles are dark and regular in the designs, not LUX's blue bold heading. Two classes,
+// so this wins over LUX's .utrecht-heading-* rules.
+.kaart .kop {
   margin: 0;
+  color: var(--lux-color-foreground-default);
+  font-weight: var(--lux-font-weight-regular);
 }

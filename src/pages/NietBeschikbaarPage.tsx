@@ -3,8 +3,7 @@
 import { LuxParagraph } from '@lux-design-system/components-react';
 
 import { ContentCard } from '../components/ContentCard';
-import { ChevronRechts } from '../components/icons';
-import { LinkNaar } from '../components/LinkNaar';
+import { Koppeling } from '../components/Koppeling';
 import { PageTitle } from '../components/PageTitle';
 import { HOME, KRUIMELPAD_LABEL, WONEN, WONEN_PAD } from './paginaKader';
 
@@ -21,9 +20,9 @@ export function NietBeschikbaarPage() {
       <ContentCard>
         <LuxParagraph>Deze pagina is nog in ontwikkeling.</LuxParagraph>
         <LuxParagraph>
-          <LinkNaar naar={WONEN_PAD} icon={<ChevronRechts />} iconPosition="end">
+          <Koppeling doel={{ naar: WONEN_PAD }} pijl>
             Naar Wonen
-          </LinkNaar>
+          </Koppeling>
         </LuxParagraph>
       </ContentCard>
     </>

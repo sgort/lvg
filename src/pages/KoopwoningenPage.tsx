@@ -9,7 +9,6 @@ import type { WoningenOverzicht } from '../api/schemas';
 import { haalWoningen } from '../api/wonen';
 import { ContentCard } from '../components/ContentCard';
 import { FaqCard } from '../components/FaqCard';
-import { ChevronRechts } from '../components/icons';
 import { Koppeling } from '../components/Koppeling';
 import { PageTitle } from '../components/PageTitle';
 import { WoningLijst } from '../features/koopwoningen/WoningLijst';
@@ -62,7 +61,7 @@ export function KoopwoningenPage() {
         )}
         {knoppen.map((knop) => (
           <LuxParagraph key={knop.type}>
-            <Koppeling doel={knop.doel} icon={<ChevronRechts />}>
+            <Koppeling doel={knop.doel} pijl>
               {knop.tekst}
             </Koppeling>
           </LuxParagraph>

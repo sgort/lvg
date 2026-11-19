@@ -3,7 +3,6 @@
 import { LuxParagraph } from '@lux-design-system/components-react';
 
 import { ContentCard } from '../../components/ContentCard';
-import { ChevronRechts } from '../../components/icons';
 import { type Doel, Koppeling } from '../../components/Koppeling';
 import styles from './WonenKaarten.module.scss';
 
@@ -26,7 +25,7 @@ export function WonenKaarten({ kaarten }: { kaarten: WonenKaart[] }) {
           <LuxParagraph>{kaart.tekst}</LuxParagraph>
           {kaart.knop && (
             <LuxParagraph className={styles.knop}>
-              <Koppeling doel={kaart.knop.doel} icon={<ChevronRechts />}>
+              <Koppeling doel={kaart.knop.doel} pijl>
                 {kaart.knop.tekst}
               </Koppeling>
             </LuxParagraph>

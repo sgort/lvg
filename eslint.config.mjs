@@ -17,7 +17,8 @@ const NO_API = {
 };
 
 export default [
-  { ignores: ['dist/**', 'docs/**', '.superpowers/**'] },
+  // Generated output, including Playwright's reports, is not linted.
+  { ignores: ['dist/**', 'docs/**', '.superpowers/**', 'playwright-report/**', 'test-results/**'] },
 
   js.configs.recommended,
 
