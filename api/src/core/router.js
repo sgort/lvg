@@ -1,5 +1,6 @@
 // Routes requests to handlers. The table maps each contract operation to a plain function,
 // so tests and both hosts (Azure Functions and the Vite dev server) share one entry point.
+import { getDakisolatie } from '../resources/dakisolatie.js';
 import { getEnergielabel } from '../resources/energielabel.js';
 import { getKadaster } from '../resources/kadaster.js';
 import { getWoning, listWoningen } from '../resources/woningen.js';
@@ -33,6 +34,12 @@ export const routes = [
     pattern: '/woningen/{woningId}/energielabel',
     operationId: 'getEnergielabel',
     handler: getEnergielabel,
+  },
+  {
+    method: 'GET',
+    pattern: '/woningen/{woningId}/dakisolatie',
+    operationId: 'getDakisolatie',
+    handler: getDakisolatie,
   },
 ];
 

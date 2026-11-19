@@ -6,14 +6,11 @@ import {
   externeLink,
   placeholderLink,
   scenarioOf,
+  vandaag,
   veelgesteldeVragen,
   woningHref,
   woningVerwijzing,
 } from './shared.js';
-
-// Today's date in the Netherlands, as YYYY-MM-DD.
-const vandaag = () =>
-  new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Amsterdam' }).format(new Date());
 
 // A label is valid up to and including its end date.
 const geldigheid = (geldigTot) => (vandaag() <= geldigTot ? 'geldig' : 'verlopen');

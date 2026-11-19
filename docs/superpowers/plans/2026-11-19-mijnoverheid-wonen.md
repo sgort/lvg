@@ -182,12 +182,14 @@ Branch: `feat/lvg-api` from `acc`.
 
 - Produces: `evaluateIsolatie(params, { baseUrl, user, password, fetch })`; `buildIsolatieParams(dak)`; `TARGET_R_VALUES`; handler `getDakisolatie`.
 
-- [ ] **Step 1:** Move the existing Operaton tests to `client.test.js`, adapted: the URL is built from `baseUrl`; with `user` and `password` set the request has a Basic `Authorization` header, without them it has none; payload and types are unchanged; a non-OK response throws.
-- [ ] **Step 2: Write failing tests** for `getDakisolatie`: four options; `aanbevolen` taken from the DMN output per option, and all `false` when the DMN result has no `aanbevolen` output (version 21), with no fallback rule in the API; the roof area sent to Operaton is `dak.oppervlakte_m2`, not floor area; `kostenPerM2Eur` rounded to whole euros; amounts rounded to whole euros and payback to one decimal; `uitgangspunten` lists λ, material price and labour price; actions `deel-met-aannemer` and `meer-over-subsidie`. With `fetch` rejecting: status 200, `advies.status: 'niet-beschikbaar'`, a `burgerActie`, and no `deel-met-aannemer` action. Each case calls `expectValidResponse`.
-- [ ] **Step 3:** Run tests. Expected: FAIL.
-- [ ] **Step 4:** Implement. Configuration comes from `process.env.OPERATON_BASE_URL`, `OPERATON_USER`, `OPERATON_PASSWORD`. A timeout of 10 seconds per call. The four calls run in parallel, as today.
-- [ ] **Step 5:** Run tests. Expected: PASS.
-- [ ] **Step 6:** After owner go-ahead, commit `feat(api): move the roof insulation decision to the API`.
+**Note, 19 November 2026:** `parameters.js` also exports `operatonConfig(env)`. The demo login is the default only for the local engine; another engine gets no login unless one is set, and an empty `OPERATON_USER` means none. A property without building data answers 404 on `getDakisolatie`. Checked against both the local and the public Operaton: identical results, R 6.0 recommended.
+
+- [x] **Step 1:** Move the existing Operaton tests to `client.test.js`, adapted: the URL is built from `baseUrl`; with `user` and `password` set the request has a Basic `Authorization` header, without them it has none; payload and types are unchanged; a non-OK response throws.
+- [x] **Step 2: Write failing tests** for `getDakisolatie`: four options; `aanbevolen` taken from the DMN output per option, and all `false` when the DMN result has no `aanbevolen` output (version 21), with no fallback rule in the API; the roof area sent to Operaton is `dak.oppervlakte_m2`, not floor area; `kostenPerM2Eur` rounded to whole euros; amounts rounded to whole euros and payback to one decimal; `uitgangspunten` lists λ, material price and labour price; actions `deel-met-aannemer` and `meer-over-subsidie`. With `fetch` rejecting: status 200, `advies.status: 'niet-beschikbaar'`, a `burgerActie`, and no `deel-met-aannemer` action. Each case calls `expectValidResponse`.
+- [x] **Step 3:** Run tests. Expected: FAIL.
+- [x] **Step 4:** Implement. Configuration comes from `process.env.OPERATON_BASE_URL`, `OPERATON_USER`, `OPERATON_PASSWORD`. A timeout of 10 seconds per call. The four calls run in parallel, as today.
+- [x] **Step 5:** Run tests. Expected: PASS.
+- [x] **Step 6:** After owner go-ahead, commit `feat(api): move the roof insulation decision to the API`.
 
 ### Task 7: Contractors and consent
 

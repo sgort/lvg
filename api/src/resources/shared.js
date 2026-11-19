@@ -7,6 +7,10 @@ export const PLACEHOLDER_HREF = '#nog-niet-beschikbaar';
 
 export const scenarioOf = (request) => resolveScenario(request.headers, process.env);
 
+/** Today's date in the Netherlands, as YYYY-MM-DD. */
+export const vandaag = () =>
+  new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Amsterdam' }).format(new Date());
+
 export const woningHref = (id, ...segments) => ['/api/v1/woningen', id, ...segments].join('/');
 
 export const adresKort = (bag) => `${bag.straat} ${bag.huisnummer}`;
