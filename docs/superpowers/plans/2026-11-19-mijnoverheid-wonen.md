@@ -380,15 +380,16 @@ Branch: `feat/wonen-pages` from `acc`.
 
 - Produces: zod schemas and inferred types for every response in `api/openapi.yaml` (`Wonen`, `WoningenOverzicht`, `Woning`, `Kadaster`, `Woz`, `Energielabel`, `Dakisolatie`, `AannemersOverzicht`, `Toestemming`, `Probleem`); `apiGet<T>(path, schema)`, `apiPost<T>(path, body, schema)` that send `Accept-Language: nl` and `X-LVG-Scenario` (from `sessionStorage`, default `drie-woningen`), abort after 15 seconds, and throw `ApiError { status, title, detail?, burgerActie }`; one function per operation in `wonen.ts`; `routeVoorActie(actie, context) → { naar: string } | { extern: string } | null` in `acties.ts`; `formatEuro`, `formatDatum`, `formatGetal`; `contractExamples(operationId, status)` for tests, which reads `api/openapi.yaml` with `yaml`.
 
-- [ ] **Step 1: Write failing tests:**
+- [x] **Step 1: Write failing tests:**
   - `schemas.test.ts`: every 2xx example in the contract parses with its schema; removing a required field from each makes it fail; an `Advies` with `status: 'berekend'` and no `opties` fails.
   - `client.test.ts` (with a stubbed `fetch`): headers sent; a problem+json response becomes `ApiError` with its `burgerActie`; a body that fails its schema becomes `ApiError` with `burgerActie: 'Probeer het later opnieuw.'`; a network failure becomes `ApiError` with `burgerActie: 'Controleer uw internetverbinding en probeer het opnieuw.'`; after 15 seconds (fake timers) the request is aborted with `burgerActie: 'Probeer het later opnieuw.'`.
   - `acties.test.ts`: `bekijk-dakisolatie` maps to `/nl/wonen/koopwoningen/w-7f3a/energielabel/dakisolatie`; `deel-met-aannemer` to `…/dakisolatie/aannemer`; an absolute `https` href becomes external; an unknown type gives `null`.
   - `format.test.ts`: `4080` → `€ 4.080`; `'2025-01-01'` → `1 januari 2025`; `2.8` → `2,8`.
-- [ ] **Step 2:** Run `npm test`. Expected: FAIL.
-- [ ] **Step 3:** Implement. Mirror the contract's required fields and enums exactly; use `z.discriminatedUnion('status', …)` for `Advies`. `acties.ts` holds only the type-to-route table; it decides nothing about whether an action is offered.
-- [ ] **Step 4:** Run `npm test` and `npm run typecheck`. Expected: PASS.
-- [ ] **Step 5:** After owner go-ahead, commit `feat: add the validated API client`.
+- [x] **Step 2:** Run `npm test`. Expected: FAIL.
+- [x] **Step 3:** Implement. Mirror the contract's required fields and enums exactly; use `z.discriminatedUnion('status', …)` for `Advies`. `acties.ts` holds only the type-to-route table; it decides nothing about whether an action is offered.
+- [x] **Step 4:** Run `npm test` and `npm run typecheck`. Expected: PASS.
+      Notes, 19 November 2026: the spec names no route for placeholder links, so `acties.ts` exports `NIET_BESCHIKBAAR_PAD = '/nl/wonen/nog-niet-beschikbaar'`, which Task 17 routes to `NietBeschikbaarPage`. The scenario is kept under the `sessionStorage` key `lvg-scenario` (`SCENARIO_SLEUTEL` in `client.ts`), which Task 18 writes. `contractExamples.ts` reads the contract with Vite's `?raw` import, so no `@types/node` is needed; it also exports `contractExample()` for the first example. The client's error titles (`Geen verbinding`, `Geen antwoord`, `Onverwacht antwoord`, `Er ging iets mis`) are not in the spec; the `burgerActie` texts are. `formatEuro` shows cents only when an amount has them (`trailingZeroDisplay: 'stripIfInteger'`), so it never rounds.
+- [x] **Step 5:** After owner go-ahead, commit `feat: add the validated API client`.
 
 ### Task 17: Router, layers and shared UI components
 
