@@ -242,10 +242,11 @@ Branch: `feat/lvg-api` from `acc`.
 
 - [x] **Step 1:** Root scripts: `test:api` (`npm test --prefix api`), `lint:contract` (`npm run lint:contract --prefix api`), `check-bundle` (a script that fails if `dist/` contains `localhost:8081`, `demo:demo` or `operaton.open-regels.nl`).
 - [x] **Step 2:** In both workflows, after the root `npm ci`: `npm ci --prefix api`, `npm run lint:contract`, `npm run test:api`. After the build: `npm run check-bundle`. Before deploy: `npm prune --omit=dev --prefix api`. Deploy with `api_location: 'api'` and `skip_api_build: true`.
-- [ ] **Step 3:** The owner sets the app settings `OPERATON_BASE_URL` on both Static Web Apps, and `LVG_SCENARIOS=on` on the acceptance app only (previews inherit it).
+- [x] **Step 3:** The owner sets the app settings `OPERATON_BASE_URL` on both Static Web Apps, and `LVG_SCENARIOS=on` on the acceptance app only (previews inherit it).
+      Done on 19 November 2026: both apps have `OPERATON_BASE_URL`, the acceptance app also `LVG_SCENARIOS=on`; Azure copies settings to preview environments.
 - [x] **Step 4:** Pre-push hook: add `npm run test:api` and `npm run lint:contract` after `npm test`.
 - [x] **Step 5:** `SECURITY-PIPELINE.md`: the API's own lockfile, the vendored ADR ruleset and the bundle check.
-- [ ] **Step 6:** After owner go-ahead, commit `ci: build, test and deploy the LVG API`.
+- [x] **Step 6:** After owner go-ahead, commit `ci: build, test and deploy the LVG API`.
 
 ### Task 10: Ship Part 1
 
