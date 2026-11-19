@@ -25,3 +25,6 @@ dist-ssr
 
 # Semgrep exports
 .semgrep/
+
+# Azure Functions local settings
+api/local.settings.json

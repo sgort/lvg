@@ -57,10 +57,10 @@ Branch: `docs/mijnoverheid-wonen` from `acc`.
 - Delete: `docs/Mock-up/` (decision of 19 November 2026)
 
 - [x] **Step 1:** Write the documents and `CLAUDE.md`, and change the foundation spec's status line.
-- [ ] **Step 2:** Owner: create the branch, `git rm -r "docs/Mock-up"`, check `git grep -n "Mock-up" -- ':!docs/'` returns nothing, and stage the rest.
-- [ ] **Step 3:** Owner: commit `docs: add MijnOverheid Wonen design, plan, runbook and CLAUDE.md` and `docs: remove superseded Mijn Woning mock-ups`.
-- [ ] **Step 4:** Owner: push and open a pull request into `acc`. `CLAUDE.md` is not under `docs/` but ends in `.md`, so the deploy workflow still skips the build by design.
-- [ ] **Step 5:** After merge, the implementation session starts at Task 1.
+- [x] **Step 2:** Owner: create the branch, `git rm -r "docs/Mock-up"`, check `git grep -n "Mock-up" -- ':!docs/'` returns nothing, and stage the rest.
+- [x] **Step 3:** Owner: commit `docs: add MijnOverheid Wonen design, plan, runbook and CLAUDE.md` and `docs: remove superseded Mijn Woning mock-ups`.
+- [x] **Step 4:** Owner: push and open a pull request into `acc`. `CLAUDE.md` is not under `docs/` but ends in `.md`, so the deploy workflow still skips the build by design.
+- [x] **Step 5:** After merge, the implementation session starts at Task 1.
 
 ---
 
@@ -75,12 +75,14 @@ Branch: `feat/lvg-api` from `acc`.
 - Create: `api/package.json`, `api/package-lock.json`, `api/host.json`, `api/.funcignore`, `api/openapi.yaml`, `api/.spectral.yaml`, `api/vitest.config.js`
 - Modify: `.gitignore`, `.prettierignore` if needed, `eslint.config.mjs` (Node globals for `api/**`)
 
-- [ ] **Step 1:** Ask the owner to stop the dev server. In `api/`, create `package.json` (`"type": "module"`, `"engines": { "node": ">=22" }`, `"main": "src/functions/*.js"`) with scripts `test` (`vitest run`) and `lint:contract` (`spectral lint openapi.yaml`). Install `@azure/functions`, `yaml` and, as dev dependencies, `vitest`, `@stoplight/spectral-cli`, `ajv`, `ajv-formats`.
-- [ ] **Step 2:** `host.json` with version 2.0 and the extension bundle `[4.*, 5.0.0)`. `.funcignore` excludes tests and `openapi.yaml` is kept.
-- [ ] **Step 3:** Ask the owner to download `https://static.developer.overheid.nl/adr/ruleset.yaml` to `api/.spectral.yaml` and to add a first comment line with the source URL and download date. Vendored so CI does not fetch rules from the network at lint time.
-- [ ] **Step 4:** Write `api/openapi.yaml` (OAS 3.0.3): `info` with title `LVG Wonen API`, `version: 1.0.0`, contact; server `/api/v1`; the endpoints in the spec's table with request and response schemas; `Accept-Language` parameter (enum `[nl]`, default `nl`) on every operation; `Content-Language` and `API-Version` response headers; responses 200/201, 400, 404, 406, 500, 503 with `application/problem+json` and the extra `burgerActie` property. Schema names in Dutch, matching the spec's example.
-- [ ] **Step 5:** Run `npm run lint:contract --prefix api`. Expected: no errors. Fix the contract, not the ruleset.
-- [ ] **Step 6:** After owner go-ahead, commit `feat(api): add API package and OpenAPI contract`.
+**Deviation agreed with the owner on 19 November 2026:** also create `api/.npmrc` with `min-release-age=14`. npm reads `.npmrc` from the package being installed, so the root cooldown does not apply inside `api/`.
+
+- [x] **Step 1:** Ask the owner to stop the dev server. In `api/`, create `package.json` (`"type": "module"`, `"engines": { "node": ">=22" }`, `"main": "src/functions/*.js"`) with scripts `test` (`vitest run`) and `lint:contract` (`spectral lint openapi.yaml`). Install `@azure/functions`, `yaml` and, as dev dependencies, `vitest`, `@stoplight/spectral-cli`, `ajv`, `ajv-formats`.
+- [x] **Step 2:** `host.json` with version 2.0 and the extension bundle `[4.*, 5.0.0)`. `.funcignore` excludes tests and `openapi.yaml` is kept.
+- [x] **Step 3:** Ask the owner to download `https://static.developer.overheid.nl/adr/ruleset.yaml` to `api/.spectral.yaml` and to add a first comment line with the source URL and download date. Vendored so CI does not fetch rules from the network at lint time.
+- [x] **Step 4:** Write `api/openapi.yaml` (OAS 3.0.3): `info` with title `LVG Wonen API`, `version: 1.0.0`, contact; server `/api/v1`; the endpoints in the spec's table with request and response schemas; `Accept-Language` parameter (enum `[nl]`, default `nl`) on every operation; `Content-Language` and `API-Version` response headers; responses 200/201, 400, 404, 406, 500, 503 with `application/problem+json` and the extra `burgerActie` property. Schema names in Dutch, matching the spec's example.
+- [x] **Step 5:** Run `npm run lint:contract --prefix api`. Expected: no errors. Fix the contract, not the ruleset. Result on 19 November 2026: no errors; one warning, `servers-use-https`, because the server is the relative `/api/v1` this step prescribes.
+- [x] **Step 6:** After owner go-ahead, commit `feat(api): add API package and OpenAPI contract`.
 
 ### Task 2: Core request handling
 

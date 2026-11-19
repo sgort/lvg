@@ -4,5 +4,8 @@ dist
 package-lock.json
 *.html
 
+# Vendored from developer.overheid.nl; kept exactly as downloaded.
+api/.spectral.yaml
+
 # Published to toestemming.open-regels.nl exactly as it is.
 docs/Wireframes
