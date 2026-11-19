@@ -52,12 +52,22 @@ export const adresKort = (bag) => `${bag.straat} ${bag.huisnummer}`;
 
 export const adresMetPlaats = (bag) => `${adresKort(bag)}, ${bag.woonplaats}`;
 
-/** The property a page is about: short address for title and breadcrumb, full address. */
-export const woningVerwijzing = (bag) => ({
-  id: bag.id,
-  adresKort: adresKort(bag),
-  adres: `${adresKort(bag)}, ${bag.postcode} ${bag.woonplaats}`,
-});
+/** How the list of koopwoningen shows: none, straight to the only one, or a list. */
+export const weergaveVoor = (aantal) => (aantal === 0 ? 'leeg' : aantal === 1 ? 'direct' : 'lijst');
+
+/**
+ * The property a page is about, with how the citizen's list behaves (`overzicht`), so the
+ * page leaves out a step back to a list that would only lead here again.
+ */
+export async function woningVerwijzing(scenario, bag) {
+  const aantal = (await registers.listWoningen(scenario)).length;
+  return {
+    id: bag.id,
+    adresKort: adresKort(bag),
+    adres: `${adresKort(bag)}, ${bag.postcode} ${bag.woonplaats}`,
+    overzicht: weergaveVoor(aantal) === 'direct' ? 'direct' : 'lijst',
+  };
+}
 
 export const placeholderLink = (tekst, extern = false) => ({
   tekst,

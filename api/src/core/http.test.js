@@ -72,7 +72,7 @@ describe('handle', () => {
     const response = await get(path, headers);
 
     expect(response.headers['Content-Language']).toBe('nl');
-    expect(response.headers['API-Version']).toBe('1.3.0');
+    expect(response.headers['API-Version']).toBe('1.4.0');
   });
 
   it('serves the contract in any language', async () => {

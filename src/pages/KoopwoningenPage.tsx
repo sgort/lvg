@@ -27,7 +27,8 @@ export function KoopwoningenPage() {
   const { weergave, woningen, acties, veelgesteldeVragen } = useLoaderData<WoningenOverzicht>();
   const knoppen = acties.flatMap((actie) => {
     const doel = routeVoorActie(actie);
-    return doel ? [{ type: actie.type, tekst: actie.tekst ?? actie.type, doel }] : [];
+    // A link needs its text from the API; without one it is left out.
+    return doel && actie.tekst ? [{ type: actie.type, tekst: actie.tekst, doel }] : [];
   });
 
   return (

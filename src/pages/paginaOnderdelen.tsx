@@ -39,7 +39,11 @@ export function MeerLink({
 /** A link the API sends: external, a download, or a placeholder for "Nog niet beschikbaar". */
 export function ApiLink({ link, download = false }: { link: Link; download?: boolean }) {
   return (
-    <Koppeling doel={bestemmingVoorLink(link)} icon={download ? <Download /> : undefined}>
+    <Koppeling
+      doel={bestemmingVoorLink(link)}
+      icon={download ? <Download /> : undefined}
+      download={download}
+    >
       {link.tekst}
     </Koppeling>
   );

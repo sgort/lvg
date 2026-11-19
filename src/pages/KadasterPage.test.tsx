@@ -44,6 +44,25 @@ describe('KadasterPage', () => {
     );
   });
 
+  it('leaves the list out of the breadcrumb when the list goes straight to the property', async () => {
+    const data = structuredClone(contractExample('getKadaster', 200)) as {
+      woning: Record<string, unknown>;
+    };
+    data.woning.overzicht = 'direct';
+    renderPagina({
+      patroon: '/nl/wonen/koopwoningen/:woningId/kadaster',
+      pad: '/nl/wonen/koopwoningen/w-7f3a/kadaster',
+      data,
+      element: <KadasterPage />,
+    });
+
+    const kruimelpad = await screen.findByRole('navigation', { name: 'Kruimelpad' });
+    expect(within(kruimelpad).queryByText('Koopwoningen')).not.toBeInTheDocument();
+    expect(
+      within(kruimelpad).getByRole('link', { name: 'Voorbeeldlaan 73 B' })
+    ).toBeInTheDocument();
+  });
+
   it('shows the map with its download, and the parcel data with the paid products', async () => {
     toon();
     await screen.findByRole('heading', { level: 1 });
@@ -51,10 +70,9 @@ describe('KadasterPage', () => {
     expect(
       screen.getByRole('img', { name: 'Kadastrale kaart met perceel Rotterdam Z 99999' })
     ).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Download kadastrale kaart \(png\)/ })).toHaveAttribute(
-      'href',
-      '/perceel-1560.png'
-    );
+    const kaart = screen.getByRole('link', { name: /Download kadastrale kaart \(png\)/ });
+    expect(kaart).toHaveAttribute('href', '/perceel-1560.png');
+    expect(kaart).toHaveAttribute('download');
     const gegevens = sectie('Kadastrale gegevens');
     expect(gegevens).toHaveTextContent('Koopsom€ 245.000');
     expect(gegevens).toHaveTextContent('Publiekrechtelijke beperkingenGeen');
@@ -75,6 +93,24 @@ describe('KadasterPage', () => {
     expect(
       within(info).getByRole('link', { name: /Download eigenaarsinformatie \(pdf\)/ })
     ).toHaveAttribute('href', '/nl/wonen/nog-niet-beschikbaar');
+  });
+
+  it('keeps the owner information link when its word is not in the text', async () => {
+    const data = structuredClone(contractExample('getKadaster', 200)) as {
+      eigenaarsinformatie: { tekst: string };
+    };
+    data.eigenaarsinformatie.tekst = 'Meer weten over uw objecten?';
+    renderPagina({
+      patroon: '/nl/wonen/koopwoningen/:woningId/kadaster',
+      pad: '/nl/wonen/koopwoningen/w-7f3a/kadaster',
+      data,
+      element: <KadasterPage />,
+    });
+    await screen.findByRole('heading', { level: 1 });
+
+    expect(
+      within(sectie('Eigenaarsinformatie')).getByRole('link', { name: /^Kadaster/ })
+    ).toHaveAttribute('href', 'https://www.kadaster.nl/');
   });
 
   it('shows the photos open, the contact and the questions, without axe violations', async () => {

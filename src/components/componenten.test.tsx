@@ -3,6 +3,7 @@
 // all its text as props, and has no axe violations.
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { expectNoAxeViolations } from '../test/axe';
@@ -44,6 +45,21 @@ describe('ContentCard', () => {
 });
 
 describe('DataList', () => {
+  it('leaves out a row whose value the API did not send', () => {
+    const { container } = render(
+      <DataList
+        items={[
+          { label: 'Koopsom', waarde: undefined },
+          { label: 'Bebouwing', waarde: 'Woonhuis' },
+        ]}
+      />
+    );
+
+    expect([...container.querySelectorAll('dt')].map((dt) => dt.textContent)).toEqual([
+      'Bebouwing',
+    ]);
+  });
+
   it('renders labels and values as a description list', async () => {
     const { container } = render(
       <DataList
@@ -210,6 +226,33 @@ describe('ContactCard', () => {
 });
 
 describe('FaqCard', () => {
+  it('shows new questions when the data changes, also a different number', () => {
+    const vraag = (n: number) => ({ vraag: `Vraag ${n}`, antwoord: `Antwoord ${n}` });
+    const { rerender } = renderMetRouter(
+      <FaqCard titel="Veelgestelde vragen" vragen={[vraag(1), vraag(2)]} />
+    );
+    expect(screen.getAllByRole('button')).toHaveLength(2);
+
+    rerender(
+      <RouterProvider
+        router={createMemoryRouter([
+          {
+            path: '*',
+            element: (
+              <FaqCard titel="Veelgestelde vragen" vragen={[vraag(3), vraag(4), vraag(5)]} />
+            ),
+          },
+        ])}
+      />
+    );
+
+    expect(screen.getAllByRole('button').map((knop) => knop.textContent)).toEqual([
+      'Vraag 3',
+      'Vraag 4',
+      'Vraag 5',
+    ]);
+  });
+
   it('shows the questions collapsed and a link to all questions', async () => {
     const { container } = renderMetRouter(
       <FaqCard

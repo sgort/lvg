@@ -15,11 +15,21 @@ export const woningPad = (woningId: string) =>
   `${KOOPWONINGEN_PAD}/${encodeURIComponent(woningId)}`;
 
 /** The breadcrumb to a property's page, and on to one of its detail pages. */
+/** Where the property page's back link leads: the list, or Wonen when the list goes straight here. */
+export const terugVanWoning = (woning: { overzicht?: 'lijst' | 'direct' }) =>
+  woning.overzicht === 'direct'
+    ? { tekst: 'Wonen', naar: WONEN_PAD }
+    : { tekst: 'Koopwoningen', naar: KOOPWONINGEN_PAD };
+
 export function kruimelsWoning(
-  woning: { id: string; adresKort: string },
+  woning: { id: string; adresKort: string; overzicht?: 'lijst' | 'direct' },
   detailpagina?: string
 ): Kruimel[] {
-  const pad = [HOME, WONEN, { tekst: 'Koopwoningen', naar: KOOPWONINGEN_PAD }];
+  // With `direct` (from the API) the list only leads back here, so it is no step on the way.
+  const pad =
+    woning.overzicht === 'direct'
+      ? [HOME, WONEN]
+      : [HOME, WONEN, { tekst: 'Koopwoningen', naar: KOOPWONINGEN_PAD }];
   return detailpagina
     ? [...pad, { tekst: woning.adresKort, naar: woningPad(woning.id) }, { tekst: detailpagina }]
     : [...pad, { tekst: woning.adresKort }];

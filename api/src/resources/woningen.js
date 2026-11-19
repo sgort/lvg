@@ -8,14 +8,12 @@ import {
   adresMetPlaats,
   scenarioOf,
   veelgesteldeVragen,
+  weergaveVoor,
   woningHref,
   woningVerwijzing,
 } from './shared.js';
 
 const label = (klasse) => ({ klasse, naam: klasse });
-
-// One property opens directly, several show as a list, none shows the empty message.
-const weergave = (aantal) => (aantal === 0 ? 'leeg' : aantal === 1 ? 'direct' : 'lijst');
 
 export async function listWoningen(request) {
   const woningen = await registers.listWoningen(scenarioOf(request));
@@ -32,7 +30,7 @@ export async function listWoningen(request) {
       : [];
 
   return json(200, {
-    weergave: weergave(woningen.length),
+    weergave: weergaveVoor(woningen.length),
     woningen: woningen.map((bag) => ({
       id: bag.id,
       adresKort: adresKort(bag),
@@ -90,7 +88,7 @@ export async function getWoning(request) {
   ]);
 
   return json(200, {
-    woning: woningVerwijzing(bag),
+    woning: await woningVerwijzing(scenario, bag),
     bag: {
       status: 'beschikbaar',
       adres: adresMetPlaats(bag),

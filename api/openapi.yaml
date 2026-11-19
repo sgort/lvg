@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: LVG Wonen API
-  version: 1.3.0
+  version: 1.4.0
   description: |-
     The API behind the MijnOverheid Wonen pages built by LVG. It returns what each page needs,
     already decided: statuses, final amounts, allowed actions (`acties`) and the texts a
@@ -69,7 +69,7 @@ paths:
                     openapi: 3.0.3
                     info:
                       title: LVG Wonen API
-                      version: 1.3.0
+                      version: 1.4.0
                     paths: {}
         '500':
           $ref: '#/components/responses/InternalServerError'
@@ -285,6 +285,7 @@ paths:
                       id: w-7f3a
                       adresKort: Voorbeeldlaan 73 B
                       adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                      overzicht: lijst
                     bag:
                       status: beschikbaar
                       adres: Voorbeeldlaan 73 B, Rotterdam
@@ -372,6 +373,7 @@ paths:
                       id: w-7f3a
                       adresKort: Voorbeeldlaan 73 B
                       adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                      overzicht: lijst
                     kaart:
                       afbeelding:
                         src: /perceel-1560.png
@@ -487,6 +489,7 @@ paths:
                       id: w-7f3a
                       adresKort: Voorbeeldlaan 73 B
                       adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                      overzicht: lijst
                     gegevens:
                       waarde:
                         bedragEur: 317000
@@ -570,6 +573,7 @@ paths:
                       id: w-7f3a
                       adresKort: Voorbeeldlaan 73 B
                       adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                      overzicht: lijst
                     label:
                       klasse: C
                       naam: C
@@ -656,6 +660,7 @@ paths:
                       id: w-7f3a
                       adresKort: Voorbeeldlaan 73 B
                       adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                      overzicht: lijst
                     huidigDak:
                       isolatie:
                         soort: Glaswol
@@ -751,6 +756,7 @@ paths:
                       id: w-7f3a
                       adresKort: Voorbeeldlaan 73 B
                       adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                      overzicht: lijst
                     huidigDak:
                       isolatie:
                         soort: Glaswol
@@ -836,6 +842,7 @@ paths:
                       id: w-7f3a
                       adresKort: Voorbeeldlaan 73 B
                       adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                      overzicht: lijst
                     doel: Offerte voor dakisolatie maken
                     aannemers:
                       - id: a-91d2
@@ -1191,6 +1198,7 @@ paths:
                       id: w-7f3a
                       adresKort: Voorbeeldlaan 73 B
                       adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                      overzicht: lijst
                     gedeeldMet: IsolatieGroep Rotterdam
                     doel: Offerte voor dakisolatie maken
                     gegevenssets:
@@ -1254,6 +1262,7 @@ paths:
                       id: w-7f3a
                       adresKort: Voorbeeldlaan 73 B
                       adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                      overzicht: lijst
                     gedeeldMet: IsolatieGroep Rotterdam
                     doel: Offerte voor dakisolatie maken
                     gegevenssets:
@@ -1321,7 +1330,7 @@ components:
       description: De volledige versie van deze API.
       schema:
         type: string
-        example: 1.3.0
+        example: 1.4.0
     ContentLanguage:
       description: De taal van de teksten in het antwoord.
       schema:
@@ -1558,6 +1567,14 @@ components:
           type: string
           description: Het volledige adres.
           example: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+        overzicht:
+          type: string
+          enum: [lijst, direct]
+          description: >-
+            Hoe de pagina Koopwoningen zich voor deze burger gedraagt, zoals `weergave` daar:
+            `direct` als de burger één koopwoning heeft. De pagina's van de woning laten dan geen
+            stap terug naar die lijst zien, want die lijst gaat meteen naar deze woning.
+          example: lijst
     Energielabelklasse:
       type: object
       required: [klasse, naam]

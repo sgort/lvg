@@ -26,7 +26,13 @@ function MetLink({
   link: Kadaster['eigenaarsinformatie']['meerInformatie'];
 }) {
   const plek = tekst.lastIndexOf(link.tekst);
-  if (plek < 0) return <LuxParagraph>{tekst}</LuxParagraph>;
+  if (plek < 0) {
+    return (
+      <LuxParagraph>
+        {tekst} <Koppeling doel={bestemmingVoorLink(link)}>{link.tekst}</Koppeling>
+      </LuxParagraph>
+    );
+  }
   return (
     <LuxParagraph>
       {tekst.slice(0, plek)}
@@ -114,7 +120,12 @@ export function KadasterPage() {
             </LuxParagraph>
           )}
         </Sectie>
-        <LuxAccordionProvider headingLevel={3} sections={fotoSecties} />
+        {/* LUX's provider keeps its first sections; a key per content renders new ones afresh. */}
+        <LuxAccordionProvider
+          key={[...fotos.luchtfotos, ...fotos.panoramafotos].map(({ src }) => src).join('|')}
+          headingLevel={3}
+          sections={fotoSecties}
+        />
       </ContentCard>
       <Contactkaart contact={contact} />
       <Vragenkaart vragen={veelgesteldeVragen} />

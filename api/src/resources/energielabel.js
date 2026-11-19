@@ -31,7 +31,7 @@ export async function getEnergielabel(request) {
     : [];
 
   return json(200, {
-    woning: woningVerwijzing(bag),
+    woning: await woningVerwijzing(scenario, bag),
     label: { klasse: label.klasse, naam: label.klasseNaam },
     objectAanduiding: label.gebouwklasse === 'woning' ? 'woning' : 'gebouw',
     registratiedatum: label.registratiedatum,

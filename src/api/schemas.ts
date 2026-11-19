@@ -50,6 +50,8 @@ export const WoningVerwijzing = z.object({
   id: z.string(),
   adresKort: z.string(),
   adres: z.string(),
+  // `direct`: the list goes straight to this one property, so pages leave out a step to it.
+  overzicht: z.enum(['lijst', 'direct']).optional(),
 });
 export type WoningVerwijzing = z.infer<typeof WoningVerwijzing>;
 

@@ -132,7 +132,7 @@ export async function getDakisolatie(request) {
   ];
 
   return json(200, {
-    woning: woningVerwijzing(bag),
+    woning: await woningVerwijzing(scenario, bag),
     huidigDak: {
       isolatie: {
         soort: capitalise(isolatie.type),

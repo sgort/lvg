@@ -2,6 +2,13 @@
 
 All notable changes to the LVG Wonen API. Versions follow the policy in `README.md`.
 
+## 1.4.0
+
+- Every `woning` reference (`WoningVerwijzing`) says how the citizen's list of koopwoningen
+  behaves (`overzicht`, optional): `direct` for one property, otherwise `lijst`. With `direct`
+  the property's pages leave out the step back to that list, which would only lead back to the
+  same property.
+
 ## 1.3.0
 
 - `GET /woningen/{woningId}` answers frequently asked questions about the property

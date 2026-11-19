@@ -22,7 +22,7 @@ export async function getWoz(request) {
   // The explanation texts are mock copy until G&B delivers the real texts.
   const website = GEMEENTE_WEBSITES[bag.woonplaats];
   return json(200, {
-    woning: woningVerwijzing(bag),
+    woning: await woningVerwijzing(scenario, bag),
     gegevens: {
       waarde: { bedragEur: woz.waardeEur, uitleg: WOZ_UITLEG.waarde },
       waardepeildatum: { datum: woz.waardepeildatum, uitleg: WOZ_UITLEG.waardepeildatum },

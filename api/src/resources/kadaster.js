@@ -25,7 +25,7 @@ export async function getKadaster(request) {
   ]);
 
   return json(200, {
-    woning: woningVerwijzing(bag),
+    woning: await woningVerwijzing(scenario, bag),
     kaart: {
       afbeelding: {
         src: kadaster.kaart,

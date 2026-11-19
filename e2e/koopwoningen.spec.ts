@@ -36,6 +36,19 @@ test('one property: straight to it, and Back does not return to the list', async
   await expect(page).toHaveURL(/\/nl\/wonen$/);
 });
 
+test('one property: the way back leads to Wonen, not to the list that loops', async ({ page }) => {
+  await kiesScenario(page, 'een-woning');
+  await page.goto('/nl/wonen');
+  await page.getByRole('link', { name: /Bekijk koopwoningen/ }).click();
+  await expect(page).toHaveURL(/\/nl\/wonen\/koopwoningen\/w-7f3a$/);
+
+  // Breadcrumb on desktop, back link on mobile: only the visible one is found.
+  const inhoud = page.getByRole('main');
+  await expect(inhoud.getByRole('link', { name: 'Koopwoningen', exact: true })).toHaveCount(0);
+  await inhoud.getByRole('link', { name: 'Wonen', exact: true }).click();
+  await expect(page).toHaveURL(/\/nl\/wonen$/);
+});
+
 test('no property: the message and the Kadaster contact, accessibly', async ({ page }) => {
   await kiesScenario(page, 'geen-woning');
   await page.goto('/nl/wonen/koopwoningen');

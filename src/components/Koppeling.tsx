@@ -10,9 +10,16 @@ import { LinkNaar } from './LinkNaar';
 
 export type Doel = { naar: string } | { extern: string } | { href: string };
 
-type Props = { doel: Doel; children: ReactNode; icon?: ReactNode; pijl?: boolean };
+type Props = {
+  doel: Doel;
+  children: ReactNode;
+  icon?: ReactNode;
+  pijl?: boolean;
+  /** A file on our own site: the browser saves it instead of opening it. */
+  download?: boolean;
+};
 
-export function Koppeling({ doel, children, icon, pijl = false }: Props) {
+export function Koppeling({ doel, children, icon, pijl = false, download = false }: Props) {
   const opmaak = pijl
     ? { icon: <ChevronRechts />, iconPosition: 'end' as const, className: styles.pijl }
     : { icon: icon ? <>{icon}</> : undefined, iconPosition: 'start' as const };
@@ -32,7 +39,7 @@ export function Koppeling({ doel, children, icon, pijl = false }: Props) {
     );
   }
   return (
-    <LuxLink href={doel.href} {...opmaak}>
+    <LuxLink href={doel.href} download={download || undefined} {...opmaak}>
       {children}
     </LuxLink>
   );

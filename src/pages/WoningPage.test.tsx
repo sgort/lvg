@@ -97,6 +97,18 @@ describe('WoningPage', () => {
     expect(sectie('Kadastrale gegevens')).toHaveTextContent('Rotterdam Z 99999');
   });
 
+  it('leads back to Wonen, not to the list, when the list goes straight to this property', async () => {
+    const data = voorbeeld();
+    data.woning = { ...data.woning, overzicht: 'direct' };
+    toon(data);
+    await screen.findByRole('heading', { level: 1 });
+
+    expect(screen.queryByRole('link', { name: 'Koopwoningen' })).not.toBeInTheDocument();
+    const wonen = screen.getAllByRole('link', { name: 'Wonen' });
+    expect(wonen.length).toBeGreaterThan(0);
+    for (const link of wonen) expect(link).toHaveAttribute('href', '/nl/wonen');
+  });
+
   it('shows the frequently asked questions, and has no axe violations', async () => {
     toon();
 

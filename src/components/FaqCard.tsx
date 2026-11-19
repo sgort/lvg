@@ -14,7 +14,9 @@ type Props = {
 export function FaqCard({ titel, vragen, meer }: Props) {
   return (
     <ContentCard titel={titel}>
+      {/* LUX's provider keeps its first sections; a key per content renders new ones afresh. */}
       <LuxAccordionProvider
+        key={vragen.map(({ vraag }) => vraag).join('|')}
         headingLevel={3}
         sections={vragen.map(({ vraag, antwoord }) => ({ label: vraag, body: antwoord }))}
       />

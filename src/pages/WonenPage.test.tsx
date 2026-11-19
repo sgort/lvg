@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { expectNoAxeViolations } from '../test/axe';
 import { contractExample } from '../test/contractExamples';
-import { verbodenFetch } from '../test/render';
+import { renderPagina, verbodenFetch } from '../test/render';
 import { Hoofdinhoud } from './Hoofdinhoud';
 import { WonenPage } from './WonenPage';
 
@@ -68,6 +68,18 @@ describe('WonenPage', () => {
       'href',
       '/nl/wonen/nog-niet-beschikbaar'
     );
+  });
+
+  it('shows no button for an action without a text', async () => {
+    const data = structuredClone(contractExample('getWonen', 200)) as {
+      kaarten: { actie: { tekst?: string } }[];
+    };
+    delete data.kaarten[1]!.actie.tekst;
+    renderPagina({ patroon: '/nl/wonen', pad: '/nl/wonen', data, element: <WonenPage /> });
+
+    await screen.findByRole('heading', { level: 1 });
+    const kaart = screen.getByRole('region', { name: 'Ik ben woningeigenaar' });
+    expect(within(kaart).queryByRole('link')).not.toBeInTheDocument();
   });
 
   it('has no axe violations', async () => {

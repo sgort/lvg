@@ -103,6 +103,8 @@ describe('GET /woningen/{id}', () => {
       id: 'w-7f3a',
       adresKort: 'Voorbeeldlaan 73 B',
       adres: 'Voorbeeldlaan 73 B, 3000 SS Rotterdam',
+      // The default scenario has one property, so its list goes straight here.
+      overzicht: 'direct',
     });
     expect(bag).toEqual({
       status: 'beschikbaar',

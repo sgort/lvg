@@ -9,7 +9,7 @@ import { InfoToggle } from '../components/InfoToggle';
 import { PageTitle } from '../components/PageTitle';
 import { Sectie } from '../features/woning/Sectie';
 import { formatDatum, formatEuro } from '../lib/format';
-import { KOOPWONINGEN_PAD, KRUIMELPAD_LABEL, kruimelsWoning } from './paginaKader';
+import { KRUIMELPAD_LABEL, kruimelsWoning, terugVanWoning } from './paginaKader';
 import { MeerLink, NIET_BESCHIKBAAR, Vragenkaart, vierkanteMeters } from './paginaOnderdelen';
 
 const beschikbaar = (status: string) => (status === 'beschikbaar' ? undefined : NIET_BESCHIKBAAR);
@@ -22,7 +22,7 @@ export function WoningPage() {
       <PageTitle
         titel={woning.adresKort}
         kruimelpad={{ label: KRUIMELPAD_LABEL, items: kruimelsWoning(woning) }}
-        terug={{ tekst: 'Koopwoningen', naar: KOOPWONINGEN_PAD }}
+        terug={terugVanWoning(woning)}
       />
       <ContentCard>
         <Sectie

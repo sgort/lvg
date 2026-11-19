@@ -92,7 +92,7 @@ export async function createToestemming(request) {
   const kenmerk = nieuwKenmerk(datum);
   const toestemming = {
     kenmerk,
-    woning: woningVerwijzing(bag),
+    woning: await woningVerwijzing(scenario, bag),
     gedeeldMet: aannemer.naam,
     doel: DOEL,
     gegevenssets: GEGEVENSSETS.filter((set) => gekozen.includes(set.id)).map((set) => set.naam),

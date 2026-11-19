@@ -20,7 +20,8 @@ export function WonenPage() {
       titel: kaart.titel,
       bron: `Bron: ${kaart.bron}`,
       tekst: kaart.tekst,
-      knop: doel ? { tekst: kaart.actie.tekst ?? kaart.titel, doel } : undefined,
+      // A button needs its text from the API; without one the card shows none.
+      knop: doel && kaart.actie.tekst ? { tekst: kaart.actie.tekst, doel } : undefined,
     };
   });
 
