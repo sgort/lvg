@@ -31,12 +31,12 @@ same branch before merging.
 
 ## Checks
 
-| Check                  | Workflow               | Covers                                                                 |
-| ---------------------- | ---------------------- | ---------------------------------------------------------------------- |
-| `audit`                | `zizmor.yml`           | Workflow analysis, Renovate config, lockfile, format, signatures, pins |
-| `scan`                 | `semgrep.yml`          | Semgrep Code and Supply Chain                                          |
-| `Build and deploy ACC` | `azure-lvg-acc.yml`    | Lint and the production build, skipped for documentation-only changes  |
-| `dependency-audit`     | `dependency-audit.yml` | Daily audit of `acc` and `main`; not a merge check                     |
+| Check                  | Workflow               | Covers                                                                       |
+| ---------------------- | ---------------------- | ---------------------------------------------------------------------------- |
+| `audit`                | `zizmor.yml`           | Workflow analysis, Renovate config, lockfile, format, signatures, pins       |
+| `scan`                 | `semgrep.yml`          | Semgrep Code and Supply Chain                                                |
+| `Build and deploy ACC` | `azure-lvg-acc.yml`    | Lint, tests and the production build, skipped for documentation-only changes |
+| `dependency-audit`     | `dependency-audit.yml` | Daily audit of `acc` and `main`; not a merge check                           |
 
 Required checks match by job name, so renaming a job means updating the rulesets.
 
@@ -54,6 +54,14 @@ block branch deletion and force pushes. Neither has bypass actors.
 
 If semgrep.dev is unreachable or `SEMGREP_APP_TOKEN` is revoked, `scan` fails and
 merges stop until the repository owner edits the rulesets.
+
+`require_extra_approval_for_unattributed_changes` is `true` on `acc` and `false` on
+`main`, as in `ttl-editor`, `linked-data-explorer` and `ronl-business-api`. GitHub
+documents it as one extra approval when Copilot opens a pull request without a human
+collaborator and a non-zero approval count is required. Neither ruleset requires
+approvals, so the difference is kept for consistency across the repositories. If a
+Copilot pull request into `acc` is ever blocked despite passing its checks, look here
+first.
 
 A pull request that is retargeted to `acc` gets no new `Build and deploy ACC` run,
 because retargeting does not trigger that workflow. If the check stays on
@@ -102,10 +110,13 @@ To recover:
 3. Run the `az staticwebapp environment delete` command it prints.
 4. Re-run the failed check on the blocked pull request.
 
+If there are no orphans, the slots are held by open pull requests. Merge or close
+one of them, then re-run the failed check.
+
 Renovate is limited to two open pull requests to leave room in this pool.
 
 ## Deliberately left out
 
 These parts of the `ttl-editor` pipeline are not used here: the SBOM workflow, the
-quarterly dependency review, the lockfile review job, a test suite, the GitLab
+quarterly dependency review, the lockfile review job, the GitLab
 mirror and the release process.

@@ -3,6 +3,8 @@
 * text=auto
 
 # Binary formats, declared explicitly so they are never normalised.
+*.docx binary
 *.ico binary
 *.jpg binary
+*.pdf binary
 *.png binary

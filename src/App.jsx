@@ -13,6 +13,7 @@ import {
   Share2,
 } from 'lucide-react';
 import { fetchAllCalculations } from './services/operatonService';
+import Footer from './components/Footer';
 
 const PropertyDashboard = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -680,6 +681,8 @@ const PropertyDashboard = () => {
             </button>
           </div>
         )}
+
+        <Footer />
       </div>
 
       {/* Roof Insulation Modal */}
