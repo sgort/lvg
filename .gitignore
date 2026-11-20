@@ -30,5 +30,9 @@ dist-ssr
 test-results/
 playwright-report/
 
+# Handoff folders from the design team: input for a build session, never committed (CLAUDE.md).
+# Ignored here so Prettier and the pre-push check skip them too.
+docs/*-handoff/
+
 # Azure Functions local settings
 api/local.settings.json

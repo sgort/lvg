@@ -28,6 +28,7 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  vi.unstubAllEnvs();
 });
 
 describe('ContentCard', () => {
@@ -115,8 +116,19 @@ describe('PageTitle', () => {
   it('sets the document title and moves focus to the H1', () => {
     renderMetRouter(<PageTitle {...props} />);
 
-    expect(document.title).toBe('Koopwoningen - MijnOverheid');
+    // No VITE_SITE_URL in tests: a local build, so the title is marked.
+    expect(document.title).toBe('LOCAL · Koopwoningen - MijnOverheid');
     expect(screen.getByRole('heading', { level: 1 })).toHaveFocus();
+  });
+
+  it.each([
+    ['https://acc.lvg.open-regels.nl', 'ACC · Koopwoningen - MijnOverheid'],
+    ['https://lvg.open-regels.nl', 'Koopwoningen - MijnOverheid'],
+  ])('keeps the environment marker in the title on %s', (site, titel) => {
+    vi.stubEnv('VITE_SITE_URL', site);
+    renderMetRouter(<PageTitle {...props} />);
+
+    expect(document.title).toBe(titel);
   });
 });
 

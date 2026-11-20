@@ -99,8 +99,9 @@ local engine), or the advice shows as unavailable.
 ## Scenarios
 
 The band of the stand-in frame has a scenario switch. It sends `X-LVG-Scenario` to the API,
-which honours it only when `LVG_SCENARIOS=on`. The default is `een-woning`, also where the API
-ignores the header (the stable release). The choice holds for the browser tab; a new tab starts
+which honours it only when `LVG_SCENARIOS=on`. That app setting is on for both sites (acceptance
+and, since 20 November 2026, the stable release), for previews and locally. The default is
+`een-woning`, also where the API ignores the header. The choice holds for the browser tab; a new tab starts
 with the default. `TOON_SCENARIO_KEUZE` in `src/frame/StandInFrame.tsx` hides the switch when set
 to `false`.
 
@@ -151,6 +152,10 @@ Walk through each changed page:
 - [ ] Zoom to 200 %: nothing is cut off.
 - [ ] Complete Dakisolatie → aannemer → toestemming → gegeven.
 - [ ] Note every difference from the design in the log, with the page and width.
+- [ ] After the merge to `acc`, check the link preview of https://acc.lvg.open-regels.nl/ with
+      the LinkedIn Post Inspector (`og-image-acc.png`); after the merge to `main`, of
+      https://lvg.open-regels.nl/ (`og-image-prod.png`). Previews of pull requests use the
+      acceptance card, because their build has the acceptance `VITE_SITE_URL`.
 
 ## Rules that do not change between iterations
 
@@ -199,8 +204,18 @@ decisions.
   stays an open question for the Logius intake. See the spec, "Iteration 2".
 - **Plan:** Part 1b (Tasks 11–14), Part 2 (Tasks 15–23) and Part 3 (Tasks 24–27) of
   `docs/superpowers/plans/2026-11-19-mijnoverheid-wonen.md`.
+- **Part 2 shipped:** #44 merged into `acc` and promoted to `main` in #46 on 20 November 2026:
+  Wonen, Koopwoningen, the property summary and its Kadaster, WOZ and energy label pages, API
+  1.4.0, and the stand-in frame after `koopwoningen - desktop.pdf`. The owner's walkthrough of
+  the preview, on desktop and at 375 px, found no differences left after these changes.
+- **Differences from design, decided in the walkthrough:** the design's "English" at the top
+  right of the header is left out (an error in the design); the side menu has one row height
+  for every item, where the design's groups vary; the scenario switch is visible on both sites,
+  and a scenario change goes to Koopwoningen. Recorded in the plan under Task 23.
+- **Stable release:** `LVG_SCENARIOS=on` is set on the stable Static Web App, so the switch
+  works there too (owner, 20 November 2026).
+- **Next:** Part 2b, a social card from the design team, before Part 3.
 - **Built:** (to be filled in when Part 3 merges)
-- **Differences from design:** (to be filled in after the preview review)
 
 ### Iteration 1 — started 19 November 2026
 

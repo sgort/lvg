@@ -1,9 +1,10 @@
 // The top of every page: breadcrumb (desktop) or back link (mobile), and the H1. Sets the
-// document title and moves focus to the H1, so a screen reader announces the new page.
+// document title, with the environment marker (ACC · / LOCAL ·), and moves focus to the H1, so a screen reader announces the new page.
 // The H1 is a native element with LUX's heading class: LuxHeading does not forward the ref
 // that focusing needs.
 import { useEffect, useRef } from 'react';
 
+import { getDocumentTitle } from '../lib/siteInfo';
 import { Breadcrumb, type Kruimel } from './Breadcrumb';
 import { ChevronLinks } from './icons';
 import { LinkNaar } from './LinkNaar';
@@ -19,7 +20,7 @@ export function PageTitle({ titel, kruimelpad, terug }: Props) {
   const kop = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
-    document.title = `${titel} - MijnOverheid`;
+    document.title = getDocumentTitle(titel);
     kop.current?.focus();
   }, [titel]);
 
