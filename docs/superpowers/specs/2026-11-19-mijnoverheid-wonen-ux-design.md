@@ -564,7 +564,9 @@ opnieuw.`; the page offers `Probeer opnieuw`.
 - Browser storage is never read while rendering, and never holds personal data.
 - No inline scripts or `style` attributes in markup, so the strict CSP holds.
 - Every page sets `document.title` to `[Paginatitel] - MijnOverheid` and moves focus to the
-  H1 after navigation.
+  H1 after navigation. On acceptance and in local builds the title keeps the environment
+  marker in front (`ACC · `, `LOCAL · `), as the tab title in `index.html` has it (owner,
+  20 November 2026).
 
 ## LVG API
 

@@ -530,6 +530,7 @@ An addition by the owner on 20 November 2026, between Part 2 and Part 3 (Part 2b
 - [x] **Step 4:** Add the walkthrough `e2e/social.spec.ts`: either card, served as a PNG.
 - [x] **Step 5:** Copy the card source to `docs/social/`; add the link-preview check to the runbook's review checklist and a sentence to the README. Ignore `docs/*-handoff/` in `.gitignore`, so the pre-push format check skips handoff folders.
 - [x] **Step 5a:** At the owner's request, the browser tab title in `index.html` (and the favicon's label) becomes `Mijn woning – Wonen in MijnOverheid (prototype)`, the same as the link preview; a test keeps the two equal.
+- [x] **Step 5b:** Found by the owner: each page's title (`[Paginatitel] - MijnOverheid`, spec and WCAG 2.4.2) replaced the tab title and dropped the environment marker, so acceptance and local tabs looked like the stable release once a page had loaded. `PageTitle` now uses `getDocumentTitle` in `src/lib/siteInfo.ts`, which adds the same marker (`ACC · Wonen - MijnOverheid`).
 - [x] **Step 6:** Run every check, the walkthroughs included, and check `dist/index.html` of a local build. Expected: all pass; every tag, the prod card and the `LOCAL · ` title.
 - [ ] **Step 7:** After the merge to `acc`, the owner checks `https://acc.lvg.open-regels.nl/` in the LinkedIn Post Inspector (`og-image-acc.png`); after the promotion to `main`, `https://lvg.open-regels.nl/` (`og-image-prod.png`).
 

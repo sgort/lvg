@@ -21,6 +21,14 @@ export function getPageTitle(rawSiteUrl: string | undefined, baseTitle: string):
   return baseTitle;
 }
 
+/**
+ * A page's document title, `[Paginatitel] - MijnOverheid` as the spec has it, with the same
+ * environment marker as the tab title in index.html. Read at call time, so tests can stub it.
+ */
+export function getDocumentTitle(paginatitel: string): string {
+  return getPageTitle(import.meta.env.VITE_SITE_URL, `${paginatitel} - MijnOverheid`);
+}
+
 /** The host, without scheme or trailing slash. */
 export function getSiteHost(url: string): string {
   return url.replace(/^https?:\/\//, '').replace(/\/+$/, '');
