@@ -99,7 +99,10 @@ local engine), or the advice shows as unavailable.
 ## Scenarios
 
 The band of the stand-in frame has a scenario switch. It sends `X-LVG-Scenario` to the API,
-which honours it only when `LVG_SCENARIOS=on`.
+which honours it only when `LVG_SCENARIOS=on`. The default is `een-woning`, also where the API
+ignores the header (the stable release). The choice holds for the browser tab; a new tab starts
+with the default. `TOON_SCENARIO_KEUZE` in `src/frame/StandInFrame.tsx` hides the switch when set
+to `false`.
 
 | Scenario        | What you see                                                              | Use it to check                         |
 | --------------- | ------------------------------------------------------------------------- | --------------------------------------- |

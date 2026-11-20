@@ -1,0 +1,32 @@
+@use '../styles/mixins' as *;
+
+.titel {
+  display: grid;
+  gap: var(--lux-space-200);
+  margin-block-end: var(--lux-space-300);
+}
+
+// Two classes, so these win over LUX's link display (.lux-link is inline-flex).
+.titel .desktop {
+  display: none;
+}
+
+.titel .mobiel {
+  display: inline-flex;
+}
+
+@media (min-width: $breekpunt-desktop) {
+  .titel .desktop {
+    display: block;
+  }
+
+  .titel .mobiel {
+    display: none;
+  }
+}
+
+// Focus moves to the H1 after navigation, so a screen reader announces the page. The H1 is
+// not in the tab order, so it shows no focus outline, as in the designs.
+.kop:focus {
+  outline: none;
+}

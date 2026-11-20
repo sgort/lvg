@@ -18,6 +18,7 @@ or exact version wherever one exists. `lvg` is a sandbox, so this follows
 | ------------------------------ | ------------------------------------------ | ------- | ---------------------------------------------- |
 | `actions/checkout`             | `3d3c42e5aac5ba805825da76410c181273ba90b1` | v7.0.1  | Renovate                                       |
 | `actions/setup-node`           | `949feb2413d6458794dcd2491c4babbbce0c15c1` | v7.1.0  | Renovate                                       |
+| `actions/upload-artifact`      | `cf430e030ddbb5b0abf93d22962f4752f3646cd9` | v7.0.2  | Renovate                                       |
 | `zizmorcore/zizmor-action`     | `45d7276c9ca790aabd705e31ca99c6185c3e76dd` | v0.8.1  | Renovate                                       |
 | `Azure/static-web-apps-deploy` | `4d27395796ac319302594769cfe812bd207490b1` | v1      | manual, because Renovate would pick a 2021 tag |
 | zizmor (the audit tool)        | `version: '1.29.0'` in `zizmor.yml`        | 1.29.0  | Renovate; merge the action update first        |
@@ -33,14 +34,18 @@ same branch before merging.
 
 ## Checks
 
-| Check                  | Workflow               | Covers                                                                                                          |
-| ---------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `audit`                | `zizmor.yml`           | Workflow analysis, Renovate config, lockfile, format, signatures, pins                                          |
-| `scan`                 | `semgrep.yml`          | Semgrep Code and Supply Chain                                                                                   |
-| `Build and deploy ACC` | `azure-lvg-acc.yml`    | Lint, tests, the API contract and tests, the build and the bundle check, skipped for documentation-only changes |
-| `dependency-audit`     | `dependency-audit.yml` | Daily audit of `acc` and `main`; not a merge check                                                              |
+| Check                  | Workflow               | Covers                                                                                                                                                   |
+| ---------------------- | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `audit`                | `zizmor.yml`           | Workflow analysis, Renovate config, lockfile, format, signatures, pins                                                                                   |
+| `scan`                 | `semgrep.yml`          | Semgrep Code and Supply Chain                                                                                                                            |
+| `Build and deploy ACC` | `azure-lvg-acc.yml`    | Lint, type-check, tests, the API contract and tests, the build and the bundle check, the Playwright walkthroughs, skipped for documentation-only changes |
+| `dependency-audit`     | `dependency-audit.yml` | Daily audit of `acc` and `main`; not a merge check                                                                                                       |
 
 Required checks match by job name, so renaming a job means updating the rulesets.
+
+**Playwright's browser.** The deploy workflows run `npx playwright install --with-deps chromium`, which downloads Chromium from Playwright's CDN (and system libraries through apt) at the version `@playwright/test` in the lockfile pins. That download is outside npm's lockfile and signatures; it runs in CI only, and nothing from it is deployed. On failure the report is uploaded with `actions/upload-artifact`, pinned by commit SHA like the other actions.
+
+**Install scripts.** npm runs no install script that `allowScripts` does not list. `sass` (since Part 2) brings the optional `@parcel/watcher`, whose script builds a native file watcher; it is not allowed and not needed, because Vite compiles Sass without `--watch`.
 
 ## The LVG API
 
@@ -55,8 +60,14 @@ Required checks match by job name, so renaming a job means updating the rulesets
   Design Rules. The ruleset is vendored in `api/.spectral.yaml`, so CI fetches no rules
   from the network; its first line records the source and download date.
 - **The bundle check.** `npm run check-bundle` runs after the build and fails when `dist/`
-  contains `localhost:8081` or `demo:demo`. `operaton.open-regels.nl` is added when the old
-  page that still calls Operaton from the browser is removed (plan, Task 19).
+  contains `localhost:8081`, `demo:demo` or `operaton.open-regels.nl`: no Operaton address or
+  login reaches the browser (complete since plan Task 19).
+- **The Content-Security-Policy.** Both Static Web Apps send a strict policy from
+  `globalHeaders` in `public/staticwebapp.config.json` (`style-src 'self'`, no `unsafe-inline`
+  or `unsafe-eval`), with `X-Content-Type-Options: nosniff` and `Referrer-Policy: same-origin`.
+  `vite preview` sends the same headers (`vite/swaHeadersPlugin.js`), so a page that breaks the
+  policy fails locally first. The LUX components' run-time style injection is moved into a
+  stylesheet at build time (`vite/luxCssPlugin.js`).
 - **Logs.** The API logs the name of an error only (`TypeError`, `Error`), never its message
   or stack: once real sources replace the mocks, a message can hold a URL with an address or
   a BAG id. A missing `OPERATON_BASE_URL` on Azure is logged once, by name.

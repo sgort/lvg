@@ -65,11 +65,30 @@ describe('GET /woningen', () => {
     ]);
   });
 
+  it.each(['drie-woningen', 'een-woning', 'geen-woning'])(
+    'answers frequently asked questions about koopwoningen (%s)',
+    async (scenario) => {
+      const response = await get('/api/v1/woningen', scenario);
+
+      expectValidResponse('listWoningen', response);
+      const { vragen, meer } = response.body.veelgesteldeVragen;
+      expect(vragen).toHaveLength(3);
+      expect(vragen[0].vraag).toBe('Waarom staat mijn woning hier niet?');
+      expect(vragen.every((v) => v.antwoord.length > 0)).toBe(true);
+      expect(meer).toEqual({
+        tekst: 'Bekijk alle veelgestelde vragen',
+        href: '#nog-niet-beschikbaar',
+        extern: false,
+      });
+    }
+  );
+
   it('ignores the scenario header unless LVG_SCENARIOS is on', async () => {
     vi.stubEnv('LVG_SCENARIOS', '');
     const response = await get('/api/v1/woningen', 'geen-woning');
 
-    expect(response.body.weergave).toBe('lijst');
+    // The default scenario, een-woning, goes straight to the only property.
+    expect(response.body.weergave).toBe('direct');
   });
 });
 
@@ -84,6 +103,8 @@ describe('GET /woningen/{id}', () => {
       id: 'w-7f3a',
       adresKort: 'Voorbeeldlaan 73 B',
       adres: 'Voorbeeldlaan 73 B, 3000 SS Rotterdam',
+      // The default scenario has one property, so its list goes straight here.
+      overzicht: 'direct',
     });
     expect(bag).toEqual({
       status: 'beschikbaar',

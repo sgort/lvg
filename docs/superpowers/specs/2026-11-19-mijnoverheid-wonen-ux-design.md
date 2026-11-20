@@ -252,6 +252,14 @@ Every page has three data states besides the filled one:
 Dutch copy is given as it will appear. `[…]` marks values from the API. Text between
 `{…}` is still a design placeholder; it is built as written and listed under open questions.
 
+Changed with the owner on 19 November 2026, so the first deployed version looks finished:
+every `{…}` placeholder is filled with mock content, written for this sandbox in B1 Dutch and
+not reviewed by G&B or the source holders. The API's mock copy is in
+`api/src/mock/teksten.js` and `api/src/mock/veelgesteldeVragen.js` (API 1.3.0, which also gives
+the property summary its FAQ); the stand-in frame has a fictional citizen and footer columns;
+the aerial and street photos are drawn examples. The open questions about the real copy stand.
+Links whose real target is unknown still lead to "Nog niet beschikbaar".
+
 ### 1. Wonen (landing)
 
 From the deck, page 2, and `wonen - mobile.pdf`. Three cards in a grid: two columns on desktop,
@@ -474,7 +482,13 @@ oplevering.`
   with `VITE_FRAME=off` at build time or `?kader=uit` at run time; the content then renders
   in a plain page with the same width as the MijnOverheid content column.
 - The **scenario switch** sits in the band: a select with `Geen woning`, `Eén woning` and
-  `Drie woningen` (default). The choice goes to the API as the header `X-LVG-Scenario` and is
+  `Drie woningen`. Changed with the owner on 19 November 2026 (plan Task 21): the default is
+  `Eén woning`, in the API and the front-end. The switch was hidden while the first pages
+  were built on that one path, and is shown again since 20 November 2026
+  (`TOON_SCENARIO_KEUZE` in `src/frame/StandInFrame.tsx`). The frame follows the delivered
+  design (`koopwoningen - desktop.pdf`): hanging logo, icons in the side menu, the design's
+  footer columns and citizen name (`R. Janssen`). The design's `English` at the top right of
+  the header is left out: the owner calls it an error in the design. The choice goes to the API as the header `X-LVG-Scenario` and is
   kept in `sessionStorage` (no personal data; only the scenario name), read in the API client
   and the switch's event handler, never while rendering. The API ignores the
   header unless `LVG_SCENARIOS=on` is set, which it is on `acc`, previews and locally, and
@@ -730,6 +744,17 @@ source is `dmn/bereken_isolatie_opties.dmn` (see `dmn/README.md`).
   `default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'`.
   No `unsafe-inline` and no `unsafe-eval`. React's `style` prop sets styles through the DOM,
   which this policy allows; markup carries no `style` attributes or inline scripts.
+- `@lux-design-system/components-react` injects its CSS at run time as `<style>` elements, which
+  `style-src 'self'` blocks, and LUX publishes no separate CSS package. Decided with the owner
+  on 19 November 2026 (plan Task 17): `vite/luxCssPlugin.js` moves that CSS into an ordinary
+  stylesheet during the build and removes the injection, so the policy stays as written. The
+  dev server keeps the injection and sends no CSP; the build, `vite preview` and the deployed
+  sites use the extracted stylesheet. The port (#37) meets the same question with
+  `@mijnoverheid/ui`.
+- `LuxAlert`'s icon (`LuxIcon`) renders a `<style>` element (`svg { fill: currentColor }`),
+  which the same policy blocks; extracting it would fill every SVG on the page. The info box and
+  the error state therefore use a local `Melding` with LUX's alert classes and a local icon
+  (plan Task 22). Every component and page test now fails on a `<style>` element.
 - The mock consent stores nothing outside the API's memory, in a capped store (Part 1b).
 - The API logs no request data and no source error messages, only error names (Part 1b).
 

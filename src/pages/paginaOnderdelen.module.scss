@@ -1,0 +1,12 @@
+@use '../styles/mixins' as *;
+
+.meer {
+  margin: 0;
+}
+
+// Under a data list the link starts at the value column, as in the designs.
+@media (min-width: $breekpunt-desktop) {
+  .meer {
+    padding-inline-start: calc(#{$label-kolom} + #{$kolom-afstand});
+  }
+}

@@ -1,0 +1,35 @@
+@use '../styles/mixins' as *;
+
+.lijst {
+  display: grid;
+  gap: var(--lux-space-150);
+  margin: 0;
+}
+
+.rij {
+  display: grid;
+  gap: var(--lux-space-25);
+}
+
+// Labels are quiet, values carry the weight, as in the designs.
+.label {
+  color: var(--lux-color-foreground-subdued);
+  font-size: var(--lux-font-size-body-small);
+}
+
+// The value, and at the end of the row the info button; an opened explanation spans both.
+.waarde {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--lux-space-50) var(--lux-space-100);
+  align-items: start;
+  margin: 0;
+}
+
+@media (min-width: $breekpunt-desktop) {
+  .rij {
+    grid-template-columns: $label-kolom 1fr;
+    gap: $kolom-afstand;
+    align-items: baseline;
+  }
+}

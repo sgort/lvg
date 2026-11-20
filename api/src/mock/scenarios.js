@@ -28,8 +28,8 @@ const woningen = {
       publiekrechtelijkeBeperkingen: 'Geen',
       bebouwing: 'Woonhuis',
       kaart: '/perceel-1560.png',
-      luchtfoto: '/foto-placeholder.svg',
-      panoramafoto: '/foto-placeholder.svg',
+      luchtfoto: '/luchtfoto-voorbeeld.svg',
+      panoramafoto: '/panoramafoto-voorbeeld.svg',
     },
     woz: {
       waardeEur: 317000,
@@ -92,8 +92,8 @@ const woningen = {
       publiekrechtelijkeBeperkingen: 'Geen',
       bebouwing: 'Woonhuis',
       kaart: '/perceel-1560.png',
-      luchtfoto: '/foto-placeholder.svg',
-      panoramafoto: '/foto-placeholder.svg',
+      luchtfoto: '/luchtfoto-voorbeeld.svg',
+      panoramafoto: '/panoramafoto-voorbeeld.svg',
     },
     woz: {
       waardeEur: 350000,
@@ -132,8 +132,8 @@ const woningen = {
       publiekrechtelijkeBeperkingen: 'Geen',
       bebouwing: 'Woonhuis',
       kaart: '/perceel-1560.png',
-      luchtfoto: '/foto-placeholder.svg',
-      panoramafoto: '/foto-placeholder.svg',
+      luchtfoto: '/luchtfoto-voorbeeld.svg',
+      panoramafoto: '/panoramafoto-voorbeeld.svg',
     },
     woz: {
       waardeEur: 289000,

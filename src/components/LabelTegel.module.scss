@@ -1,0 +1,56 @@
+@use '../styles/mixins' as *;
+
+.tegel {
+  display: inline-flex;
+}
+
+// A small square with the letter, as in the design.
+.kleur {
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: 1.25rem;
+  block-size: 1.25rem;
+  padding-inline: 0.15rem;
+  color: var(--lux-color-foreground-on-emphasis);
+  font-size: var(--lux-font-size-body-small);
+  font-weight: var(--lux-font-weight-bold);
+  line-height: 1;
+  border-radius: 2px;
+}
+
+// White text is too faint on C to F (below 4.5:1); they take the dark text colour.
+.klasseA {
+  background-color: var(--lux-color-donkergroen-500);
+}
+
+.klasseB {
+  background-color: var(--lux-color-groen-500);
+}
+
+.klasseC {
+  background-color: var(--lux-color-groen-300);
+  color: var(--lux-color-foreground-default);
+}
+
+.klasseD {
+  background-color: var(--lux-color-geel-500);
+  color: var(--lux-color-foreground-default);
+}
+
+.klasseE {
+  background-color: var(--lux-color-donkergeel-500);
+  color: var(--lux-color-foreground-default);
+}
+
+.klasseF {
+  background-color: var(--lux-color-oranje-500);
+  color: var(--lux-color-foreground-default);
+}
+
+.klasseG {
+  background-color: var(--lux-color-rood-500);
+}
+
+.tekst {
+  @include visueel-verborgen;
+}

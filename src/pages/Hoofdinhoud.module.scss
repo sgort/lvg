@@ -1,0 +1,9 @@
+.inhoud {
+  display: grid;
+  gap: var(--lux-space-300);
+  max-inline-size: 48rem;
+  margin-inline: auto;
+  padding: var(--lux-space-300) var(--lux-space-200);
+  color: var(--lux-color-foreground-default);
+  font-family: var(--lux-font-family-primary);
+}

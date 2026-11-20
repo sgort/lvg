@@ -1,0 +1,61 @@
+// After the design: a small bold heading, rows with the address in brand blue, the details in
+// grey, light separators and a blue chevron.
+.kop {
+  margin: 0;
+  font-size: var(--lux-font-size-body-large);
+  font-weight: var(--lux-font-weight-bold);
+  line-height: var(--lux-line-height-body-large);
+}
+
+.lijst {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rij {
+  display: flex;
+  gap: var(--lux-space-200);
+  align-items: center;
+  padding-block: var(--lux-space-200);
+  color: var(--lux-color-foreground-default);
+  text-decoration: none;
+  // The design's very light separator; LUX's subdued border (grijs-400) is darker. Decorative,
+  // so no contrast minimum applies.
+  border-block-end: var(--lux-border-width-default, 1px) solid var(--lux-color-grijs-300);
+}
+
+.rij:hover .adres {
+  text-decoration-line: underline;
+}
+
+.rij:focus-visible {
+  outline: var(--lux-focus-outline-width) var(--lux-focus-outline-style) currentColor;
+  outline-offset: var(--lux-focus-outline-offset);
+}
+
+.regels {
+  display: grid;
+  flex: 1;
+  gap: var(--lux-space-50);
+}
+
+.adres {
+  color: var(--lux-color-brand-default);
+  font-weight: var(--lux-font-weight-bold);
+}
+
+.details {
+  display: inline-flex;
+  gap: var(--lux-space-100);
+  align-items: center;
+  color: var(--lux-color-foreground-subdued);
+  font-size: var(--lux-font-size-body-small);
+}
+
+.pijl {
+  flex-shrink: 0;
+  color: var(--lux-color-brand-default);
+  font-size: 1.25rem;
+}

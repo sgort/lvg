@@ -1,12 +1,19 @@
 // GET /woningen and GET /woningen/{id}: the list of koopwoningen and the summary of one.
 import { errorName, json } from '../core/http.js';
+import { WOZ_UITLEG } from '../mock/teksten.js';
+import { KOOPWONINGEN, WONING } from '../mock/veelgesteldeVragen.js';
 import * as registers from '../sources/registers.js';
-import { adresKort, adresMetPlaats, scenarioOf, woningHref, woningVerwijzing } from './shared.js';
+import {
+  adresKort,
+  adresMetPlaats,
+  scenarioOf,
+  veelgesteldeVragen,
+  weergaveVoor,
+  woningHref,
+  woningVerwijzing,
+} from './shared.js';
 
 const label = (klasse) => ({ klasse, naam: klasse });
-
-// One property opens directly, several show as a list, none shows the empty message.
-const weergave = (aantal) => (aantal === 0 ? 'leeg' : aantal === 1 ? 'direct' : 'lijst');
 
 export async function listWoningen(request) {
   const woningen = await registers.listWoningen(scenarioOf(request));
@@ -23,7 +30,7 @@ export async function listWoningen(request) {
       : [];
 
   return json(200, {
-    weergave: weergave(woningen.length),
+    weergave: weergaveVoor(woningen.length),
     woningen: woningen.map((bag) => ({
       id: bag.id,
       adresKort: adresKort(bag),
@@ -33,6 +40,7 @@ export async function listWoningen(request) {
       energielabel: label(bag.energielabelklasse),
     })),
     acties,
+    veelgesteldeVragen: veelgesteldeVragen(KOOPWONINGEN),
   });
 }
 
@@ -64,8 +72,8 @@ export async function getWoning(request) {
     sectie(
       () => registers.getWoz(scenario, woningId),
       (w) => ({
-        waarde: { bedragEur: w.waardeEur, uitleg: '{uitleg WOZ-waarde}' },
-        waardepeildatum: { datum: w.waardepeildatum, uitleg: '{uitleg waardepeildatum}' },
+        waarde: { bedragEur: w.waardeEur, uitleg: WOZ_UITLEG.waarde },
+        waardepeildatum: { datum: w.waardepeildatum, uitleg: WOZ_UITLEG.waardepeildatum },
         actie: { type: 'bekijk-woz', href: woningHref(woningId, 'woz') },
       })
     ),
@@ -80,7 +88,7 @@ export async function getWoning(request) {
   ]);
 
   return json(200, {
-    woning: woningVerwijzing(bag),
+    woning: await woningVerwijzing(scenario, bag),
     bag: {
       status: 'beschikbaar',
       adres: adresMetPlaats(bag),
@@ -92,5 +100,6 @@ export async function getWoning(request) {
     kadaster,
     woz,
     energielabel,
+    veelgesteldeVragen: veelgesteldeVragen(WONING),
   });
 }

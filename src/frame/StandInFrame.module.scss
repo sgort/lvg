@@ -1,0 +1,271 @@
+@use '../styles/mixins' as *;
+
+// The stand-in frame, after the delivered design. Selectors on links use two classes, so they
+// win over LUX's link styling (.lux-link, .utrecht-link:any-link) in the dev server too.
+
+$inhoud-breedte: 70rem;
+
+.kader {
+  display: grid;
+  // One column that may shrink to the viewport. An implicit (auto) column is at least as wide
+  // as its widest child's min-content, and the footer's auto-fit grid, with its max width,
+  // counts four 12rem columns there: about 896 px, so the page overflowed on a phone.
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto 1fr auto;
+  min-block-size: 100vh;
+  font-family: var(--lux-font-family-primary);
+  color: var(--lux-color-foreground-default);
+  background-color: var(--lux-color-grijs-100);
+}
+
+// The band: not part of MijnOverheid, so it looks like a warning strip.
+.band {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--lux-space-100) var(--lux-space-300);
+  align-items: center;
+  padding: var(--lux-space-100) var(--lux-space-200);
+  font-size: var(--lux-font-size-body-small);
+  background-color: var(--lux-color-feedback-warning-subdued);
+  border-block-end: 2px dashed var(--lux-color-feedback-warning-default);
+}
+
+.bandTekst {
+  margin: 0;
+  font-weight: var(--lux-font-weight-bold);
+}
+
+.scenario {
+  display: inline-flex;
+  gap: var(--lux-space-50);
+  align-items: center;
+}
+
+.build {
+  margin-inline-start: auto;
+  font-family: monospace;
+}
+
+// The header: the logo hangs from the top in the middle; MijnOverheid on the left; the citizen
+// and Uitloggen on the right; a blue line underneath. The design's "English" at the top right
+// is left out: the owner calls it an error in the design (20 November 2026).
+.kop {
+  background-color: var(--lux-color-background-default);
+  border-block-end: 3px solid var(--lux-color-brand-default);
+}
+
+.kopInhoud {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: 'merk gebruiker';
+  align-items: end;
+  max-inline-size: $inhoud-breedte;
+  min-block-size: 6rem;
+  margin-inline: auto;
+  padding: var(--lux-space-100) var(--lux-space-300) var(--lux-space-150);
+}
+
+.logo {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 50%;
+  block-size: 4.5rem;
+  inline-size: auto;
+  transform: translateX(-50%);
+}
+
+.merk {
+  grid-area: merk;
+  font-size: var(--lux-font-size-heading-level-2);
+  line-height: 1;
+}
+
+.gebruiker {
+  display: flex;
+  grid-area: gebruiker;
+  gap: var(--lux-space-300);
+  align-items: center;
+}
+
+.naam,
+.uitloggen {
+  display: inline-flex;
+  gap: var(--lux-space-50);
+  align-items: center;
+}
+
+.uitloggen {
+  color: var(--lux-color-brand-default);
+  font-weight: var(--lux-font-weight-bold);
+}
+
+// border-box: with padding, a 100% wide box would overflow and show a horizontal scrollbar.
+.midden {
+  box-sizing: border-box;
+  display: grid;
+  gap: var(--lux-space-300);
+  inline-size: 100%;
+  max-inline-size: $inhoud-breedte;
+  margin-inline: auto;
+  padding-inline: var(--lux-space-200);
+}
+
+// The side menu: icons, groups with space between them, Wonen as a light blue pill.
+.menu {
+  display: none;
+  padding-block: var(--lux-space-300);
+}
+
+// Every item is one fixed row height, as Identiteit to Onderwijs in the design (about 40 px),
+// with no extra space between the groups: one even rhythm from Home to Instellingen.
+$menu-regel: 2.5rem;
+
+.menuGroep {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// .menu .actief.actief: two classes win over LUX's link layout in the dev server too.
+.menuItem,
+.menu .actief.actief {
+  box-sizing: border-box;
+  display: flex;
+  gap: var(--lux-space-150);
+  align-items: center;
+  min-block-size: $menu-regel;
+  padding: 0 var(--lux-space-100);
+  color: var(--lux-color-foreground-default);
+  border-radius: var(--lux-border-radius-default);
+}
+
+// LUX puts the icon in its own slot (lux-link-icon--start); give it the same gap and size as
+// the inert items.
+.menu .actief.actief {
+  --lux-link-column-gap: var(--lux-space-150);
+}
+
+.menu .actief.actief:any-link {
+  color: var(--lux-color-foreground-default);
+  font-weight: var(--lux-font-weight-bold);
+  text-decoration-line: none;
+  background-color: var(--lux-color-lichtblauw-100);
+}
+
+.menuIcoon {
+  flex-shrink: 0;
+  font-size: 1.1rem;
+}
+
+.badge {
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: 1.1rem;
+  block-size: 1.1rem;
+  margin-inline-start: auto;
+  color: var(--lux-color-foreground-on-emphasis);
+  font-size: 0.7rem;
+  font-weight: var(--lux-font-weight-bold);
+  background-color: var(--lux-color-rood-500);
+  border-radius: var(--lux-border-radius-circle);
+}
+
+.inhoud {
+  min-inline-size: 0;
+}
+
+// The footer: dark grey, a blue line with a blue tab in the middle, four columns.
+.voet {
+  position: relative;
+  margin-block-start: var(--lux-space-500);
+  color: var(--lux-color-foreground-on-emphasis);
+  background-color: var(--lux-color-grijs-500);
+  border-block-start: 3px solid var(--lux-color-brand-default);
+
+  &::before {
+    position: absolute;
+    inset-block-end: 100%;
+    inset-inline-start: 50%;
+    inline-size: 2rem;
+    block-size: 1.25rem;
+    content: '';
+    background-color: var(--lux-color-donkerblauw-500);
+    transform: translateX(-50%);
+  }
+}
+
+.voetInhoud {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: var(--lux-space-300);
+  max-inline-size: $inhoud-breedte;
+  margin-inline: auto;
+  padding: var(--lux-space-400) var(--lux-space-300) var(--lux-space-500);
+}
+
+.voetKolom {
+  display: grid;
+  gap: var(--lux-space-150);
+  align-content: start;
+
+  ul {
+    display: grid;
+    gap: var(--lux-space-100);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    display: flex;
+    gap: var(--lux-space-100);
+    align-items: flex-start;
+    font-size: var(--lux-font-size-body-small);
+
+    svg {
+      flex-shrink: 0;
+      margin-block-start: 0.2em;
+    }
+  }
+}
+
+.voetKop {
+  margin: 0;
+  font-size: var(--lux-font-size-body-large);
+}
+
+@media (min-width: $breekpunt-desktop) {
+  .midden {
+    grid-template-columns: 14rem 1fr;
+  }
+
+  .menu {
+    display: block;
+  }
+}
+
+// On small screens the logo sits above the header text, and the header stacks: MijnOverheid,
+// then the citizen and Uitloggen. In one row they are wider than a phone, and a page wider
+// than the viewport makes mobile browsers rescale it.
+@media (max-width: calc(#{$breekpunt-desktop} - 1px)) {
+  .kopInhoud {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'merk'
+      'gebruiker';
+    row-gap: var(--lux-space-150);
+    padding-block-start: 5rem;
+  }
+
+  .merk {
+    font-size: var(--lux-font-size-heading-level-3);
+  }
+
+  .gebruiker {
+    flex-wrap: wrap;
+    gap: var(--lux-space-100) var(--lux-space-200);
+  }
+}

@@ -62,7 +62,7 @@ export async function getAannemers(request) {
   const aanbod = termijnen();
 
   return json(200, {
-    woning: woningVerwijzing(bag),
+    woning: await woningVerwijzing(scenario, bag),
     doel: DOEL,
     aannemers: aannemers.map((aannemer) => ({
       id: aannemer.id,

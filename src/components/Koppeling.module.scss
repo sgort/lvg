@@ -1,0 +1,18 @@
+// The design's "Bekijk … ›" link: bold, in the brand blue of the card titles (#007bc7, 4.5:1 on
+// white), the chevron after the text, underlined only on hover. The colour goes through
+// Utrecht's own link variables, so its hover and focus states keep working. Three-part
+// selectors win over LUX's .utrecht-link:any-link.
+.pijl {
+  --utrecht-link-color: var(--lux-color-brand-default);
+  --utrecht-link-visited-color: var(--lux-color-brand-default);
+
+  font-weight: var(--lux-font-weight-bold);
+}
+
+.pijl.pijl:any-link {
+  text-decoration-line: none;
+}
+
+.pijl.pijl:any-link:hover {
+  text-decoration-line: underline;
+}

@@ -1,5 +1,7 @@
 // GET /woningen/{id}/kadaster: parcel data, map, photos, Kadaster products and contact.
 import { json } from '../core/http.js';
+import { KADASTER } from '../mock/veelgesteldeVragen.js';
+import { KADASTER_PRODUCT_LINK, KADASTER_PRODUCTEN } from '../mock/teksten.js';
 import * as registers from '../sources/registers.js';
 import {
   externeLink,
@@ -11,15 +13,8 @@ import {
 
 const KADASTER_WEBSITE = 'https://www.kadaster.nl/';
 
-// The rights and mortgage items link to (paid) Kadaster products; their targets are an
-// open question in the spec, so the links are placeholders.
-const PRODUCTEN = [
-  ['Beperkte rechten', '{Link beperkte rechten}'],
-  ['Hypotheekbedrag', '{Link hypotheekbedrag}'],
-  ['Hypotheekgever', '{Link hypotheekgever}'],
-  ['Hypotheeknemer', '{Link hypotheeknemer}'],
-  ['Zakelijke rechten', '{Link zakelijke rechten}'],
-];
+// The rights and mortgage items are (paid) Kadaster products. Their exact targets are an open
+// question in the spec, so each links to the Kadaster's website (mock).
 
 export async function getKadaster(request) {
   const scenario = scenarioOf(request);
@@ -30,13 +25,13 @@ export async function getKadaster(request) {
   ]);
 
   return json(200, {
-    woning: woningVerwijzing(bag),
+    woning: await woningVerwijzing(scenario, bag),
     kaart: {
       afbeelding: {
         src: kadaster.kaart,
         alt: `Kadastrale kaart met perceel ${kadaster.aanduiding}`,
       },
-      download: placeholderLink('{Download link}'),
+      download: { tekst: 'Download kadastrale kaart (png)', href: kadaster.kaart },
     },
     gegevens: {
       aanduiding: kadaster.aanduiding,
@@ -45,7 +40,10 @@ export async function getKadaster(request) {
       publiekrechtelijkeBeperkingen: kadaster.publiekrechtelijkeBeperkingen,
       bebouwing: kadaster.bebouwing,
     },
-    producten: PRODUCTEN.map(([label, tekst]) => ({ label, link: placeholderLink(tekst, true) })),
+    producten: KADASTER_PRODUCTEN.map((label) => ({
+      label,
+      link: externeLink(KADASTER_PRODUCT_LINK, KADASTER_WEBSITE),
+    })),
     eigenaarsinformatie: {
       tekst:
         'In Eigenaarsinformatie vindt u informatie over geregistreerde objecten die op uw naam staan in de Basisregistratie Kadaster. U bent van deze objecten de gerechtigde. Een uitgebreide toelichting op deze informatie vindt u op de webpagina van het Kadaster.',
@@ -53,13 +51,21 @@ export async function getKadaster(request) {
       download: placeholderLink('Download eigenaarsinformatie (pdf)'),
     },
     fotos: {
-      luchtfotos: [{ src: kadaster.luchtfoto, alt: 'Luchtfoto van de omgeving van uw woning' }],
-      panoramafotos: [{ src: kadaster.panoramafoto, alt: 'Panoramafoto van de straat' }],
+      // Drawn examples, not photos of the property: the sandbox has no real images.
+      luchtfotos: [
+        { src: kadaster.luchtfoto, alt: 'Voorbeeld van een luchtfoto: woningen langs een straat' },
+      ],
+      panoramafotos: [
+        {
+          src: kadaster.panoramafoto,
+          alt: 'Voorbeeld van een panoramafoto: een rij woningen gezien vanaf de straat',
+        },
+      ],
     },
     contact: {
       organisatie: 'Kadaster',
       website: externeLink('www.kadaster.nl', KADASTER_WEBSITE),
     },
-    veelgesteldeVragen: veelgesteldeVragen(),
+    veelgesteldeVragen: veelgesteldeVragen(KADASTER),
   });
 }

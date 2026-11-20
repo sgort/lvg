@@ -26,5 +26,9 @@ dist-ssr
 # Semgrep exports
 .semgrep/
 
+# Playwright output
+test-results/
+playwright-report/
+
 # Azure Functions local settings
 api/local.settings.json

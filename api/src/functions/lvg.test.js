@@ -18,7 +18,8 @@ describe('lvgHandler', () => {
 
     expect(response.status).toBe(200);
     expect(response.headers['Content-Language']).toBe('nl');
-    expect(JSON.parse(response.body).weergave).toBe('lijst');
+    // The default scenario, een-woning, goes straight to the only property.
+    expect(JSON.parse(response.body).weergave).toBe('direct');
   });
 
   it('passes the request headers on', async () => {
