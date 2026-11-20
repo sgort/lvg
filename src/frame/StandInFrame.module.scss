@@ -7,6 +7,10 @@ $inhoud-breedte: 70rem;
 
 .kader {
   display: grid;
+  // One column that may shrink to the viewport. An implicit (auto) column is at least as wide
+  // as its widest child's min-content, and the footer's auto-fit grid, with its max width,
+  // counts four 12rem columns there: about 896 px, so the page overflowed on a phone.
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto auto 1fr auto;
   min-block-size: 100vh;
   font-family: var(--lux-font-family-primary);
@@ -243,9 +247,25 @@ $menu-regel: 2.5rem;
   }
 }
 
-// On small screens the logo sits above the header text instead of over it.
+// On small screens the logo sits above the header text, and the header stacks: MijnOverheid,
+// then the citizen and Uitloggen. In one row they are wider than a phone, and a page wider
+// than the viewport makes mobile browsers rescale it.
 @media (max-width: calc(#{$breekpunt-desktop} - 1px)) {
   .kopInhoud {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'merk'
+      'gebruiker';
+    row-gap: var(--lux-space-150);
     padding-block-start: 5rem;
+  }
+
+  .merk {
+    font-size: var(--lux-font-size-heading-level-3);
+  }
+
+  .gebruiker {
+    flex-wrap: wrap;
+    gap: var(--lux-space-100) var(--lux-space-200);
   }
 }
