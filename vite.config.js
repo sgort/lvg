@@ -5,11 +5,13 @@ import { configDefaults } from 'vitest/config';
 import { getPageTitle } from './src/lib/siteInfo.ts';
 import { luxCssPlugin } from './vite/luxCssPlugin.js';
 import { lvgApiPlugin } from './vite/lvgApiPlugin.js';
+import { socialMetaPlugin } from './vite/socialMetaPlugin.js';
 import { swaHeadersPlugin } from './vite/swaHeadersPlugin.js';
 
 export default defineConfig(({ mode }) => {
-  // VITE_SITE_URL is set by each deploy workflow and absent locally. The title is
-  // written into index.html, so the tab is marked before any script runs.
+  // VITE_SITE_URL is set by each deploy workflow and absent locally. The title and the
+  // link-preview tags are written into index.html, so the tab is marked before any script runs
+  // and crawlers, which run no script, see the right card.
   const siteUrl = loadEnv(mode, process.cwd(), 'VITE_').VITE_SITE_URL;
   const pageTitle = {
     name: 'environment-page-title',
@@ -25,7 +27,15 @@ export default defineConfig(({ mode }) => {
     // itself, so the browser never talks to Operaton and no login reaches the bundle.
     // luxCssPlugin moves the LUX components' styles into a stylesheet, so the strict CSP holds.
     // swaHeadersPlugin gives `vite preview` the deployed sites' headers, including the CSP.
-    plugins: [react(), pageTitle, lvgApiPlugin(), luxCssPlugin(), swaHeadersPlugin()],
+    // socialMetaPlugin writes the link-preview tags for this site, with its own social card.
+    plugins: [
+      react(),
+      pageTitle,
+      socialMetaPlugin(siteUrl),
+      lvgApiPlugin(),
+      luxCssPlugin(),
+      swaHeadersPlugin(),
+    ],
     test: {
       // The API has its own package, Node version and test run (`npm run test:api`).
       // e2e/ holds the Playwright walkthroughs, run by Playwright itself.

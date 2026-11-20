@@ -17,6 +17,9 @@ system. The port to the MijnOverheid codebase (Next.js, Nx, `@mijnoverheid/ui`) 
 | https://lvg.open-regels.nl         | `main`                                    | `azure-lvg-stable.yml`             |
 | https://toestemming.open-regels.nl | `main`, `docs/Wireframes` as static files | `azure-toestemming-wireframes.yml` |
 
+Each site has its own social card for link previews (the acceptance card is marked); the
+source is in `docs/social/`, and `render-cards.py` there re-exports the cards to `public/`.
+
 The band of the stand-in MijnOverheid frame shows which site and build you are viewing, for
 example `acc.lvg.open-regels.nl · build c80d7d7 · #17`. A local build shows `local build`.
 

@@ -152,6 +152,10 @@ Walk through each changed page:
 - [ ] Zoom to 200 %: nothing is cut off.
 - [ ] Complete Dakisolatie → aannemer → toestemming → gegeven.
 - [ ] Note every difference from the design in the log, with the page and width.
+- [ ] After the merge to `acc`, check the link preview of https://acc.lvg.open-regels.nl/ with
+      the LinkedIn Post Inspector (`og-image-acc.png`); after the merge to `main`, of
+      https://lvg.open-regels.nl/ (`og-image-prod.png`). Previews of pull requests use the
+      acceptance card, because their build has the acceptance `VITE_SITE_URL`.
 
 ## Rules that do not change between iterations
 

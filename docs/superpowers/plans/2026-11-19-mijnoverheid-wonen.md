@@ -520,9 +520,18 @@ and `feat: mock content for the stand-in frame and the property list`.
 
 ---
 
-## Part 2b: Social card
+### Task 23a: Social cards
 
-Agreed with the owner on 20 November 2026: before Part 3, the design team delivers a social card, which is then implemented and shipped as a small intermediate part. Its tasks are written into this plan when the design arrives.
+An addition by the owner on 20 November 2026, between Part 2 and Part 3 (Part 2b), from the design team's handoff `docs/lvg-social-card-handoff/` (not committed). Link-preview meta tags and a social card per environment, after the RBA tenant cards. Built on `docs/ship-part-2`, which the owner kept for this work, instead of the handoff's `feat/social-card`.
+
+- [x] **Step 1:** Copy `og-image-prod.png` and `og-image-acc.png` (1200×630) into `public/`.
+- [x] **Step 2:** Export `FALLBACK_SITE_URL` from `src/lib/siteInfo.ts`.
+- [x] **Step 3:** Add `vite/socialMetaPlugin.js` with its tests (per-site card, URL and title; every tag once; twitter equals og; both PNGs 1200×630), and wire it in `vite.config.js`.
+- [x] **Step 4:** Add the walkthrough `e2e/social.spec.ts`: either card, served as a PNG.
+- [x] **Step 5:** Copy the card source to `docs/social/`; add the link-preview check to the runbook's review checklist and a sentence to the README. Ignore `docs/*-handoff/` in `.gitignore`, so the pre-push format check skips handoff folders.
+- [x] **Step 5a:** At the owner's request, the browser tab title in `index.html` (and the favicon's label) becomes `Mijn woning – Wonen in MijnOverheid (prototype)`, the same as the link preview; a test keeps the two equal.
+- [x] **Step 6:** Run every check, the walkthroughs included, and check `dist/index.html` of a local build. Expected: all pass; every tag, the prod card and the `LOCAL · ` title.
+- [ ] **Step 7:** After the merge to `acc`, the owner checks `https://acc.lvg.open-regels.nl/` in the LinkedIn Post Inspector (`og-image-acc.png`); after the promotion to `main`, `https://lvg.open-regels.nl/` (`og-image-prod.png`).
 
 ---
 

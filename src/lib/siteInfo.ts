@@ -1,7 +1,7 @@
 // The site's own address, shown in the build line. Each deploy workflow sets
 // VITE_SITE_URL, so acceptance shows its own host. The stable release is the
 // fallback when nothing was injected, for example in a local build.
-const FALLBACK_SITE_URL = 'https://lvg.open-regels.nl';
+export const FALLBACK_SITE_URL = 'https://lvg.open-regels.nl';
 
 /** Read inside the function, like getBuildInfo, so tests can stub it per case. */
 export function getSiteUrl(): string {
