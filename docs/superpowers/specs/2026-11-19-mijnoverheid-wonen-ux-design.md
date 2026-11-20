@@ -491,8 +491,8 @@ oplevering.`
   the header is left out: the owner calls it an error in the design. The choice goes to the API as the header `X-LVG-Scenario` and is
   kept in `sessionStorage` (no personal data; only the scenario name), read in the API client
   and the switch's event handler, never while rendering. The API ignores the
-  header unless `LVG_SCENARIOS=on` is set, which it is on `acc`, previews and locally, and
-  not in any future production setup.
+  header unless `LVG_SCENARIOS=on` is set, which it is on `acc`, the stable release (owner,
+  20 November 2026), previews and locally, and not in any future production setup.
 - The build line (`lvg.open-regels.nl · build c80d7d7 · #17`) moves from the page footer into
   the band.
 
@@ -564,7 +564,9 @@ opnieuw.`; the page offers `Probeer opnieuw`.
 - Browser storage is never read while rendering, and never holds personal data.
 - No inline scripts or `style` attributes in markup, so the strict CSP holds.
 - Every page sets `document.title` to `[Paginatitel] - MijnOverheid` and moves focus to the
-  H1 after navigation.
+  H1 after navigation. On acceptance and in local builds the title keeps the environment
+  marker in front (`ACC · `, `LOCAL · `), as the tab title in `index.html` has it (owner,
+  20 November 2026).
 
 ## LVG API
 
