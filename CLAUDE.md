@@ -47,9 +47,11 @@ MijnOverheid codebase (Next.js, Nx, `@mijnoverheid/ui`) is issue #37 and is not 
   worked around.
 - Never start or stop the dev server and never run `npm ci`. Ask the owner to stop the server
   before dependency changes and to run `npm ci` (root and `api/`) when needed.
-- No browser automation. The owner checks the UI and reports back. Write the Playwright
-  walkthroughs in `e2e/`, but do not run them: the owner runs `npm run test:e2e`, and CI runs
-  it on every pull request.
+- Browser automation is allowed in this repository (owner, 20 November 2026), overriding the
+  global rule. Run `npm run test:e2e` yourself before asking to commit a UI change: Playwright
+  starts its own preview server on port 4173, never the owner's dev server on 5173. You may also
+  check pages in a browser. The owner still does the visual design check, and CI runs the
+  walkthroughs on every pull request.
 - Ask clarifying questions one at a time, in chat, with your recommended answer.
 - If the plan turns out to be wrong or incomplete, stop and ask. Do not improvise around it.
   Record an agreed deviation in the plan, under the task, in the same commit.
@@ -115,7 +117,7 @@ SCSS modules on LUX tokens (`--lux-*`), so LUX could take them over.
 | `npm run lint:contract`            | ADR linter on `api/openapi.yaml`                             |
 | `npm run lint`                     | ESLint, `--max-warnings 0` from Task 15                      |
 | `npm run typecheck`                | TypeScript, strict (from Task 15)                            |
-| `npm run test:e2e`                 | Playwright walkthroughs (from Task 20; the owner runs it)    |
+| `npm run test:e2e`                 | Playwright walkthroughs, on their own preview server (4173)  |
 | `npm run check-format`             | Prettier check                                               |
 | `npm run build`                    | Production build                                             |
 | `npm run check-bundle`             | Forbidden strings in `dist/`                                 |
