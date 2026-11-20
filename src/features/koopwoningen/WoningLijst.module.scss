@@ -1,5 +1,10 @@
+// After the design: a small bold heading, rows with the address in brand blue, the details in
+// grey, light separators and a blue chevron.
 .kop {
   margin: 0;
+  font-size: var(--lux-font-size-body-large);
+  font-weight: var(--lux-font-weight-bold);
+  line-height: var(--lux-line-height-body-large);
 }
 
 .lijst {
@@ -16,11 +21,13 @@
   padding-block: var(--lux-space-200);
   color: var(--lux-color-foreground-default);
   text-decoration: none;
-  border-block-end: var(--lux-border-width-default, 1px) solid var(--lux-color-border-default);
+  // The design's very light separator; LUX's subdued border (grijs-400) is darker. Decorative,
+  // so no contrast minimum applies.
+  border-block-end: var(--lux-border-width-default, 1px) solid var(--lux-color-grijs-300);
 }
 
 .rij:hover .adres {
-  text-decoration-thickness: 2px;
+  text-decoration-line: underline;
 }
 
 .rij:focus-visible {
@@ -35,18 +42,20 @@
 }
 
 .adres {
-  color: var(--lux-color-foreground-link);
+  color: var(--lux-color-brand-default);
   font-weight: var(--lux-font-weight-bold);
-  text-decoration: underline;
 }
 
 .details {
   display: inline-flex;
   gap: var(--lux-space-100);
   align-items: center;
+  color: var(--lux-color-foreground-subdued);
+  font-size: var(--lux-font-size-body-small);
 }
 
 .pijl {
   flex-shrink: 0;
-  color: var(--lux-color-foreground-link);
+  color: var(--lux-color-brand-default);
+  font-size: 1.25rem;
 }

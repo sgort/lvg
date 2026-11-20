@@ -20,7 +20,7 @@ type Props = { kop: string; labelTekst: string; woningen: WoningRij[] };
 export function WoningLijst({ kop, labelTekst, woningen }: Props) {
   return (
     <>
-      <h2 id="uw-gebouwen" className={`utrecht-heading-3 ${styles.kop}`}>
+      <h2 id="uw-gebouwen" className={styles.kop}>
         {kop}
       </h2>
       <ul aria-labelledby="uw-gebouwen" className={styles.lijst}>

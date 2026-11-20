@@ -4,14 +4,18 @@
   display: inline-flex;
 }
 
+// A small square with the letter, as in the design.
 .kleur {
   display: inline-grid;
   place-items: center;
-  min-inline-size: 1.75rem;
-  padding-inline: var(--lux-space-50);
+  min-inline-size: 1.25rem;
+  block-size: 1.25rem;
+  padding-inline: 0.15rem;
   color: var(--lux-color-foreground-on-emphasis);
+  font-size: var(--lux-font-size-body-small);
   font-weight: var(--lux-font-weight-bold);
-  border-radius: var(--lux-border-radius-default);
+  line-height: 1;
+  border-radius: 2px;
 }
 
 // White text is too faint on C to F (below 4.5:1); they take the dark text colour.

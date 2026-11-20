@@ -19,7 +19,8 @@ const opslag = {
 
 const inhoudLoader = vi.fn(() => null);
 
-const toon = (pad = '/nl/wonen', scenarioKeuze = false) => {
+// Without scenarioKeuze the frame uses its own default.
+const toon = (pad = '/nl/wonen', scenarioKeuze?: boolean) => {
   const router = createMemoryRouter(
     [
       kaderRoute(
@@ -40,6 +41,7 @@ const toon = (pad = '/nl/wonen', scenarioKeuze = false) => {
     { initialEntries: [pad] }
   );
   render(<RouterProvider router={router} />);
+  return router;
 };
 
 beforeEach(() => {
@@ -67,8 +69,9 @@ describe('StandInFrame', () => {
     toon();
 
     expect(await screen.findByText(BAND)).toBeInTheDocument();
-    expect(screen.getByText('J. de Vries')).toBeInTheDocument();
-    expect(screen.getByText('Over MijnOverheid')).toBeInTheDocument();
+    expect(screen.getByText('R. Janssen')).toBeInTheDocument();
+    expect(screen.getByText('Over deze site')).toBeInTheDocument();
+    expect(screen.getByText('Meldpunt Fouten in Overheidsregistraties')).toBeInTheDocument();
     expect(document.body.textContent).not.toMatch(/{[A-Za-z][^{}]*}/);
   });
 
@@ -79,16 +82,15 @@ describe('StandInFrame', () => {
     expect(screen.queryByText(BAND)).not.toBeInTheDocument();
   });
 
-  it('hides the scenario switch for now', async () => {
+  it('shows the scenario switch, set to the default of one property', async () => {
     toon();
 
-    expect(await screen.findByText(BAND)).toBeInTheDocument();
-    expect(screen.queryByRole('combobox', { name: 'Scenario' })).not.toBeInTheDocument();
+    expect(await screen.findByRole('combobox', { name: 'Scenario' })).toHaveValue('een-woning');
   });
 
-  it('keeps the chosen scenario and loads the page again', async () => {
+  it('keeps the chosen scenario and goes to Koopwoningen, where the scenarios differ', async () => {
     const user = userEvent.setup();
-    toon('/nl/wonen', true);
+    const router = toon('/nl/wonen/koopwoningen/w-7f3a', true);
     const keuze = await screen.findByRole('combobox', { name: 'Scenario' });
     expect(keuze).toHaveValue('een-woning');
     const geladen = inhoudLoader.mock.calls.length;
@@ -97,6 +99,7 @@ describe('StandInFrame', () => {
 
     expect(opslag.setItem).toHaveBeenCalledWith(SCENARIO_SLEUTEL, 'drie-woningen');
     await vi.waitFor(() => expect(inhoudLoader.mock.calls.length).toBeGreaterThan(geladen));
+    expect(router.state.location.pathname).toBe('/nl/wonen/koopwoningen');
     expect(screen.getByRole('combobox', { name: 'Scenario' })).toHaveValue('drie-woningen');
   });
 

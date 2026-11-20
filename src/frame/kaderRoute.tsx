@@ -1,6 +1,6 @@
 // The frame as a layout route around the content routes. Its loader reads the chosen scenario
-// (through the API client, outside rendering); revalidating after a change reruns it and every
-// content loader, so the pages reload for the new scenario.
+// (through the API client, outside rendering) on every navigation; after a change the switch
+// navigates to Koopwoningen, so that page and the switch show the new scenario.
 import { Outlet, type RouteObject, useLoaderData } from 'react-router';
 
 import { gekozenScenario } from '../api/client';
@@ -23,6 +23,8 @@ export function kaderRoute(
   return {
     id: 'kader',
     loader: () => ({ scenario: gekozenScenario() }),
+    // Read again on every navigation, so the switch shows the scenario just chosen.
+    shouldRevalidate: () => true,
     // Until the first loaders finish nothing else can render, frame included.
     hydrateFallbackElement: (
       <main>

@@ -120,5 +120,7 @@ describe('lvgApiPlugin in vite preview', () => {
 
     expect(res.statusCode).toBe(200);
     expect(JSON.parse(res.body).weergave).toBe('direct');
-  });
+    // This test imports the whole API on a cold start (contract parsing included). Alone it
+    // takes under a second; in a full parallel run it has taken over the default 5 s.
+  }, 20_000);
 });

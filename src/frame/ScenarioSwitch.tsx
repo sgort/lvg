@@ -2,10 +2,12 @@
 // in sessionStorage (a scenario name only) and written here, in the change handler. The
 // current value comes in as a prop from the frame's loader, never from storage in render.
 import { useId } from 'react';
-import { useRevalidator } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import { SCENARIO_SLEUTEL } from '../api/client';
 import styles from './StandInFrame.module.scss';
+
+const KOOPWONINGEN = '/nl/wonen/koopwoningen';
 
 const SCENARIOS = [
   { waarde: 'geen-woning', tekst: 'Geen woning' },
@@ -15,7 +17,7 @@ const SCENARIOS = [
 
 export function ScenarioSwitch({ scenario }: { scenario: string }) {
   const id = useId();
-  const revalidator = useRevalidator();
+  const navigate = useNavigate();
 
   const kies = (waarde: string) => {
     try {
@@ -23,7 +25,9 @@ export function ScenarioSwitch({ scenario }: { scenario: string }) {
     } catch {
       // Storage may be blocked; the scenario then stays the default.
     }
-    void revalidator.revalidate();
+    // Koopwoningen is where the scenarios differ (list, straight to the property, or none);
+    // staying on a property page could show the same page under another scenario.
+    void navigate(KOOPWONINGEN);
   };
 
   return (

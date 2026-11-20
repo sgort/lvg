@@ -149,9 +149,8 @@ it gets no login. On Azure, `OPERATON_BASE_URL` is an app setting and has no def
 ### Scenarios
 
 The API simulates a citizen with no property, one property or three. The default is one
-property, so Wonen leads straight to it. The scenario switch in the frame is hidden for now;
-to try another scenario, run `sessionStorage.setItem('lvg-scenario', 'drie-woningen')` (or
-`geen-woning`) in the browser console and reload. See `docs/runbook.md`.
+property, so Wonen leads straight to it. Choose another with the scenario switch in the band of
+the frame; the choice holds for the browser tab. See `docs/runbook.md`.
 
 ## Scripts
 
