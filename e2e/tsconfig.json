@@ -1,0 +1,10 @@
+// The walkthroughs run in Node, under Playwright; the pages' project (../tsconfig.json)
+// has no Node types, so browser code cannot use them by accident.
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "paths": {}
+  },
+  "include": ["**/*.ts", "../playwright.config.ts"]
+}

@@ -3,7 +3,9 @@
 import { scenarios } from '../mock/scenarios.js';
 import { getHeader } from './http.js';
 
-export const DEFAULT_SCENARIO = 'drie-woningen';
+// One property, so every environment shows the same path through the pages: Wonen, then
+// straight to that property (agreed with the owner on 19 November 2026, plan Task 21).
+export const DEFAULT_SCENARIO = 'een-woning';
 
 export function resolveScenario(headers, env) {
   if (env?.LVG_SCENARIOS !== 'on') return DEFAULT_SCENARIO;

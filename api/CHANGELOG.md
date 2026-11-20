@@ -2,6 +2,35 @@
 
 All notable changes to the LVG Wonen API. Versions follow the policy in `README.md`.
 
+## 1.4.0
+
+- Every `woning` reference (`WoningVerwijzing`) says how the citizen's list of koopwoningen
+  behaves (`overzicht`, optional): `direct` for one property, otherwise `lijst`. With `direct`
+  the property's pages leave out the step back to that list, which would only lead back to the
+  same property.
+
+## 1.3.0
+
+- `GET /woningen/{woningId}` answers frequently asked questions about the property
+  (`veelgesteldeVragen`, optional), for the FAQ card on the property summary.
+- Mock content replaces the design placeholders (`{…}`) in every response: the landing
+  cards' texts, the WOZ explanations, the ISDE link and explanation, the Kadaster product
+  links, the contact websites and the frequently asked questions. The parcel map is offered as
+  a download, and the aerial and street photos are drawn examples. All of it is mock content
+  for this sandbox, not reviewed by G&B or the source holders.
+
+## 1.2.1
+
+- The default scenario is `een-woning` instead of `drie-woningen`: without a valid
+  `X-LVG-Scenario` (and always where `LVG_SCENARIOS` is off, as on the stable release) the API
+  answers for a citizen with one property. The contract states the default.
+
+## 1.2.0
+
+- `GET /woningen` answers frequently asked questions about koopwoningen
+  (`veelgesteldeVragen`, optional), for the FAQ card on the Koopwoningen page. The questions are
+  mock texts for this sandbox. Existing clients need no change.
+
 ## 1.1.0
 
 Part 1b of the MijnOverheid Wonen plan, after Logius's code and authentication conditions of

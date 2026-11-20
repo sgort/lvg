@@ -1,0 +1,66 @@
+@use '../styles/mixins' as *;
+
+.knop {
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: var(--lux-size-target-minimum, 24px);
+  min-block-size: var(--lux-size-target-minimum, 24px);
+  padding: 0;
+  color: var(--lux-color-brand-default);
+  font-size: 1.25rem;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+// Open: a filled square with a white "i", as in the design.
+.knop[aria-expanded='true'] rect {
+  fill: currentColor;
+}
+
+.knop[aria-expanded='true'] path {
+  stroke: var(--lux-color-background-default);
+}
+
+.knop:focus-visible {
+  outline: var(--lux-focus-outline-width) var(--lux-focus-outline-style) currentColor;
+  outline-offset: var(--lux-focus-outline-offset);
+}
+
+// The explanation: a light blue box with a small filled "i", under the row and as wide as the
+// whole row (on desktop it reaches back over the label column).
+.uitleg {
+  display: flex;
+  grid-column: 1 / -1;
+  gap: var(--lux-space-100);
+  align-items: flex-start;
+  margin-block-start: var(--lux-space-100);
+  padding: var(--lux-space-150) var(--lux-space-200);
+  background-color: var(--lux-color-feedback-info-subdued);
+  border-radius: var(--lux-border-radius-default);
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.uitlegIcoon {
+  flex-shrink: 0;
+  margin-block-start: 0.15em;
+  color: var(--lux-color-brand-default);
+  font-size: 1.25rem;
+
+  rect {
+    fill: currentColor;
+  }
+
+  path {
+    stroke: var(--lux-color-background-default);
+  }
+}
+
+@media (min-width: $breekpunt-desktop) {
+  .uitleg {
+    margin-inline-start: calc(-1 * (#{$label-kolom} + #{$kolom-afstand}));
+  }
+}

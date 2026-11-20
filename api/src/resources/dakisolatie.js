@@ -1,6 +1,8 @@
 // GET /woningen/{id}/dakisolatie: the current roof and the advice, calculated by Operaton on
 // every request. The API rounds the amounts and decides which actions the page may offer.
 import { errorName, json } from '../core/http.js';
+import { LVG_WEBSITE } from '../mock/teksten.js';
+import { DAKISOLATIE } from '../mock/veelgesteldeVragen.js';
 import { evaluateIsolatie } from '../operaton/client.js';
 import {
   buildIsolatieParams,
@@ -12,6 +14,7 @@ import {
 } from '../operaton/parameters.js';
 import {
   envOf,
+  externeLink,
   placeholderLink,
   scenarioOf,
   vandaag,
@@ -129,7 +132,7 @@ export async function getDakisolatie(request) {
   ];
 
   return json(200, {
-    woning: woningVerwijzing(bag),
+    woning: await woningVerwijzing(scenario, bag),
     huidigDak: {
       isolatie: {
         soort: capitalise(isolatie.type),
@@ -142,8 +145,8 @@ export async function getDakisolatie(request) {
       klopDitNiet: placeholderLink('Klopt dit niet?'),
     },
     advies,
-    contact: { organisatie: 'LVG', website: placeholderLink('{url}', true) },
-    veelgesteldeVragen: veelgesteldeVragen(),
+    contact: { organisatie: 'LVG', website: externeLink(LVG_WEBSITE.tekst, LVG_WEBSITE.href) },
+    veelgesteldeVragen: veelgesteldeVragen(DAKISOLATIE),
     acties,
   });
 }

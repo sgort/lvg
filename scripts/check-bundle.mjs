@@ -4,14 +4,14 @@
 // The LVG API is the only part that talks to Operaton; its address and login never belong
 // in what the browser downloads. Run after `npm run build`.
 //
-// Phased, as agreed on 19 November 2026 (plan, Task 9): the old page in src/ still calls the
-// public Operaton itself until Task 19 removes it, so `operaton.open-regels.nl` is added to
-// FORBIDDEN in Task 19. Until then the check covers the local engine and its login.
+// Phased, as agreed on 19 November 2026 (plan, Task 9): until the old page left the bundle
+// (plan Task 17) it called the public Operaton itself. Since Task 19 the check also covers
+// `operaton.open-regels.nl`: no Operaton address reaches the browser.
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 const DIST = 'dist';
-const FORBIDDEN = ['localhost:8081', 'demo:demo'];
+const FORBIDDEN = ['localhost:8081', 'demo:demo', 'operaton.open-regels.nl'];
 
 const files = (dir) =>
   readdirSync(dir).flatMap((name) => {

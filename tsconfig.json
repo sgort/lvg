@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "types": ["vite/client"],
+    "paths": {
+      "@lux-design-system/components-react": [
+        "./node_modules/@lux-design-system/components-react/dist/src/index.d.ts"
+      ]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
+}

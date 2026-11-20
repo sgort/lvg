@@ -1,5 +1,6 @@
 // GET /wonen: the landing cards. The API decides which cards appear and where they lead.
 import { json } from '../core/http.js';
+import { WONEN_KAARTEN } from '../mock/teksten.js';
 import { PLACEHOLDER_HREF } from './shared.js';
 
 export async function getWonen() {
@@ -22,7 +23,7 @@ export async function getWonen() {
         id: 'woningeigenaar',
         titel: 'Ik ben woningeigenaar',
         bron: 'LVG',
-        tekst: '{Ingang LVG}',
+        tekst: WONEN_KAARTEN.woningeigenaar,
         actie: {
           type: 'bekijk-koopwoningen',
           href: '/api/v1/woningen',
@@ -33,7 +34,7 @@ export async function getWonen() {
         id: 'huurder',
         titel: 'Ik ben huurder',
         bron: 'LVG',
-        tekst: '{intro}',
+        tekst: WONEN_KAARTEN.huurder,
         // Rental properties are out of scope: the page shows "Nog niet beschikbaar".
         actie: {
           type: 'bekijk-huurwoningen',

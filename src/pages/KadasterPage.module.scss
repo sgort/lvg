@@ -1,0 +1,12 @@
+.kaart,
+.foto {
+  display: block;
+  max-inline-size: 100%;
+  block-size: auto;
+  border: var(--lux-border-width-default, 1px) solid var(--lux-color-border-subdued);
+}
+
+.fotos {
+  display: grid;
+  gap: var(--lux-space-150);
+}

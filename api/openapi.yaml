@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: LVG Wonen API
-  version: 1.1.0
+  version: 1.4.0
   description: |-
     The API behind the MijnOverheid Wonen pages built by LVG. It returns what each page needs,
     already decided: statuses, final amounts, allowed actions (`acties`) and the texts a
@@ -69,7 +69,7 @@ paths:
                     openapi: 3.0.3
                     info:
                       title: LVG Wonen API
-                      version: 1.1.0
+                      version: 1.4.0
                     paths: {}
         '500':
           $ref: '#/components/responses/InternalServerError'
@@ -111,7 +111,7 @@ paths:
                       - id: woningeigenaar
                         titel: Ik ben woningeigenaar
                         bron: LVG
-                        tekst: '{Ingang LVG}'
+                        tekst: 'Bekijk de gegevens van uw koopwoning: de kadastrale gegevens, de WOZ-waarde en het energielabel. U ziet ook wat betere dakisolatie kost en oplevert.'
                         actie:
                           type: bekijk-koopwoningen
                           href: /api/v1/woningen
@@ -119,7 +119,7 @@ paths:
                       - id: huurder
                         titel: Ik ben huurder
                         bron: LVG
-                        tekst: '{intro}'
+                        tekst: Huurt u een woning? Hier vindt u straks de gegevens over uw huurwoning en over huurtoeslag.
                         actie:
                           type: bekijk-huurwoningen
                           href: '#nog-niet-beschikbaar'
@@ -187,6 +187,18 @@ paths:
                           klasse: C
                           naam: C
                     acties: []
+                    veelgesteldeVragen:
+                      vragen:
+                        - vraag: Waarom staat mijn woning hier niet?
+                          antwoord: U ziet de woningen die in de Basisregistratie Kadaster op uw naam staan. Hebt u net een woning gekocht? Dan kan het een paar weken duren voordat de woning op uw naam staat.
+                        - vraag: Wat betekent het energielabel bij mijn woning?
+                          antwoord: Het energielabel laat zien hoe zuinig uw woning met energie is. A is het zuinigst, G het minst zuinig. Het label komt uit de registratie van RVO.
+                        - vraag: Het bouwjaar of het soort woning klopt niet. Wat moet ik doen?
+                          antwoord: Deze gegevens komen uit de Basisregistratie Adressen en Gebouwen. Uw gemeente houdt die bij. Neem contact op met uw gemeente als een gegeven niet klopt.
+                      meer:
+                        tekst: Bekijk alle veelgestelde vragen
+                        href: '#nog-niet-beschikbaar'
+                        extern: false
                 direct:
                   summary: 'Eén koopwoning: de pagina gaat meteen naar de woning'
                   value:
@@ -201,6 +213,18 @@ paths:
                           klasse: C
                           naam: C
                     acties: []
+                    veelgesteldeVragen:
+                      vragen:
+                        - vraag: Waarom staat mijn woning hier niet?
+                          antwoord: U ziet de woningen die in de Basisregistratie Kadaster op uw naam staan. Hebt u net een woning gekocht? Dan kan het een paar weken duren voordat de woning op uw naam staat.
+                        - vraag: Wat betekent het energielabel bij mijn woning?
+                          antwoord: Het energielabel laat zien hoe zuinig uw woning met energie is. A is het zuinigst, G het minst zuinig. Het label komt uit de registratie van RVO.
+                        - vraag: Het bouwjaar of het soort woning klopt niet. Wat moet ik doen?
+                          antwoord: Deze gegevens komen uit de Basisregistratie Adressen en Gebouwen. Uw gemeente houdt die bij. Neem contact op met uw gemeente als een gegeven niet klopt.
+                      meer:
+                        tekst: Bekijk alle veelgestelde vragen
+                        href: '#nog-niet-beschikbaar'
+                        extern: false
                 leeg:
                   summary: Geen koopwoning
                   value:
@@ -210,6 +234,18 @@ paths:
                       - type: contact-kadaster
                         href: https://www.kadaster.nl/contact
                         tekst: Klopt dit niet? Neem contact op met het Kadaster
+                    veelgesteldeVragen:
+                      vragen:
+                        - vraag: Waarom staat mijn woning hier niet?
+                          antwoord: U ziet de woningen die in de Basisregistratie Kadaster op uw naam staan. Hebt u net een woning gekocht? Dan kan het een paar weken duren voordat de woning op uw naam staat.
+                        - vraag: Wat betekent het energielabel bij mijn woning?
+                          antwoord: Het energielabel laat zien hoe zuinig uw woning met energie is. A is het zuinigst, G het minst zuinig. Het label komt uit de registratie van RVO.
+                        - vraag: Het bouwjaar of het soort woning klopt niet. Wat moet ik doen?
+                          antwoord: Deze gegevens komen uit de Basisregistratie Adressen en Gebouwen. Uw gemeente houdt die bij. Neem contact op met uw gemeente als een gegeven niet klopt.
+                      meer:
+                        tekst: Bekijk alle veelgestelde vragen
+                        href: '#nog-niet-beschikbaar'
+                        extern: false
         '400':
           $ref: '#/components/responses/BadRequest'
         '406':
@@ -249,6 +285,7 @@ paths:
                       id: w-7f3a
                       adresKort: Voorbeeldlaan 73 B
                       adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                      overzicht: lijst
                     bag:
                       status: beschikbaar
                       adres: Voorbeeldlaan 73 B, Rotterdam
@@ -267,10 +304,10 @@ paths:
                       status: beschikbaar
                       waarde:
                         bedragEur: 317000
-                        uitleg: '{uitleg WOZ-waarde}'
+                        uitleg: De waarde van uw woning volgens uw gemeente, op de waardepeildatum.
                       waardepeildatum:
                         datum: '2025-01-01'
-                        uitleg: '{uitleg waardepeildatum}'
+                        uitleg: De datum waarop de gemeente de waarde van uw woning heeft bepaald.
                       actie:
                         type: bekijk-woz
                         href: /api/v1/woningen/w-7f3a/woz
@@ -283,6 +320,18 @@ paths:
                       actie:
                         type: bekijk-energielabel
                         href: /api/v1/woningen/w-7f3a/energielabel
+                    veelgesteldeVragen:
+                      vragen:
+                        - vraag: Waar komen de gegevens over mijn woning vandaan?
+                          antwoord: 'De gegevens komen uit registraties van de overheid: het Kadaster, de Basisregistratie Adressen en Gebouwen, de WOZ-registratie en de energielabels van RVO. MijnOverheid laat ze samen zien.'
+                        - vraag: Een gegeven over mijn woning klopt niet. Wat kan ik doen?
+                          antwoord: Neem contact op met de organisatie die het gegeven bijhoudt. Bij elk onderdeel ziet u welke organisatie dat is. Die kan het gegeven nakijken en verbeteren.
+                        - vraag: Waarom zie ik bij een onderdeel geen gegevens?
+                          antwoord: Soms is een registratie even niet bereikbaar. De andere gegevens ziet u dan wel. Probeer het later opnieuw.
+                      meer:
+                        tekst: Bekijk alle veelgestelde vragen
+                        href: '#nog-niet-beschikbaar'
+                        extern: false
         '400':
           $ref: '#/components/responses/BadRequest'
         '404':
@@ -324,14 +373,14 @@ paths:
                       id: w-7f3a
                       adresKort: Voorbeeldlaan 73 B
                       adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                      overzicht: lijst
                     kaart:
                       afbeelding:
                         src: /perceel-1560.png
                         alt: Kadastrale kaart met perceel Rotterdam Z 99999
                       download:
-                        tekst: '{Download link}'
-                        href: '#nog-niet-beschikbaar'
-                        extern: false
+                        tekst: Download kadastrale kaart (png)
+                        href: /perceel-1560.png
                     gegevens:
                       aanduiding: Rotterdam Z 99999
                       grootteM2: 158
@@ -341,28 +390,28 @@ paths:
                     producten:
                       - label: Beperkte rechten
                         link:
-                          tekst: '{Link beperkte rechten}'
-                          href: '#nog-niet-beschikbaar'
+                          tekst: Bestel bij het Kadaster
+                          href: https://www.kadaster.nl/
                           extern: true
                       - label: Hypotheekbedrag
                         link:
-                          tekst: '{Link hypotheekbedrag}'
-                          href: '#nog-niet-beschikbaar'
+                          tekst: Bestel bij het Kadaster
+                          href: https://www.kadaster.nl/
                           extern: true
                       - label: Hypotheekgever
                         link:
-                          tekst: '{Link hypotheekgever}'
-                          href: '#nog-niet-beschikbaar'
+                          tekst: Bestel bij het Kadaster
+                          href: https://www.kadaster.nl/
                           extern: true
                       - label: Hypotheeknemer
                         link:
-                          tekst: '{Link hypotheeknemer}'
-                          href: '#nog-niet-beschikbaar'
+                          tekst: Bestel bij het Kadaster
+                          href: https://www.kadaster.nl/
                           extern: true
                       - label: Zakelijke rechten
                         link:
-                          tekst: '{Link zakelijke rechten}'
-                          href: '#nog-niet-beschikbaar'
+                          tekst: Bestel bij het Kadaster
+                          href: https://www.kadaster.nl/
                           extern: true
                     eigenaarsinformatie:
                       tekst: In Eigenaarsinformatie vindt u informatie over geregistreerde objecten die op uw naam staan in de Basisregistratie Kadaster. U bent van deze objecten de gerechtigde. Een uitgebreide toelichting op deze informatie vindt u op de webpagina van het Kadaster.
@@ -376,11 +425,11 @@ paths:
                         extern: false
                     fotos:
                       luchtfotos:
-                        - src: /foto-placeholder.svg
-                          alt: Luchtfoto van de omgeving van uw woning
+                        - src: /luchtfoto-voorbeeld.svg
+                          alt: 'Voorbeeld van een luchtfoto: woningen langs een straat'
                       panoramafotos:
-                        - src: /foto-placeholder.svg
-                          alt: Panoramafoto van de straat
+                        - src: /panoramafoto-voorbeeld.svg
+                          alt: 'Voorbeeld van een panoramafoto: een rij woningen gezien vanaf de straat'
                     contact:
                       organisatie: Kadaster
                       website:
@@ -389,12 +438,12 @@ paths:
                         extern: true
                     veelgesteldeVragen:
                       vragen:
-                        - vraag: '{Label}'
-                          antwoord: '{antwoord}'
-                        - vraag: '{Label}'
-                          antwoord: '{antwoord}'
-                        - vraag: '{Label}'
-                          antwoord: '{antwoord}'
+                        - vraag: Wat is een kadastrale aanduiding?
+                          antwoord: De kadastrale aanduiding is het nummer van uw perceel in de Basisregistratie Kadaster. Het bestaat uit de naam van de gemeente, een letter voor de sectie en een nummer.
+                        - vraag: Waarom is de kadastrale grootte anders dan ik dacht?
+                          antwoord: De kadastrale grootte is een berekening op basis van de kaart. De echte grootte kan iets anders zijn. Wilt u het precies weten? Dan kan het Kadaster uw perceel opnieuw meten.
+                        - vraag: Waarom moet ik betalen voor sommige gegevens?
+                          antwoord: Het Kadaster vraagt een vergoeding voor uitgebreide producten, zoals gegevens over hypotheken en rechten. Uw eigen basisgegevens ziet u hier gratis.
                       meer:
                         tekst: Bekijk alle veelgestelde vragen
                         href: '#nog-niet-beschikbaar'
@@ -440,42 +489,43 @@ paths:
                       id: w-7f3a
                       adresKort: Voorbeeldlaan 73 B
                       adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                      overzicht: lijst
                     gegevens:
                       waarde:
                         bedragEur: 317000
-                        uitleg: '{uitleg WOZ-waarde}'
+                        uitleg: De waarde van uw woning volgens uw gemeente, op de waardepeildatum.
                       waardepeildatum:
                         datum: '2025-01-01'
-                        uitleg: '{uitleg waardepeildatum}'
+                        uitleg: De datum waarop de gemeente de waarde van uw woning heeft bepaald.
                       grondoppervlakteM2:
                         waarde: 160
-                        uitleg: '{uitleg grondoppervlakte}'
+                        uitleg: De grootte van de grond die bij uw woning hoort.
                       objectnummer:
                         tekst: '059999999999'
-                        uitleg: '{uitleg WOZ-objectnummer}'
+                        uitleg: Het nummer waarmee de gemeente uw woning in de WOZ-registratie bijhoudt.
                       objecttype:
                         tekst: hoekwoning
-                        uitleg: '{uitleg WOZ-objecttype}'
+                        uitleg: Het soort woning volgens de WOZ-registratie.
                       taxatieverslag:
                         link:
                           tekst: Taxatieverslag (pdf)
                           href: '#nog-niet-beschikbaar'
                           extern: false
-                        uitleg: '{uitleg taxatieverslag}'
+                        uitleg: In het taxatieverslag leest u hoe de gemeente de waarde van uw woning heeft bepaald.
                     contact:
                       organisatie: Gemeente Rotterdam
                       website:
-                        tekst: '{url}'
-                        href: '#nog-niet-beschikbaar'
+                        tekst: www.rotterdam.nl
+                        href: https://www.rotterdam.nl/
                         extern: true
                     veelgesteldeVragen:
                       vragen:
-                        - vraag: '{Label}'
-                          antwoord: '{antwoord}'
-                        - vraag: '{Label}'
-                          antwoord: '{antwoord}'
-                        - vraag: '{Label}'
-                          antwoord: '{antwoord}'
+                        - vraag: Wat is de WOZ-waarde?
+                          antwoord: De WOZ-waarde is de waarde van uw woning volgens uw gemeente. De gemeente gebruikt die waarde onder andere voor de onroerendezaakbelasting.
+                        - vraag: Ik ben het niet eens met de WOZ-waarde. Wat kan ik doen?
+                          antwoord: U kunt bezwaar maken bij uw gemeente. Dat doet u binnen 6 weken na de datum op uw WOZ-beschikking.
+                        - vraag: Waarom is de waardepeildatum 1 januari van vorig jaar?
+                          antwoord: De gemeente bepaalt de waarde voor alle woningen op dezelfde datum. Zo kan zij de woningen goed met elkaar vergelijken.
                       meer:
                         tekst: Bekijk alle veelgestelde vragen
                         href: '#nog-niet-beschikbaar'
@@ -523,6 +573,7 @@ paths:
                       id: w-7f3a
                       adresKort: Voorbeeldlaan 73 B
                       adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                      overzicht: lijst
                     label:
                       klasse: C
                       naam: C
@@ -541,10 +592,10 @@ paths:
                       extern: false
                     isde:
                       link:
-                        tekst: '{ISDE-gegevens}'
+                        tekst: Bekijk uw ISDE-gegevens
                         href: https://www.rvo.nl/subsidies-financiering/isde
                         extern: true
-                      uitleg: '{uitleg ISDE-gegevens}'
+                      uitleg: ISDE is een subsidie voor isolatie, warmtepompen en zonneboilers. Hier ziet u welke ISDE-subsidie u eerder voor deze woning hebt gekregen.
                     contact:
                       organisatie: Rijksdienst voor Ondernemend Nederland (RVO)
                       website:
@@ -553,12 +604,12 @@ paths:
                         extern: true
                     veelgesteldeVragen:
                       vragen:
-                        - vraag: '{Label}'
-                          antwoord: '{antwoord}'
-                        - vraag: '{Label}'
-                          antwoord: '{antwoord}'
-                        - vraag: '{Label}'
-                          antwoord: '{antwoord}'
+                        - vraag: Hoe lang is een energielabel geldig?
+                          antwoord: Een energielabel is 10 jaar geldig. Bij de gegevens ziet u tot wanneer uw label geldt.
+                        - vraag: Hoe krijg ik een beter energielabel?
+                          antwoord: Maak uw woning zuiniger, bijvoorbeeld met isolatie of zonnepanelen. Laat daarna een nieuw label maken door een erkende energieadviseur.
+                        - vraag: Moet ik een energielabel hebben?
+                          antwoord: U hebt een energielabel nodig als u uw woning verkoopt of verhuurt. Het label moet dan geldig zijn.
                       meer:
                         tekst: Bekijk alle veelgestelde vragen
                         href: '#nog-niet-beschikbaar'
@@ -609,6 +660,7 @@ paths:
                       id: w-7f3a
                       adresKort: Voorbeeldlaan 73 B
                       adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                      overzicht: lijst
                     huidigDak:
                       isolatie:
                         soort: Glaswol
@@ -676,17 +728,17 @@ paths:
                     contact:
                       organisatie: LVG
                       website:
-                        tekst: '{url}'
-                        href: '#nog-niet-beschikbaar'
+                        tekst: lvg.open-regels.nl
+                        href: https://lvg.open-regels.nl/
                         extern: true
                     veelgesteldeVragen:
                       vragen:
-                        - vraag: '{Label}'
-                          antwoord: '{antwoord}'
-                        - vraag: '{Label}'
-                          antwoord: '{antwoord}'
-                        - vraag: '{Label}'
-                          antwoord: '{antwoord}'
+                        - vraag: Hoe is dit advies berekend?
+                          antwoord: Het advies is berekend met de gegevens over uw dak en de huidige isolatie. De rekenregels staan vast. Bij het advies ziet u van welke uitgangspunten de berekening uitgaat.
+                        - vraag: Hoeveel subsidie kan ik krijgen?
+                          antwoord: Voor dakisolatie is vaak subsidie mogelijk via de ISDE-regeling van RVO. Het bedrag in het advies is een indicatie. Bij RVO leest u welke voorwaarden gelden.
+                        - vraag: Ben ik verplicht een aannemer te kiezen?
+                          antwoord: Nee. Het advies is alleen ter informatie. U kiest zelf of en met welke aannemer u verder gaat.
                       meer:
                         tekst: Bekijk alle veelgestelde vragen
                         href: '#nog-niet-beschikbaar'
@@ -704,6 +756,7 @@ paths:
                       id: w-7f3a
                       adresKort: Voorbeeldlaan 73 B
                       adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                      overzicht: lijst
                     huidigDak:
                       isolatie:
                         soort: Glaswol
@@ -729,17 +782,17 @@ paths:
                     contact:
                       organisatie: LVG
                       website:
-                        tekst: '{url}'
-                        href: '#nog-niet-beschikbaar'
+                        tekst: lvg.open-regels.nl
+                        href: https://lvg.open-regels.nl/
                         extern: true
                     veelgesteldeVragen:
                       vragen:
-                        - vraag: '{Label}'
-                          antwoord: '{antwoord}'
-                        - vraag: '{Label}'
-                          antwoord: '{antwoord}'
-                        - vraag: '{Label}'
-                          antwoord: '{antwoord}'
+                        - vraag: Hoe is dit advies berekend?
+                          antwoord: Het advies is berekend met de gegevens over uw dak en de huidige isolatie. De rekenregels staan vast. Bij het advies ziet u van welke uitgangspunten de berekening uitgaat.
+                        - vraag: Hoeveel subsidie kan ik krijgen?
+                          antwoord: Voor dakisolatie is vaak subsidie mogelijk via de ISDE-regeling van RVO. Het bedrag in het advies is een indicatie. Bij RVO leest u welke voorwaarden gelden.
+                        - vraag: Ben ik verplicht een aannemer te kiezen?
+                          antwoord: Nee. Het advies is alleen ter informatie. U kiest zelf of en met welke aannemer u verder gaat.
                       meer:
                         tekst: Bekijk alle veelgestelde vragen
                         href: '#nog-niet-beschikbaar'
@@ -789,6 +842,7 @@ paths:
                       id: w-7f3a
                       adresKort: Voorbeeldlaan 73 B
                       adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                      overzicht: lijst
                     doel: Offerte voor dakisolatie maken
                     aannemers:
                       - id: a-91d2
@@ -1144,6 +1198,7 @@ paths:
                       id: w-7f3a
                       adresKort: Voorbeeldlaan 73 B
                       adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                      overzicht: lijst
                     gedeeldMet: IsolatieGroep Rotterdam
                     doel: Offerte voor dakisolatie maken
                     gegevenssets:
@@ -1207,6 +1262,7 @@ paths:
                       id: w-7f3a
                       adresKort: Voorbeeldlaan 73 B
                       adres: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+                      overzicht: lijst
                     gedeeldMet: IsolatieGroep Rotterdam
                     doel: Offerte voor dakisolatie maken
                     gegevenssets:
@@ -1255,10 +1311,12 @@ components:
       required: false
       description: >-
         Alleen voor ontwikkeling en acceptatie: kiest een nagebootste burger. De API negeert
-        deze header tenzij `LVG_SCENARIOS=on` is ingesteld.
+        deze header tenzij `LVG_SCENARIOS=on` is ingesteld. Zonder geldige header geldt
+        `een-woning`.
       schema:
         type: string
         enum: [geen-woning, een-woning, drie-woningen]
+        default: een-woning
     WoningId:
       name: woningId
       in: path
@@ -1272,7 +1330,7 @@ components:
       description: De volledige versie van deze API.
       schema:
         type: string
-        example: 1.1.0
+        example: 1.4.0
     ContentLanguage:
       description: De taal van de teksten in het antwoord.
       schema:
@@ -1509,6 +1567,14 @@ components:
           type: string
           description: Het volledige adres.
           example: Voorbeeldlaan 73 B, 3000 SS Rotterdam
+        overzicht:
+          type: string
+          enum: [lijst, direct]
+          description: >-
+            Hoe de pagina Koopwoningen zich voor deze burger gedraagt, zoals `weergave` daar:
+            `direct` als de burger één koopwoning heeft. De pagina's van de woning laten dan geen
+            stap terug naar die lijst zien, want die lijst gaat meteen naar deze woning.
+          example: lijst
     Energielabelklasse:
       type: object
       required: [klasse, naam]
@@ -1564,6 +1630,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Actie'
+        veelgesteldeVragen:
+          $ref: '#/components/schemas/VeelgesteldeVragen'
     WoningInLijst:
       type: object
       required: [id, adresKort, adresMetPlaats, soort, bouwjaar]
@@ -1651,6 +1719,8 @@ components:
               format: date
             actie:
               $ref: '#/components/schemas/Actie'
+        veelgesteldeVragen:
+          $ref: '#/components/schemas/VeelgesteldeVragen'
     BedragMetUitleg:
       type: object
       required: [bedragEur]

@@ -1,0 +1,17 @@
+@use '../../styles/mixins' as *;
+
+.raster {
+  display: grid;
+  gap: var(--lux-space-300);
+}
+
+@media (min-width: $breekpunt-desktop) {
+  .raster {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.knop {
+  margin-block-start: auto;
+  font-weight: var(--lux-font-weight-bold);
+}

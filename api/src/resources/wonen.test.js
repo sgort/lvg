@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { expectValidResponse } from '../../test/contract.js';
 import { handle } from '../core/router.js';
+import { WONEN_KAARTEN } from '../mock/teksten.js';
 
 describe('GET /wonen', () => {
   it('returns the three landing cards with their actions', async () => {
@@ -23,7 +24,7 @@ describe('GET /wonen', () => {
     });
     expect(eigenaar).toMatchObject({
       bron: 'LVG',
-      tekst: '{Ingang LVG}',
+      tekst: WONEN_KAARTEN.woningeigenaar,
       actie: {
         type: 'bekijk-koopwoningen',
         href: '/api/v1/woningen',
@@ -32,7 +33,7 @@ describe('GET /wonen', () => {
     });
     expect(huurder).toMatchObject({
       bron: 'LVG',
-      tekst: '{intro}',
+      tekst: WONEN_KAARTEN.huurder,
       actie: { type: 'bekijk-huurwoningen', tekst: 'Bekijk huurwoningen' },
     });
   });

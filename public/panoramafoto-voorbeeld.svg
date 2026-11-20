@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450" role="img" aria-label="Voorbeeld van een panoramafoto: een rij woningen gezien vanaf de straat">
+  <rect width="800" height="450" fill="#cfe3f2"/>
+  <rect x="0" y="360" width="800" height="90" fill="#8a8a8a"/>
+  <rect x="0" y="340" width="800" height="20" fill="#cfcfcf"/>
+  <g>
+    <rect x="40" y="200" width="170" height="140" fill="#b56b4f"/>
+    <path d="M30 205L125 130L220 205Z" fill="#5b4a44"/>
+    <rect x="230" y="200" width="170" height="140" fill="#a8604a"/>
+    <path d="M220 205L315 130L410 205Z" fill="#5b4a44"/>
+    <rect x="420" y="200" width="170" height="140" fill="#b56b4f"/>
+    <path d="M410 205L505 130L600 205Z" fill="#5b4a44"/>
+    <rect x="610" y="200" width="170" height="140" fill="#a8604a"/>
+    <path d="M600 205L695 130L790 205Z" fill="#5b4a44"/>
+  </g>
+  <g fill="#e8f1f8" stroke="#ffffff" stroke-width="3">
+    <rect x="65" y="225" width="45" height="40"/><rect x="140" y="225" width="45" height="40"/>
+    <rect x="255" y="225" width="45" height="40"/><rect x="330" y="225" width="45" height="40"/>
+    <rect x="445" y="225" width="45" height="40"/><rect x="520" y="225" width="45" height="40"/>
+    <rect x="635" y="225" width="45" height="40"/><rect x="710" y="225" width="45" height="40"/>
+  </g>
+  <g fill="#4a3a33">
+    <rect x="105" y="285" width="35" height="55"/><rect x="295" y="285" width="35" height="55"/>
+    <rect x="485" y="285" width="35" height="55"/><rect x="675" y="285" width="35" height="55"/>
+  </g>
+  <text x="784" y="438" font-family="sans-serif" font-size="16" fill="#ffffff" text-anchor="end">Voorbeeld, geen echte panoramafoto</text>
+</svg>

@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { expectValidResponse } from '../../test/contract.js';
 import { handle } from '../core/router.js';
 
-const get = (path) => handle({ method: 'GET', path, headers: {} });
+const get = (path, headers = {}) => handle({ method: 'GET', path, headers });
 
 afterEach(() => {
   vi.useRealTimers();
@@ -49,7 +49,12 @@ describe('GET /woningen/{id}/energielabel', () => {
   });
 
   it('offers no roof insulation action for a property without building data', async () => {
-    const response = await get('/api/v1/woningen/w-2c91/energielabel');
+    // w-2c91 is one of the three properties; the default scenario has only w-7f3a.
+    vi.stubEnv('LVG_SCENARIOS', 'on');
+    const response = await get('/api/v1/woningen/w-2c91/energielabel', {
+      'X-LVG-Scenario': 'drie-woningen',
+    });
+    vi.unstubAllEnvs();
 
     expectValidResponse('getEnergielabel', response);
     expect(response.body.label.klasse).toBe('A');
